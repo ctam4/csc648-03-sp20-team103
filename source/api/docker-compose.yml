@@ -1,0 +1,27 @@
+# docker-compose.yml
+version: "3"
+
+services:
+  node:
+    build: .
+    ports:
+      - "8080:80"
+      - "8443:443"
+    environment:
+      NODE_ENV: "production"
+      DB_HOST: "mariadb"
+      DB_USER: "team103"
+      DB_PASS: "team103"
+  mariadb:
+    image: "mariadb:10.4.12"
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "team103"
+      MYSQL_USER: "team103"
+      MYSQL_PASSWORD: "team103"
+    volumes:
+      - mariadb:/var/lib/mysql/
+
+volumes:
+  mariadb:
