@@ -1,0 +1,11 @@
+# docker-compose.yml
+version: "3"
+
+services:
+  node:
+    build: .
+    ports:
+      - "9080:80"
+      - "9443:443"
+    environment:
+      NODE_ENV: "production"
