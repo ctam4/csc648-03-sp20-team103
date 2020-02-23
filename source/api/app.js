@@ -9,6 +9,8 @@ const httpsOptions = {
   key: fs.readFileSync('server.key'),
   cert: fs.readFileSync('server.cert'),
 };
+const compression = require('compression');
+const indexRoute = require('./routes/index.js');
 
 const mariadb = require('mariadb');
 const mariadbOptions = {
@@ -35,7 +37,9 @@ async function asyncFunction() {
   }
 }
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.use(compression());
+
+app.use('/', indexRoute);
 
 http.createServer(app).listen(httpPort);
 https.createServer(httpsOptions, app).listen(httpsPort);
