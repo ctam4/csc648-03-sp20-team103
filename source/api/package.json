@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
+    "start-watch": "nodemon --watch . app.js",
     "start": "node app.js"
   },
   "author": "Team 103",
@@ -13,5 +14,8 @@
     "compression": "^1.7.4",
     "express": "^4.17.1",
     "mariadb": "^2.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
   }
 }
