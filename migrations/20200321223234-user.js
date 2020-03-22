@@ -304,6 +304,12 @@ exports.up = function(db) {
       type: 'real',
       notNull: true,
       defaultValue: 1
+    },
+
+    state:{
+      type: 'string',
+      notNull: true,
+      defaultValue: 'stored'
     }
 
   }, function (err) {

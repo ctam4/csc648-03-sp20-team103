@@ -48,13 +48,14 @@ app.get('/users/:name', function (req, res) {
   });
 });
 
-app.post('/users/:name/:fridge_id/:role'{
+app.post('/users', function (req, res) {
   var postData = req.body;
   connection.query('INSERT INTO users SET ?', postData, function (error, results, fields) {
     if (error) throw error;
     res.end(JSON.stringify(results));
   });
 });
+
 //fridges
 app.get('/fridges/:user_id', function (req, res) {
   connection.query('select fridge_id from fridges where user_id=?', [req.params.user_id], function (error, results, fields) {
@@ -62,6 +63,29 @@ app.get('/fridges/:user_id', function (req, res) {
     res.end(JSON.stringify(results));
   });
 });
+
+app.post('/fridges', function (req, res) {
+  var postData = req.body;
+  connection.query('INSERT INTO fridges SET ?', postData, function (error, results, fields) {
+    if (error) throw error;
+    res.end(JSON.stringify(results));
+  });
+});
+
+//inventory
+app.post('/inventory', function (req, res) {
+  var postData = req.body;
+  connection.query('INSERT INTO inventory SET ?', postData, function (error, results, fields) {
+    if (error) throw error;
+    res.end(JSON.stringify(results));
+  });
+});
+//get todo 
+
+app.post('/inventory/:fridge_id/:storable_id/:price/:quantity/:expiration', function(req, res){
+
+});
+
 
 app.use(compression());
 
