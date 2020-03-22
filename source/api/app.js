@@ -38,53 +38,6 @@ const pool = mariadb.createPool(mariadbOptions);
   }
 })();
 
-//users
-app.get('/users/:name', function (req, res) {
-  connection.query('select user_id from users where name =?', [req.params.name], function (error, results, fields) {
-    if (error) throw error;
-    res.end(JSON.stringify(results.user_id));
-  });
-});
-
-app.post('/users', function (req, res) {
-  var postData = req.body;
-  connection.query('INSERT INTO users SET ?', postData, function (error, results, fields) {
-    if (error) throw error;
-    res.end(JSON.stringify(results));
-  });
-});
-
-//fridges
-app.get('/fridges/:user_id', function (req, res) {
-  connection.query('select fridge_id from fridges where user_id=?', [req.params.user_id], function (error, results, fields) {
-    if (error) throw error;
-    res.end(JSON.stringify(results.fridge_id));
-  });
-});
-
-app.post('/fridges', function (req, res) {
-  var postData = req.body;
-  connection.query('INSERT INTO fridges SET ?', postData, function (error, results, fields) {
-    if (error) throw error;
-    res.end(JSON.stringify(results));
-  });
-});
-
-//inventory
-app.post('/inventory', function (req, res) {
-  var postData = req.body;
-  connection.query('INSERT INTO inventory SET ?', postData, function (error, results, fields) {
-    if (error) throw error;
-    res.end(JSON.stringify(results));
-  });
-});
-
-app.get('/inventory', function (req, res) {
-  connection.query('select * from inventory where inventory_id>=? LIMIT ?', [req.params.begin], [req.params.limit], function (error, results, fields) {
-    if (error) throw error;
-    res.end(JSON.stringify(results.inventory_id));
-  });
-});
 
 
 
