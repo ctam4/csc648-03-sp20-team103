@@ -44,7 +44,7 @@ const pool = mariadb.createPool(mariadbOptions);
 app.get('/users/:name', function (req, res) {
   connection.query('select user_id from users where name =?', [req.params.name], function (error, results, fields) {
     if (error) throw error;
-    res.end(JSON.stringify(results));
+    res.end(JSON.stringify(results.user_id));
   });
 });
 
@@ -60,7 +60,7 @@ app.post('/users', function (req, res) {
 app.get('/fridges/:user_id', function (req, res) {
   connection.query('select fridge_id from fridges where user_id=?', [req.params.user_id], function (error, results, fields) {
     if (error) throw error;
-    res.end(JSON.stringify(results));
+    res.end(JSON.stringify(results.fridge_id));
   });
 });
 
@@ -80,11 +80,15 @@ app.post('/inventory', function (req, res) {
     res.end(JSON.stringify(results));
   });
 });
-//get todo 
 
-app.post('/inventory/:fridge_id/:storable_id/:price/:quantity/:expiration', function(req, res){
-
+app.get('/inventory', function (req, res) {
+  connection.query('select * from inventory where inventory_id>=? LIMIT ?', [req.params.begin], [req.params.limit], function (error, results, fields) {
+    if (error) throw error;
+    res.end(JSON.stringify(results.inventory_id));
+  });
 });
+
+
 
 
 app.use(compression());
