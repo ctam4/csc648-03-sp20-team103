@@ -1,3 +1,5 @@
+"use strict";
+
 const express = require('express');
 const http = require('http');
 const https = require('https');
@@ -48,4 +50,3 @@ app.use('/', indexRoute);
 
 http.createServer(app).listen(httpPort);
 https.createServer(httpsOptions, app).listen(httpsPort);
-
