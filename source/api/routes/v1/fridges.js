@@ -1,16 +1,16 @@
 const express = require('express');
-const users = express.Router();
+const fridges = express.Router();
 
 const pool = require('../../database.js');
 let connection;
 
-//users
+//fridges
 
-users.get('/:name', function (req, res) {
+fridges.get('/:user_id', function (req, res) {
     try {
         connection = await pool.getConnection();
-        await connection.query('select user_id from users where name =?', [req.query.name], function (error, results, fields) {
-            res.json(results.user_id);
+        await connection.query('select fridge_id from fridges where user_id =?', [req.query.user_id], function (error, results, fields) {
+            res.json(results.fridge_id);
         });
     } catch (error) {
         res.sendStatus(500).end();
@@ -22,10 +22,10 @@ users.get('/:name', function (req, res) {
     }
 });
 
-users.post('/', function (req, res) {
+fridges.post('/', function (req, res) {
     try {
         connection = await pool.getConnection();
-        await connection.query('INSERT INTO users SET ?', req.body, function (error, results, fields) {
+        await connection.query('INSERT INTO fridges SET ?', req.body, function (error, results, fields) {
             if (error) throw error;
             res.json(results);
         });
