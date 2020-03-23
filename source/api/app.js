@@ -13,35 +13,11 @@ const httpsOptions = {
 };
 const compression = require('compression');
 
-const mariadb = require('mariadb');
-const mariadbOptions = {
-  host: process.env.DB_HOST,
-  database: process.env.DB_DATABASE,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASS,
-  connectionLimit: 5,
-};
-const pool = mariadb.createPool(mariadbOptions);
-async function asyncFunction() {
-  let connection;
-  try {
-    connection = await pool.getConnection();
-    const rows = await connection.query("SELECT 1 as val");
-    // rows: [ {val: 1}, meta: ... ]
-    //const res = await connection.query("INSERT INTO myTable value (?, ?)", [1, "mariadb"]);
-    // res: { affectedRows: 1, insertId: 1, warningStatus: 0 }
-  } catch (error) {
-    throw error;
-  } finally {
-    if (connection) {
-      connection.release(); // release to pool
-    }
-  }
-}
-
 app.use(compression());
 
-app.use('/', require('./routes/index.js'));
+app.use('/v1', require('./routes/v1/index.js'));
+
+app.get('/', (req, res) => res.sendStatus(401).end());
 
 http.createServer(app).listen(httpPort);
 https.createServer(httpsOptions, app).listen(httpsPort);
