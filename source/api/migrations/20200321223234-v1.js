@@ -61,255 +61,257 @@ exports.up = function (db) {
     },
   });
 
-  //NOT NEEDED FOR M2
-  // db.createTable("storables", {
-  //   storable_id: {
-  //     type: "int",
-  //     unsigned: true,
-  //     length: 32,
-  //     autoIncrement: true,
-  //   },
-  //   nutrition_id: {
-  //     type: "int",
-  //     unsigned: true,
-  //     length: 32,
-  //     foreignKey: {
-  //       name: "nutrition_id",
-  //       table: "nutrition",
-  //       rules: {
-  //         onDelete: "CASCADE",
-  //         onUpdate: "RESTRICT",
-  //       },
-  //       mapping: "nutrition_id",
-  //     },
-  //   },
-  //   name: {
-  //     type: "char",
-  //     length: 64,
-  //     notNull: true,
-  //     unique: true,
-  //   },
-  //   image: {
-  //     type: "text",
-  //   },
-  // });
-
-  // db.createTable("recipes", {
-  //   recipe_id: {
-  //     type: "int",
-  //     length: 32,
-  //     primaryKey: true,
-  //     autoIncrement: true,
-  //   },
-  //   nutrition_id: {
-  //     type: "int",
-  //     unsigned: true,
-  //     length: 32,
-  //     notNull: true,
-  //     foreignKey: {
-  //       name: "nutrition_id",
-  //       table: "nutrition",
-  //       rules: {
-  //         onDelete: "CASCADE",
-  //         onUpdate: "RESTRICT",
-  //       },
-  //       mapping: "nutrition_id",
-  //     },
-  //   },
-  //   name: {
-  //     type: "char",
-  //     length: 64,
-  //     notNull: true,
-  //     unique: true,
-  //   },
-  //   image: {
-  //     type: "text",
-  //     defaultValue: null,
-  //   },
-  //   servings: {
-  //     type: "smallint",
-  //     unsigned: true,
-  //     notNull: true,
-  //   },
-  //   cooking_time: {
-  //     type: "smallint",
-  //     unsigned: true,
-  //     notNull: true,
-  //     defaultValue: 0,
-  //   },
-  //   instructions: {
-  //     type: "text",
-  //     defaultValue: null,
-  //   },
-  // });
-
-  // db.createTable("nutrition", {
-  //   nutrition_id: {
-  //     type: "int",
-  //     unsigned: true,
-  //     length: 32,
-  //     primaryKey: true,
-  //     autoIncrement: true,
-  //   },
-  //   intolerances: {
-  //     type: "text",
-  //     defaultValue: null,
-  //   },
-  //   calories: {
-  //     type: "smallint",
-  //     notNull: true,
-  //   },
-  //   carbohydrates: {
-  //     type: "smallint",
-  //     unsigned: true,
-  //     notNull: true,
-  //   },
-  //   fat: {
-  //     type: "int",
-  //     unsigned: true,
-  //     notNull: true,
-  //   },
-  //   protein: {
-  //     type: "smallint",
-  //     unsigned: true,
-  //     notNull: true,
-  //   },
-  // });
-
-
-  db.createTable(
-    "inventory",
-    {
-      inventory_id: {
-        type: "int",
-        unsigned: true,
-        primaryKey: true,
-        autoIncrement: true,
-      },
-
-      fridge_id: {
-        type: "int",
-        unsigned: true,
-        length: 32,
-        notNull: true,
-        primaryKey: true,
-        foreignKey: {
-          name: "fridge_id",
-          table: "fridges",
-          rules: {
-            onDelete: "CASCADE",
-            onUpdate: "RESTRICT",
-          },
-          mapping: "fridge_id",
+/*
+  db.createTable("storables", {
+    storable_id: {
+      type: "int",
+      unsigned: true,
+      length: 32,
+      autoIncrement: true,
+    },
+    nutrition_id: {
+      type: "int",
+      unsigned: true,
+      length: 32,
+      foreignKey: {
+        name: "nutrition_id",
+        table: "nutrition",
+        rules: {
+          onDelete: "CASCADE",
+          onUpdate: "RESTRICT",
         },
+        mapping: "nutrition_id",
       },
-      //NOT NEEDED FOR M2
-      // storable_id: {
-      //   type: "int",
-      //   unsigned: true,
-      //   length: 32,
-      //   notNull: true,
-      //   foreignKey: {
-      //     name: "storable_id",
-      //     table: "storables",
-      //     rules: {
-      //       onDelete: "CASCADE",
-      //       onUpdate: "RESTRICT",
-      //     },
-      //     mapping: "storables_id",
-      //   },
-      // },
-    
-      purchase_date: {
-        type: "timestamp",
-        notNull: true,
-        // need to add default curernt timestamp
+    },
+    name: {
+      type: "char",
+      length: 64,
+      notNull: true,
+      unique: true,
+    },
+    image: {
+      type: "text",
+    },
+  });
+
+  db.createTable("recipes", {
+    recipe_id: {
+      type: "int",
+      length: 32,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    nutrition_id: {
+      type: "int",
+      unsigned: true,
+      length: 32,
+      notNull: true,
+      foreignKey: {
+        name: "nutrition_id",
+        table: "nutrition",
+        rules: {
+          onDelete: "CASCADE",
+          onUpdate: "RESTRICT",
+        },
+        mapping: "nutrition_id",
       },
-      purchased_price: {
-        type: "smallint",
-        unsigned: true,
-        notNull: true,
+    },
+    name: {
+      type: "char",
+      length: 64,
+      notNull: true,
+      unique: true,
+    },
+    image: {
+      type: "text",
+      defaultValue: null,
+    },
+    servings: {
+      type: "smallint",
+      unsigned: true,
+      notNull: true,
+    },
+    cooking_time: {
+      type: "smallint",
+      unsigned: true,
+      notNull: true,
+      defaultValue: 0,
+    },
+    instructions: {
+      type: "text",
+      defaultValue: null,
+    },
+  });
+
+  db.createTable("nutrition", {
+    nutrition_id: {
+      type: "int",
+      unsigned: true,
+      length: 32,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    intolerances: {
+      type: "text",
+      defaultValue: null,
+    },
+    calories: {
+      type: "smallint",
+      notNull: true,
+    },
+    carbohydrates: {
+      type: "smallint",
+      unsigned: true,
+      notNull: true,
+    },
+    fat: {
+      type: "int",
+      unsigned: true,
+      notNull: true,
+    },
+    protein: {
+      type: "smallint",
+      unsigned: true,
+      notNull: true,
+    },
+  });
+*/
+
+  db.createTable("inventory", {
+    inventory_id: {
+      type: "int",
+      unsigned: true,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    fridge_id: {
+      type: "int",
+      unsigned: true,
+      length: 32,
+      notNull: true,
+      primaryKey: true,
+      foreignKey: {
+        name: "fridge_id",
+        table: "fridges",
+        rules: {
+          onDelete: "CASCADE",
+          onUpdate: "RESTRICT",
+        },
+        mapping: "fridge_id",
       },
-      remaining: {
-        type: "real",
-        notNull: true,
-        defaultValue: 1,
+    },
+/*
+    storable_id: {
+      type: "int",
+      unsigned: true,
+      length: 32,
+      notNull: true,
+      foreignKey: {
+        name: "storable_id",
+        table: "storables",
+        rules: {
+          onDelete: "CASCADE",
+          onUpdate: "RESTRICT",
+        },
+        mapping: "storables_id",
       },
-      state: {
-        type: "string",
-        notNull: true,
-        defaultValue: "stored",
-      },
-    });
-    // function (err) {
-    //   if (err) return callback(err);
-    //   return callback();
-    // }
+    },
+*/
+    purchase_date: {
+      type: "timestamp",
+      notNull: true,
+      // TODO: need to add default curernt timestamp
+    },
+    purchased_price: {
+      type: "smallint",
+      unsigned: true,
+      notNull: true,
+    },
+    remaining: {
+      type: "real",
+      notNull: true,
+      defaultValue: 1,
+    },
+    state: {
+      type: "string",
+      notNull: true,
+      defaultValue: "stored",
+    },
+  });
+/*
+  },
+  function (err) {
+    if (err) return callback(err);
+    return callback();
+  });
 
   //NOT NEEDED FOR M2
-  // db.createTable("expiration", {
-  //   inventory_id: {
-  //     type: "int",
-  //     unsigned: true,
-  //     notNull: true,
-  //     foreignKey: {
-  //       name: "inventory_id",
-  //       table: "inventory",
-  //       rules: {
-  //         onDelete: "CASCADE",
-  //         onUpdate: "RESTRICT",
-  //       },
-  //       mapping: "inventory_id",
-  //     },
-  //   },
-  //   expiration_date: {
-  //     type: "timestamp",
-  //     defaultValue: null,
-  //   },
-  // });
+  db.createTable("expiration", {
+    inventory_id: {
+      type: "int",
+      unsigned: true,
+      notNull: true,
+      foreignKey: {
+        name: "inventory_id",
+        table: "inventory",
+        rules: {
+          onDelete: "CASCADE",
+          onUpdate: "RESTRICT",
+        },
+        mapping: "inventory_id",
+      },
+    },
+    expiration_date: {
+      type: "timestamp",
+      defaultValue: null,
+    },
+  });
 
-  // db.createTable("consumption", {
-  //   user_id: {
-  //     type: "int",
-  //     unsigned: true,
-  //     autoIncrement: true,
-  //     length: 32,
-  //     notNull: true,
-  //     foreignKey: {
-  //       name: "user_id",
-  //       table: "users",
-  //       rules: {
-  //         onDelete: "CASCADE",
-  //         onUpdate: "RESTRICT",
-  //       },
-  //       mapping: "user_id",
-  //     },
-  //   },
-  //   inventory_id: {
-  //     type: "int",
-  //     unsigned: true,
-  //     primaryKey: true,
-  //     autoIncrement: true,
-  //     foreignKey: {
-  //       name: "inventory_id",
-  //       table: "inventory",
-  //       rules: {
-  //         onDelete: "CASCADE",
-  //         onUpdate: "RESTRICT",
-  //       },
-  //       mapping: "inventory_id",
-  //     },
-  //   },
-  //   consumed_date: {
-  //     type: "timestamp",
-  //     notNull: true,
-  //   },
-  // });
+  db.createTable("consumption", {
+    user_id: {
+      type: "int",
+      unsigned: true,
+      autoIncrement: true,
+      length: 32,
+      notNull: true,
+      foreignKey: {
+        name: "user_id",
+        table: "users",
+        rules: {
+          onDelete: "CASCADE",
+          onUpdate: "RESTRICT",
+        },
+        mapping: "user_id",
+      },
+    },
+    inventory_id: {
+      type: "int",
+      unsigned: true,
+      primaryKey: true,
+      autoIncrement: true,
+      foreignKey: {
+        name: "inventory_id",
+        table: "inventory",
+        rules: {
+          onDelete: "CASCADE",
+          onUpdate: "RESTRICT",
+        },
+        mapping: "inventory_id",
+      },
+    },
+    consumed_date: {
+      type: "timestamp",
+      notNull: true,
+    },
+  });
+*/
 };
 
 exports.down = function (db) {
   db.dropTable("inventory", callback);
-  //todo: all tables
+  db.dropTable("fridges", callback);
+  db.dropTable("users", callback);
+  // TODO: all tables
 };
 
 exports._meta = {
