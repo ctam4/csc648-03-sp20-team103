@@ -42,4 +42,4 @@ fridges.post('/', function (req, res) {
 //console.log('inventory.stack');
 //console.log(inventory.stack);
 
-module.exports = inventory;
+module.exports = fridges;
