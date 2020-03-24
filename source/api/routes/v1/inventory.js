@@ -7,9 +7,6 @@ let connection;
 //inventory
 
 inventory.get('/:begin/:end', async (req, res) => {
-  if (Object.keys(req.query).length == 0) { // TODO: need to check contains either begin & limit
-    res.sendStatus(400).end();
-  }
   try {
     connection = await pool.getConnection();
     await connection.query('select * from inventory where inventory_id>=? LIMIT ?', [req.query.begin], [req.query.limit], function (error, results, fields) {
