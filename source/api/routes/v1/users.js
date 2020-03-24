@@ -6,7 +6,7 @@ let connection;
 
 //users
 
-users.get('/:name', function (req, res) {
+users.get('/:name', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('select user_id from users where name =?', [req.query.name], function (error, results, fields) {
@@ -22,7 +22,7 @@ users.get('/:name', function (req, res) {
   }
 });
 
-users.post('/', function (req, res) {
+users.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('INSERT INTO users SET ?', req.body, function (error, results, fields) {

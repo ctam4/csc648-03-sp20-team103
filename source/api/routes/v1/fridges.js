@@ -6,7 +6,7 @@ let connection;
 
 //fridges
 
-fridges.get('/:user_id', function (req, res) {
+fridges.get('/:user_id', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('select fridge_id from fridges where user_id =?', [req.query.user_id], function (error, results, fields) {
@@ -22,7 +22,7 @@ fridges.get('/:user_id', function (req, res) {
   }
 });
 
-fridges.post('/', function (req, res) {
+fridges.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('INSERT INTO fridges SET ?', req.body, function (error, results, fields) {
