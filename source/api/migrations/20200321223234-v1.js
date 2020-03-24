@@ -189,7 +189,6 @@ exports.up = (db) => {
       unsigned: true,
       length: 32,
       notNull: true,
-      primaryKey: true,
       foreignKey: {
         name: "fridge_id",
         table: "fridges",
