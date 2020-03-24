@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start-watch": "nodemon --watch . app.js",
+    "start-watch": "db-migrate up && nodemon --watch . app.js",
     "start": "node app.js"
   },
   "author": "Team 103",
