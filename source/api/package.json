@@ -4,7 +4,7 @@
   "main": "app.js",
   "scripts": {
     "start-watch": "db-migrate up && nodemon --watch . app.js",
-    "start": "node app.js"
+    "start": "db-migrate up && node app.js"
   },
   "author": "Team 103",
   "license": "MIT",
