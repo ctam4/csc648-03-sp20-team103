@@ -61,6 +61,7 @@ exports.up = function (db) {
     },
   });
 
+  //NOT NEEDED FOR M2
   // db.createTable("storables", {
   //   storable_id: {
   //     type: "int",
@@ -202,6 +203,7 @@ exports.up = function (db) {
           mapping: "fridge_id",
         },
       },
+      //NOT NEEDED FOR M2
       // storable_id: {
       //   type: "int",
       //   unsigned: true,
@@ -244,6 +246,7 @@ exports.up = function (db) {
     //   return callback();
     // }
 
+  //NOT NEEDED FOR M2
   // db.createTable("expiration", {
   //   inventory_id: {
   //     type: "int",
