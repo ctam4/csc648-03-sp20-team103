@@ -12,8 +12,10 @@ const httpsOptions = {
   cert: fs.readFileSync('server.cert'),
 };
 const compression = require('compression');
+const cors = require('cors');
 
 app.use(compression());
+app.use(cors());
 
 app.use('/v1', require('./routes/v1/index.js'));
 
