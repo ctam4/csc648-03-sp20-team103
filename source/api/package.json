@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start-watch": "db-migrate up && nodemon --watch . app.js",
-    "start": "db-migrate up && node app.js"
+    "start-watch": "db-migrate up --force-exit && nodemon --watch . app.js",
+    "start": "db-migrate up --force-exit && node app.js"
   },
   "author": "Team 103",
   "license": "MIT",
