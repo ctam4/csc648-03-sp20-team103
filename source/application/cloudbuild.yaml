@@ -21,7 +21,7 @@ steps:
   - '--platform'
   - 'gke'
   - '--set-env-vars'
-  - 'NODE_ENV="production"'
+  - 'NODE_ENV=production'
   - '--port'
   - '80'
 images:
