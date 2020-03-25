@@ -7,12 +7,12 @@ let connection;
 //fridges
 
 fridges.get('/', async (req, res) => {
-  if (Object.keys(req.query).length == 0) { // TODO: need to check contains either begin & limit
+  if (Object.keys(req.query).length > 0) { // TODO: need to check contains either begin & limit
     res.sendStatus(400).end();
   }
   try {
     connection = await pool.getConnection();
-    await connection.query('select fridge_id from fridges')
+    await connection.query('SELECT fridge_id FROM fridges')
       .then((results) => {
         res.json(results).end();
       });
