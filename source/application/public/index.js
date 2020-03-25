@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+let apiUrl = process.env.API_HOST || location.hostname;
+if (process.env.API_PORT) {
+  apiUrl += ':' + process.env.API_PORT;
+}
+
 // import App from '../components/App.jsx';
 import FridgeGet from '../components/FridgeGet.jsx';
 import FridgePost from '../components/FridgePost.jsx';

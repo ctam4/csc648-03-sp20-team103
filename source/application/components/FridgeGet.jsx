@@ -8,7 +8,7 @@ export default React.createElement(createReactClass({
     };
   },
   handleButtonClick: function(e) {
-    let url = location.protocol + '//' + location.hostname + ':8080/v1/fridges';
+    let url = location.protocol + '//' + apiUrl + '/v1/fridges';
     fetch(url)
       .then((res) => {
         if (!res.ok) {

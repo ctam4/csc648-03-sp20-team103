@@ -13,7 +13,7 @@ export default React.createElement(createReactClass({
     this.setState({
       msg: 'processing'
     });
-    let url = location.protocol + '//' + location.hostname + ':8080/v1/fridges';
+    let url = location.protocol + '//' + apiUrl + '/v1/fridges';
     fetch(url, {
       method: 'post',
       headers: {
