@@ -189,15 +189,15 @@ exports.up = (db) => {
       unsigned: true,
       length: 32,
       notNull: true,
-      foreignKey: {
-        name: "fridge_id",
-        table: "fridges",
-        rules: {
-          onDelete: "CASCADE",
-          onUpdate: "RESTRICT",
-        },
-        mapping: "fridge_id",
-      },
+      // foreignKey: {
+      //   name: "fridge_id",
+      //   table: "fridges",
+      //   rules: {
+      //     onDelete: "CASCADE",
+      //     onUpdate: "RESTRICT",
+      //   },
+      //   mapping: "fridge_id",
+      // },
     },
 /*
     storable_id: {
