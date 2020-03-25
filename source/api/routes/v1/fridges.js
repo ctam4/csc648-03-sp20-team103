@@ -29,7 +29,7 @@ fridges.get('/', async (req, res) => {
 fridges.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('INSERT INTO fridges SET ?', req.body)
+    await connection.query('INSERT INTO fridges VALUES (?)', req.body.fridge_id)
     .then((results) => {
       res.json(results).end();
     });

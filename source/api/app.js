@@ -14,6 +14,7 @@ const httpsOptions = {
 const compression = require('compression');
 const cors = require('cors');
 
+app.use(express.json());
 app.use(compression());
 app.use(cors());
 
