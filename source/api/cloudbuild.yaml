@@ -21,7 +21,7 @@ steps:
   - '--platform'
   - 'gke'
   - '--set-env-vars'
-  - 'NODE_ENV="production",DB_HOST="team103-db.ddns.net",DB_USER="team103",DB_PASS="team103"'
+  - 'NODE_ENV="production",DB_HOST="team103-db.ddns.net",DB_DATABASE="team103",DB_USER="team103",DB_PASS="team103"'
   - '--port'
   - '80'
 images:
