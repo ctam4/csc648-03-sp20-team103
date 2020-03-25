@@ -16,16 +16,19 @@ exports.setup = (options, seedLink) => {
 
 exports.up = (db) => {
   db.createTable("fridges", {
-    fridge_id: {
-      type: "int",
-      unsigned: true,
-      length: 32,
-      primaryKey: true,
-      autoIncrement: true,
+    columns: {
+      fridge_id: {
+        type: "int",
+        unsigned: true,
+        length: 32,
+        primaryKey: true,
+        autoIncrement: true,
+      },
     },
-    ifNotExists:true
+    ifNotExists: true,
   });
 
+/*
   db.createTable("users", {
     user_id: {
       type: "int",
@@ -60,10 +63,9 @@ exports.up = (db) => {
       notNull: true,
       unique: true,
     },
-    ifNotExists:true
+    ifNotExists: true,
   });
 
-/*
   db.createTable("storables", {
     storable_id: {
       type: "int",
@@ -177,8 +179,6 @@ exports.up = (db) => {
       notNull: true,
     },
   });
-*/
-
 
   db.createTable("inventory", {
     inventory_id: {
@@ -202,7 +202,6 @@ exports.up = (db) => {
         mapping: "fridge_id",
       },
     },
-/*
     storable_id: {
       type: "int",
       unsigned: true,
@@ -218,7 +217,6 @@ exports.up = (db) => {
         mapping: "storables_id",
       },
     },
-*/
     purchase_date: {
       type: "timestamp",
       notNull: true,
@@ -239,16 +237,14 @@ exports.up = (db) => {
       notNull: true,
       defaultValue: "stored",
     },
-    ifNotExists:true
+    ifNotExists: true,
   });
-/*
   },
   (err) => {
     if (err) return callback(err);
     return callback();
   });
 
-  //NOT NEEDED FOR M2
   db.createTable("expiration", {
     inventory_id: {
       type: "int",
@@ -311,9 +307,9 @@ exports.up = (db) => {
 };
 
 exports.down = (db) => {
-  db.dropTable("inventory", callback);
+  //db.dropTable("inventory", callback);
   db.dropTable("fridges", callback);
-  db.dropTable("users", callback);
+  //db.dropTable("users", callback);
   // TODO: all tables
 };
 
