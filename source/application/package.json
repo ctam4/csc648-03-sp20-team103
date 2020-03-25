@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "start": "webpack --config webpack.js & node app.js"
+    "build-watch": "parcel watch ./public/* -d ./build/",
+    "start-watch": "nodemon --watch . app.js",
+    "build": "parcel build ./public/* -d ./build/",
+    "start": "node app.js"
   },
   "author": "Team 103",
   "license": "MIT",
@@ -14,9 +17,11 @@
     "create-react-class": "^15.6.3",
     "express": "^4.17.1",
     "handlebars": "^4.7.3",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
-    "webpack": "^4.41.6",
-    "webpack-cli": "^3.3.11"
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2",
+    "parcel-bundler": "^1.12.4"
   }
 }
