@@ -6,12 +6,16 @@ let connection;
 
 //fridges
 
-fridges.get('/:user_id', async (req, res) => {
+fridges.get('/', async (req, res) => {
+  if (Object.keys(req.query).length == 0) { // TODO: need to check contains either begin & limit
+    res.sendStatus(400).end();
+  }
   try {
     connection = await pool.getConnection();
-    await connection.query('select fridge_id from fridges where user_id =?', [req.query.user_id], function (error, results, fields) {
-      res.json(results.fridge_id);
-    });
+    await connection.query('select fridge_id from fridges')
+      .then((results) => {
+        res.json(results).end();
+      });
   } catch (error) {
     res.sendStatus(500).end();
     throw error;
@@ -25,9 +29,9 @@ fridges.get('/:user_id', async (req, res) => {
 fridges.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('INSERT INTO fridges SET ?', req.body, function (error, results, fields) {
-      if (error) throw error;
-      res.json(results);
+    await connection.query('INSERT INTO fridges SET ?', req.body)
+    .then((results) => {
+      res.json(results).end();
     });
   } catch (error) {
     res.sendStatus(500).end();
