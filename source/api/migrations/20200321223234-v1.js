@@ -23,6 +23,7 @@ exports.up = (db) => {
       primaryKey: true,
       autoIncrement: true,
     },
+    ifNotExists:true
   });
 
   db.createTable("users", {
@@ -59,6 +60,7 @@ exports.up = (db) => {
       notNull: true,
       unique: true,
     },
+    ifNotExists:true
   });
 
 /*
@@ -177,6 +179,7 @@ exports.up = (db) => {
   });
 */
 
+
   db.createTable("inventory", {
     inventory_id: {
       type: "int",
@@ -189,15 +192,15 @@ exports.up = (db) => {
       unsigned: true,
       length: 32,
       notNull: true,
-      // foreignKey: {
-      //   name: "fridge_id",
-      //   table: "fridges",
-      //   rules: {
-      //     onDelete: "CASCADE",
-      //     onUpdate: "RESTRICT",
-      //   },
-      //   mapping: "fridge_id",
-      // },
+      foreignKey: {
+        name: "fridge_id_inventory",
+        table: "fridges",
+        rules: {
+          onDelete: "CASCADE",
+          onUpdate: "RESTRICT",
+        },
+        mapping: "fridge_id",
+      },
     },
 /*
     storable_id: {
@@ -236,6 +239,7 @@ exports.up = (db) => {
       notNull: true,
       defaultValue: "stored",
     },
+    ifNotExists:true
   });
 /*
   },
