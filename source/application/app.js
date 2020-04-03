@@ -21,6 +21,7 @@ const staticOptions = {
 app.use(compression());
 
 app.use('/about-team', express.static('about-team'));
+app.use('/vertical-prototype', require('./routes/vertical-prototype.js'));
 app.use('/', require('./routes/index.js'));
 app.use(/^\/(.*)\.(?!html|htm)(.+)\/?(?=\/|$)/i, (req, res, next) => {
   req.url = path.basename(req.originalUrl);
