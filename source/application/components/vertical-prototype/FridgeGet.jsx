@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import CreateReactClass from 'create-react-class';
 
 let apiUrl = process.env.API_HOST || location.hostname;

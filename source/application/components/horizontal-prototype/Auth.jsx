@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 import CreateReactClass from 'create-react-class';
 import { connect } from 'react-redux';
 import LocalizedStrings from 'react-localization';
