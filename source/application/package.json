@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "build-watch": "parcel watch ./public/* -d ./build/",
+    "build-watch": "parcel watch ./public/*.html -d ./build/",
     "start-watch": "nodemon --watch . app.js",
-    "build": "parcel build ./public/* -d ./build/",
+    "build": "parcel build ./public/*.html -d ./build/",
     "start": "node app.js"
   },
   "author": "Team 103",
@@ -17,11 +17,15 @@
     "create-react-class": "^15.6.3",
     "express": "^4.17.1",
     "handlebars": "^4.7.3",
+    "parcel-bundler": "^1.12.4",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-dom": "^16.13.1",
+    "react-native-web": "^0.12.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2",
-    "parcel-bundler": "^1.12.4"
+    "nodemon": "^2.0.2"
+  },
+  "alias": {
+    "react-native": "react-native-web"
   }
 }
