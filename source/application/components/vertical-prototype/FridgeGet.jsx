@@ -1,12 +1,12 @@
 import React from 'react';
-import createReactClass from 'create-react-class';
+import CreateReactClass from 'create-react-class';
 
 let apiUrl = process.env.API_HOST || location.hostname;
 if (process.env.API_PORT) {
   apiUrl += ':' + process.env.API_PORT;
 }
 
-export default React.createElement(createReactClass({
+export default React.createElement(CreateReactClass({
   getInitialState: function() {
     return {
       msg: 'ready',

@@ -1,5 +1,5 @@
 import React from 'react';
-import createReactClass from 'create-react-class';
+import CreateReactClass from 'create-react-class';
 import LocalizedStrings from 'react-localization';
 import { StyleSheet, Text, View } from 'react-native';
 
@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   text: { fontWeight: 'bold' },
 });
 
-export default createReactClass({
+export default CreateReactClass({
   render: function() {
     return (
       <View style={styles.box}>
