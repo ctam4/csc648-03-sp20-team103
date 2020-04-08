@@ -19,6 +19,8 @@
     "mariadb": "^2.2.0"
   },
   "devDependencies": {
+    "ava": "^3.6.0",
+    "jest": "^25.3.0",
     "nodemon": "^2.0.2"
   }
 }
