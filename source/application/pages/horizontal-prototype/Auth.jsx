@@ -1,14 +1,14 @@
-import * as React from 'react';
-import CreateReactClass from 'create-react-class';
-import { connect } from 'react-redux';
-import LocalizedStrings from 'react-localization';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import * as React from "react";
+import CreateReactClass from "create-react-class";
+import { connect } from "react-redux";
+import LocalizedStrings from "react-localization";
+import { Button, StyleSheet, Text, View } from "react-native";
 
-import { login } from '../../actions/horizontal-prototype/auth';
+import { login } from "../../actions/horizontal-prototype/auth";
 
 let apiUrl = process.env.API_HOST || location.hostname;
 if (process.env.API_PORT) {
-  apiUrl += ':' + process.env.API_PORT;
+  apiUrl += ":" + process.env.API_PORT;
 }
 
 let strings = new LocalizedStrings({
@@ -19,7 +19,7 @@ let strings = new LocalizedStrings({
 });
 const styles = StyleSheet.create({
   box: { padding: 10 },
-  text: { fontWeight: 'bold' },
+  text: { fontWeight: "bold" },
 });
 const mapStateToProps = (state) => {
   return {
