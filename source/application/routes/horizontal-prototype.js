@@ -12,4 +12,13 @@ router.get('/', async (req, res) => {
   res.send(render);
 });
 
+router.get('/inventory', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_inventory.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: "Inventory - Horizontal prototype",
+  });
+  res.send(render);
+});
+
 module.exports = router;
