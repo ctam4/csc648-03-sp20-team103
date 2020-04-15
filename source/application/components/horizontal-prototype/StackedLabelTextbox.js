@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
     paddingTop: 16,
     fontSize: 12,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     textAlign: "left"
   },
   inputStyle: {
@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
     fontSize: 16,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     lineHeight: 16
   }
 });
