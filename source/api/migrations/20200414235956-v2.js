@@ -1,8 +1,10 @@
 'use strict';
+const async = require("async");
 
-var dbm;
-var type;
-var seed;
+let dbm;
+let type;
+let seed;
+
 /**
   * We receive the dbmigrate dependency from dbmigrate initially.
   * This enables us to not have to rely on NODE_PATH.
@@ -40,7 +42,7 @@ exports.up = (db, callback) => {
       },
       ifNotExists: true,
     }),
-
+    // db.dropTable("sessions", callback),
     // todo: index for fridge_id
     db.createTable.bind(db, "sessions", {
     columns: {
@@ -52,7 +54,7 @@ exports.up = (db, callback) => {
         type: "int",
         unsigned: true,
         foreignKey: {
-          name: "fridge_id",
+          name: "fridge_id_sessions",
           table: "fridges",
           notNull: true,
           rules: {
@@ -61,7 +63,6 @@ exports.up = (db, callback) => {
           },
           mapping: "fridge_id",
         },
-        
       },
       //to do: default current timestamp
       logged_in_ts: {
@@ -71,13 +72,14 @@ exports.up = (db, callback) => {
       expires_ts: {
         type: "timestamp",
         notNull: true,
-      }
+      },
     },
     ifNotExists: true,
     }),
     
-    db.createTable.bind("nutrition", {
-      nutrition_id: {
+    db.createTable.bind(db, "nutrition", {
+      columns: {
+        nutrition_id: {
         type: "int",
         unsigned: true,
         length: 32,
@@ -95,7 +97,7 @@ exports.up = (db, callback) => {
         notNull: true,
       },
       carbohydrates_unit: {
-        type: char,
+        type: "char",
         unsigned: true,
         notNull: true,
       },
@@ -118,10 +120,11 @@ exports.up = (db, callback) => {
         type: "smallint",
         notNull: true,
       },
+    },
       ifNotExists: true,
     }),
 
-    db.createTable.bind("ingredients", {
+    db.createTable.bind(db, "ingredients", {
       columns:{
         ingredient_id: {
           type: "int",
@@ -140,7 +143,7 @@ exports.up = (db, callback) => {
       }
     }),
     
-    db.createTable.bind("recipes", {
+    db.createTable.bind(db, "recipes", {
       columns: {
         recipe_id: {
           type: "int",
@@ -181,7 +184,7 @@ exports.up = (db, callback) => {
       ifNotExists: true,
     }),
 
-    db.createTable.bind("recipe_ingredients", {
+    db.createTable.bind(db, "recipe_ingredients", {
       columns: {
         recipe_id: {
           type: "int",
@@ -210,7 +213,7 @@ exports.up = (db, callback) => {
       },
       ifNotExists: true,
     }),
-    db.createTable.bind("inventory", {
+    db.createTable.bind(db, "inventory", {
       columns: {
         inventory_id: {
           type: "int",
@@ -293,6 +296,7 @@ exports.down = (db, callback) => {
   async.series([
     //db.dropTable("inventory", callback),
     db.dropTable("fridges", callback),
+    db.dropTable("sessions", callback),
     //db.dropTable("users", callback),
     // TODO: all tables
   ], callback);
