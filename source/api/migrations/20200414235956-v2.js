@@ -165,7 +165,8 @@ exports.up = (db, callback) => {
         notNull: true,
       },
       protein_unit: {
-        type: "smallint",
+        type: "string",
+        length: 8,
         notNull: true,
       },
     },
@@ -181,6 +182,7 @@ exports.up = (db, callback) => {
         },
         name: {
           type: "string",
+          length: 128,
           unique: true,
           notNull: true,
         },
@@ -202,7 +204,7 @@ exports.up = (db, callback) => {
         },
         name: {
           type: "string",
-          length: 64,
+          length: 128,
           notNull: true,
           unique: true,
         },
@@ -215,9 +217,9 @@ exports.up = (db, callback) => {
           defaultValue: null,
         },
         servings: {
-        type: "smallint",
-        unsigned: true,
-        notNull: true,
+          type: "smallint",
+          unsigned: true,
+          notNull: true,
         },
         cooking_time: {
           type: "smallint",
@@ -323,6 +325,7 @@ exports.up = (db, callback) => {
         },
         unit: {
           type: "string",
+          length: 16,
           notNull: true,
         },
         price: {
