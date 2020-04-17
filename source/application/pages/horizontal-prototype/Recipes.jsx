@@ -12,10 +12,15 @@ import AppHeader from "../../components/horizontal-prototype/AppHeader";
 import RecipeCard from "../../components/horizontal-prototype/RecipeCard";
 import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
 import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
+import AppFooter from "../../components/horizontal-prototype/AppFooter";
 
 let strings = new LocalizedStrings({
   en: {
+    inventory: "Inventory",
     recipes: "Recipes",
+    carts: "Carts",
+    consumption: "Consumption",
+    toast_created: "Recipe created.",
     recipeSearch: "RecipeSearch",
     recipeView: "RecipeView",
     recipeCreated: "RecipeCreated",
@@ -65,6 +70,10 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     position: "absolute"
+  },
+  materialBasicFooter1: {
+    width: 360,
+    height: 56
   }
 });
 
@@ -88,16 +97,23 @@ export default CreateReactClass({
                   style={styles.recipeCard}
                 ></RecipeCard>
                 <RecipeCard style={styles.recipeCard1}></RecipeCard>
-                <MaterialToast1
-                  text1={strings.recipeCreated}
-                  style={styles.materialToast1}
-                ></MaterialToast1>
-                <FloatingCreate
-                  button1={strings.recipesCreate}
-                  style={styles.materialButtonShare}
-                ></FloatingCreate>
               </ScrollView>
             </View>
+            <MaterialToast1
+              text1={strings.toast_created}
+              style={styles.materialToast1}
+            ></MaterialToast1>
+            <FloatingCreate
+              button1={strings.recipesCreate}
+              style={styles.materialButtonShare}
+            ></FloatingCreate>
+            <AppFooter
+              button1={strings.inventory}
+              button2={strings.recipes}
+              button3={strings.carts}
+              button4={strings.consumption}
+              style={styles.materialBasicFooter1}
+            ></AppFooter>
           </View>
           </PersistGate>
         </Provider>

@@ -12,9 +12,14 @@ import AppHeader from "../../components/horizontal-prototype/AppHeader";
 import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
 import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
 import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
+import AppFooter from "../../components/horizontal-prototype/AppFooter";
 
 let strings = new LocalizedStrings({
   en: {
+    inventory: "Inventory",
+    recipes: "Recipes",
+    carts: "Carts",
+    consumption: "Consumption",
     view_log: "View log",
     discard: "Discard",
     toast_added: "Item added to inventory.",
@@ -62,6 +67,10 @@ const styles = StyleSheet.create({
     height: 56,
     position: "absolute",
   },
+  materialBasicFooter1: {
+    width: 360,
+    height: 56
+  }
 });
 
 export default CreateReactClass({
@@ -89,13 +98,20 @@ export default CreateReactClass({
                 text4={strings.discard}
                 style={styles.materialCardWithImageAndTitle1}
               ></InventoryCard>
-              <MaterialToast1
-                text1={strings.toast_added}
-                style={styles.materialToast1}
-              ></MaterialToast1>
-              <FloatingCreate style={styles.floatingCreate}></FloatingCreate>
             </ScrollView>
           </View>
+          <MaterialToast1
+            text1={strings.toast_added}
+            style={styles.materialToast1}
+          ></MaterialToast1>
+          <FloatingCreate style={styles.floatingCreate}></FloatingCreate>
+          <AppFooter
+            button1={strings.inventory}
+            button2={strings.recipes}
+            button3={strings.carts}
+            button4={strings.consumption}
+            style={styles.materialBasicFooter1}
+          ></AppFooter>
         </View>
         </PersistGate>
       </Provider>
