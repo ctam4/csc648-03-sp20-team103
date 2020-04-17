@@ -85,13 +85,13 @@ const styles = StyleSheet.create({
     color: "#000",
     paddingBottom: 12,
     fontSize: 24,
-    fontFamily: "roboto-regular"
+    fontFamily: "Roboto"
   },
   subtitleStyle: {
     color: "#000",
     opacity: 0.5,
     fontSize: 14,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     lineHeight: 16
   },
   actionBody: {

@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
   },
   chooseCalories: {
     color: "#121212",
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     marginTop: 15,
     marginLeft: 15
   },
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
   },
   chooseServingSize: {
     color: "#121212",
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     marginTop: 20,
     marginLeft: 15
   },
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   },
   chooseFatSize: {
     color: "#121212",
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     marginTop: 20,
     marginLeft: 15
   },
@@ -181,7 +181,7 @@ const styles = StyleSheet.create({
   },
   chooseProteinSize: {
     color: "#121212",
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     marginTop: 20,
     marginLeft: 15
   },
@@ -206,7 +206,7 @@ const styles = StyleSheet.create({
   },
   chooseProtein2: {
     color: "#121212",
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     marginTop: 20,
     marginLeft: 15
   },

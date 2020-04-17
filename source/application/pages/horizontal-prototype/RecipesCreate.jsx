@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
     color: "#121212",
     alignSelf: "stretch",
     margin: 15,
-    fontFamily: "roboto-regular"
+    fontFamily: "Roboto"
   },
   materialFixedLabelTextbox: {
     height: 43,
@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     color: "#121212",
     alignSelf: "stretch",
     margin: 15,
-    fontFamily: "roboto-regular"
+    fontFamily: "Roboto"
   },
   floatingSave: {
     top: 613,

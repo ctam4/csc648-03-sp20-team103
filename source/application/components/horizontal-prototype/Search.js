@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     paddingRight: 5,
     fontSize: 16,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     lineHeight: 16
   },
   button: {

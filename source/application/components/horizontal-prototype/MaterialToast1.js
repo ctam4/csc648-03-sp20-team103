@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   text1: {
     color: "rgba(255,255,255,1)",
     fontSize: 14,
-    fontFamily: "roboto-regular"
+    fontFamily: "Roboto"
   }
 });
 
