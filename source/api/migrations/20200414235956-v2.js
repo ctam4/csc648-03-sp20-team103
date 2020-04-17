@@ -27,12 +27,12 @@ exports.up = (db, callback) => {
           autoIncrement: true,
         },
         serial_number: {
-          type: "char",
+          type: "string",
           unique: true,
           notNull: true,
         },
         pin: {
-          type: "char",
+          type: "string",
           notNull: true,
         },
         registered_ts: {
@@ -47,7 +47,7 @@ exports.up = (db, callback) => {
     db.createTable.bind(db, "sessions", {
     columns: {
       session: {
-        type: "char",
+        type: "string",
         primaryKey: true,
       },
       fridge_id: {
@@ -76,6 +76,49 @@ exports.up = (db, callback) => {
     },
     ifNotExists: true,
     }),
+
+    db.createTable.bind(db, "users", {
+      columns: {
+        user_id: {
+        type: "int",
+        unsigned: true,
+        autoIncrement: true,
+        length: 32,
+        primaryKey: true,
+      },
+      fridge_id: {
+        type: "int",
+        unsigned: true,
+        length: 32,
+        notNull: true,
+        foreignKey: {
+          name: "fridge_id_users",
+          table: "fridges",
+          rules: {
+            onDelete: "CASCADE",
+            onUpdate: "RESTRICT",
+          },
+          mapping: "fridge_id",
+        },
+      },
+      name: {
+        type: "string",
+        length: 64,
+        notNull: true,
+      },
+      role: {
+        type: "string",
+        length: 64,
+        notNull: true,
+        unique: true,
+      },
+      created_ts: {
+        type: "timestamp",
+        notNull: true,
+      }
+    },
+      ifNotExists: true,
+    }),
     
     db.createTable.bind(db, "nutrition", {
       columns: {
@@ -91,13 +134,18 @@ exports.up = (db, callback) => {
         notNull: true,
         unsigned: true,
       },
+      calories_unit: {
+        type: "string",
+        length: 8,
+        notNull: true,
+      },
       carbohydrates: {
         type: "smallint",
         unsigned: true,
         notNull: true,
       },
       carbohydrates_unit: {
-        type: "char",
+        type: "string",
         unsigned: true,
         notNull: true,
       },
@@ -132,7 +180,7 @@ exports.up = (db, callback) => {
           primaryKey:true,
         },
         name: {
-          type: "char",
+          type: "string",
           unique: true,
           notNull: true,
         },
@@ -153,7 +201,7 @@ exports.up = (db, callback) => {
           autoIncrement: true,
         },
         name: {
-          type: "char",
+          type: "string",
           length: 64,
           notNull: true,
           unique: true,
@@ -206,7 +254,7 @@ exports.up = (db, callback) => {
           notNull: true,
         },
         unit: {
-          type: "char",
+          type: "string",
           length: 8,
           notNull: true,
         },
@@ -274,7 +322,7 @@ exports.up = (db, callback) => {
           notNull: true,
         },
         unit: {
-          type: "char",
+          type: "string",
           notNull: true,
         },
         price: {
