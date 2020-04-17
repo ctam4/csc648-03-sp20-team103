@@ -1,40 +1,17 @@
-import React, { Component } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
-import AppHeader from "../components/horizontal-prototype/AppHeader";
-import RecipeCard from "../components/horizontal-prototype/RecipeCard";
-import MaterialToast1 from "../components/horizontal-prototype/MaterialToast1";
-import FloatingCreate from "../components/horizontal-prototype/FloatingCreate";
+import * as React from "react";
+import CreateReactClass from "create-react-class";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 
-function Recipes(props) {
-  return (
-    <View style={styles.container}>
-      <AppHeader
-        button2=strings.recipeSearch
-        text1=strings.recipes
-        style={styles.materialHeader1}
-      ></AppHeader>
-      <View style={styles.scrollArea}>
-        <ScrollView
-          contentContainerStyle={styles.scrollArea_contentContainerStyle}
-        >
-          <RecipeCard
-            button2=strings.recipeView
-            style={styles.recipeCard}
-          ></RecipeCard>
-          <RecipeCard style={styles.recipeCard1}></RecipeCard>
-          <MaterialToast1
-            text1=recipeCreated
-            style={styles.materialToast1}
-          ></MaterialToast1>
-          <FloatingCreate
-            button1=recipesCreate
-            style={styles.materialButtonShare}
-          ></FloatingCreate>
-        </ScrollView>
-      </View>
-    </View>
-  );
-}
+import { store, persistor } from "../../stores/horizontal-prototype/store";
+
+import { StyleSheet, View, ScrollView } from "react-native";
+import LocalizedStrings from "react-localization";
+
+import AppHeader from "../../components/horizontal-prototype/AppHeader";
+import RecipeCard from "../../components/horizontal-prototype/RecipeCard";
+import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
+import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
 
 let strings = new LocalizedStrings({
   en: {
@@ -45,7 +22,6 @@ let strings = new LocalizedStrings({
     recipesCreate: "RecipesCreate",
   },
 });
-
 const styles = StyleSheet.create({
   container: {
     flex: 1
@@ -92,4 +68,39 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Recipes;
+export default CreateReactClass({
+  render: function() {
+    return (
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <View style={styles.container}>
+            <AppHeader
+              button2={strings.recipeSearch}
+              text1={strings.recipes}
+              style={styles.materialHeader1}
+            ></AppHeader>
+            <View style={styles.scrollArea}>
+              <ScrollView
+                contentContainerStyle={styles.scrollArea_contentContainerStyle}
+              >
+                <RecipeCard
+                  button2={strings.recipeView}
+                  style={styles.recipeCard}
+                ></RecipeCard>
+                <RecipeCard style={styles.recipeCard1}></RecipeCard>
+                <MaterialToast1
+                  text1={strings.recipeCreated}
+                  style={styles.materialToast1}
+                ></MaterialToast1>
+                <FloatingCreate
+                  button1={strings.recipesCreate}
+                  style={styles.materialButtonShare}
+                ></FloatingCreate>
+              </ScrollView>
+            </View>
+          </View>
+          </PersistGate>
+        </Provider>
+    );
+  },
+});

@@ -1,35 +1,32 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
-import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
-import MaterialIconsIcon from "react-native-vector-icons/MaterialIcons";
+import { IconContext } from "react-icons";
+import { MdEdit, MdFavorite, MdHistory } from "react-icons/md";
 
 function RecipeCard(props) {
   return (
     <View style={[styles.container, props.style]}>
       <Image
-        source={require("../assets/images/cardImage.png")}
+        //source={require("../assets/images/cardImage.png")}
         style={styles.cardItemImagePlace}
       ></Image>
       <View style={styles.buttonGroup}>
         <TouchableOpacity style={styles.leftBtn}>
-          <MaterialCommunityIconsIcon
-            name="heart"
-            style={styles.icon1}
-          ></MaterialCommunityIconsIcon>
+          <IconContext.Provider value={{ style: iconStyles.icon1 }}>
+            <MdFavorite />
+          </IconContext.Provider>
         </TouchableOpacity>
         <TouchableOpacity /* Conditional navigation not supported at the moment */
           style={styles.centerBtn}
         >
-          <MaterialIconsIcon
-            name="edit"
-            style={styles.icon2}
-          ></MaterialIconsIcon>
+          <IconContext.Provider value={{ style: iconStyles.icon2 }}>
+            <MdEdit />
+          </IconContext.Provider>
         </TouchableOpacity>
         <TouchableOpacity style={styles.rightBtn}>
-          <MaterialIconsIcon
-            name="history"
-            style={styles.icon3}
-          ></MaterialIconsIcon>
+          <IconContext.Provider value={{ style: iconStyles.icon3 }}>
+            <MdHistory />
+          </IconContext.Provider>
         </TouchableOpacity>
       </View>
     </View>
@@ -68,27 +65,29 @@ const styles = StyleSheet.create({
   leftBtn: {
     padding: 8
   },
-  icon1: {
-    fontSize: 24,
-    color: "#000",
-    opacity: 0.5
-  },
   centerBtn: {
     padding: 8
   },
-  icon2: {
-    fontSize: 24,
-    color: "#000",
-    opacity: 0.5
-  },
   rightBtn: {
     padding: 8
-  },
-  icon3: {
-    fontSize: 24,
-    color: "#000",
-    opacity: 0.5
   }
 });
+const iconStyles = {
+  icon1: {
+    color: "#000",
+    fontSize: 24,
+    opacity: 0.5
+  },
+  icon2: {
+    color: "#000",
+    fontSize: 24,
+    opacity: 0.5
+  },
+  icon3: {
+    color: "#000",
+    fontSize: 24,
+    opacity: 0.5
+  }
+};
 
 export default RecipeCard;
