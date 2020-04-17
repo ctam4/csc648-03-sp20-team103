@@ -76,6 +76,44 @@ exports.up = (db, callback) => {
     },
     ifNotExists: true,
     }),
+
+    db.createTable.bind(db, "users", {
+      columns: {user_id: {
+        type: "int",
+        unsigned: true,
+        autoIncrement: true,
+        length: 32,
+        primaryKey: true,
+      },
+      fridge_id: {
+        type: "int",
+        unsigned: true,
+        length: 32,
+        notNull: true,
+        foreignKey: {
+          name: "fridge_id",
+          table: "fridges",
+          rules: {
+            onDelete: "CASCADE",
+            onUpdate: "RESTRICT",
+          },
+          mapping: "fridge_id",
+        },
+      },
+      name: {
+        type: "char",
+        length: 64,
+        notNull: true,
+      },
+      role: {
+        type: "char",
+        length: 64,
+        notNull: true,
+        unique: true,
+      },
+    },
+      ifNotExists: true,
+    }),
     
     db.createTable.bind(db, "nutrition", {
       columns: {
