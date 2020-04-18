@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
   stockUp: {
     color: "rgba(65,117,5,1)",
     fontSize: 60,
-    fontFamily: "roboto-100",
+    fontWeight: "100",
+    fontFamily: "Roboto",
     marginTop: 223,
     alignSelf: "center",
   },

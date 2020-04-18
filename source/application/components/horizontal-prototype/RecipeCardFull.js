@@ -139,7 +139,8 @@ const styles = StyleSheet.create({
   directions: {
     color: "#121212",
     marginBottom: 10,
-    fontFamily: "roboto-700"
+    fontWeight: "700",
+    fontFamily: "Roboto"
   },
   bodyText1: {
     color: "#424242",
