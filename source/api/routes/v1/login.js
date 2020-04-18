@@ -4,22 +4,20 @@ const login = express.Router();
 const pool = require('../../database.js');
 let connection;
 
-// login.post('/login/:serial_number&:pin', async (req, res) => {
+// login.post('/', async (req, res) => {
 //     try {
 //         connection = await pool.getConnection();
-//         await connection.query('INSERT INTO sessions (session) VALUES (?, ?)', req.params.serial_number, req.params.pin)
-//             .then((results) => {
-//                 res.status(500).send(json(results)).end()
-//                 // res.json(results).end();
-//             });
+//         const results = await connection.query('INSERT INTO v2_sessions (serial_number, pin) VALUES (?, ?  )', [req.body.serial_number, req.body.pin]);
+//         res.send(results).end()
 //     } catch (error) {
-//         res.sendStatus(500).end();
-//         throw error;
-//     } finally {
+//         res.sendStatus(401).end()
+//     }
+//     finally {
 //         if (connection) {
-//             connection.release(); // release to pool
+//             connection.release();
 //         }
 //     }
+
 // });
 
 //console.log('fridges.stack');

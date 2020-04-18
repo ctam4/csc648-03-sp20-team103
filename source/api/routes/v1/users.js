@@ -1,16 +1,16 @@
 const express = require('express');
 const users = express.Router();
 
-// const pool = require('../../database.js');
+const pool = require('../../database.js');
 let connection;
 
 //fridges
-users.get('/users', async (req, res) => {
+users.get('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT * FROM users')
+    await connection.query('SELECT * FROM v2_users')
       .then((results) => {
-        res.status(500).send(json(results)).end()
+        res.send(JSON.stringify(results)).end()
         // res.json(results).end();
       });
   } catch (error) {
@@ -23,12 +23,13 @@ users.get('/users', async (req, res) => {
   }
 });
 
-users.post('/users/:name', async (req, res) => {
+users.post('/:name/:fridge_id', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('INSERT INTO users (serial_number, pin) VALUES (?, ?)', req.params.serial_number, req.params.pin)
+    sql = 'INSERT INTO v2_users (name) VALUES (?) WHERE fridge_id=' + req.params.fridge_id
+    await connection.query(sql, [req.params.name])
       .then((results) => {
-        res.status(500).send(json(results)).end()
+        res.send(JSON.stringify(results)).end()
         // res.json(results).end();
       });
   } catch (error) {
@@ -41,7 +42,7 @@ users.post('/users/:name', async (req, res) => {
   }
 });
 
-users.delete('/users:/:name', async (req, res) => {
+users.delete('/:name', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('DELETE FROM users WHERE name=(?)', req.params.name)

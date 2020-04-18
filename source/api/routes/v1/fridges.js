@@ -26,22 +26,20 @@ let connection;
 //   }
 // });
 
-fridges.post('/fridge/:serial_number&:pin', async (req, res) => {
+fridges.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('INSERT INTO fridges (serial_number, pin) VALUES (?, ?)', req.params.serial_number, req.params.pin)
-    .then((results) => {
-      res.status(500).send(json(results)).end()
-      // res.json(results).end();
-    });
+    const results = await connection.query('INSERT INTO v2_fridges (serial_number, pin) VALUES (?, ?  )', [req.body.serial_number, req.body.pin]);
+    res.send(JSON.stringify(results)).end()
   } catch (error) {
-    res.sendStatus(500).end();
-    throw error;
-  } finally {
-    if (connection) {
-      connection.release(); // release to pool
+    res.sendStatus(401).end()
+  }
+  finally {
+    if(connection) {
+      connection.release();
     }
   }
+  
 });
 
 //console.log('fridges.stack');

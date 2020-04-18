@@ -77,7 +77,7 @@ exports.up = (db, callback) => {
     ifNotExists: true,
     }),
 
-    db.createTable.bind(db, "users", {
+    db.createTable.bind(db, "v2_users", {
       columns: {
         user_id: {
         type: "int",
