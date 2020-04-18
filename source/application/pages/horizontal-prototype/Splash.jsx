@@ -76,10 +76,12 @@ export default CreateReactClass({
             <MaterialButtonDark
               text1={strings.login}
               style={styles.materialButtonDark}
+              //onPress={() => alert('login')}
             ></MaterialButtonDark>
             <MaterialButtonWithVioletText
               text1={strings.register}
               style={styles.materialButtonWithVioletText}
+              //onPress={() => alert('login')}
             ></MaterialButtonWithVioletText>
           </View>
         </PersistGate>
