@@ -17,20 +17,21 @@ exports.setup = (options, seedLink) => {
 };
 
 exports.up = (db, callback) => {
-  async.series([
-    db.createTable.bind(db, "fridges", {
-      columns: {
-        fridge_id: {
-          type: "int",
-          unsigned: true,
-          length: 32,
-          primaryKey: true,
-          autoIncrement: true,
+  async.series(
+    [
+      db.createTable.bind(db, "fridges", {
+        columns: {
+          fridge_id: {
+            type: "int",
+            unsigned: true,
+            length: 32,
+            primaryKey: true,
+            autoIncrement: true,
+          },
         },
-      },
-      ifNotExists: true,
-    }),
-/*
+        ifNotExists: true,
+      }),
+      /*
     db.createTable("users", {
       user_id: {
         type: "int",
@@ -306,16 +307,21 @@ exports.up = (db, callback) => {
       },
     });
 */
-  ], callback);
+    ],
+    callback
+  );
 };
 
 exports.down = (db, callback) => {
-  async.series([
-    //db.dropTable("inventory", callback),
-    db.dropTable("fridges", callback),
-    //db.dropTable("users", callback),
-    // TODO: all tables
-  ], callback);
+  async.series(
+    [
+      //db.dropTable("inventory", callback),
+      db.dropTable("fridges", callback),
+      //db.dropTable("users", callback),
+      // TODO: all tables
+    ],
+    callback
+  );
 };
 
 exports._meta = {
