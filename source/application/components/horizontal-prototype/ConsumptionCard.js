@@ -79,14 +79,14 @@ const styles = StyleSheet.create({
   textStyle: {
     color: "#000",
     fontSize: 16,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     lineHeight: 20
   },
   noteTextStyle: {
     color: "#000",
     opacity: 0.5,
     fontSize: 14,
-    fontFamily: "roboto-regular",
+    fontFamily: "Roboto",
     lineHeight: 16
   },
   cardItemImagePlace: {
