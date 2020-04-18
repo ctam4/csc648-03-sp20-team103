@@ -55,7 +55,7 @@ exports.up = (db, callback) => {
         unsigned: true,
         foreignKey: {
           name: "fridge_id_sessions",
-          table: "fridges",
+          table: "v2_fridges",
           notNull: true,
           rules: {
             onDelete: "CASCADE",
@@ -93,7 +93,7 @@ exports.up = (db, callback) => {
         notNull: true,
         foreignKey: {
           name: "fridge_id_users",
-          table: "fridges",
+          table: "v2_fridges",
           rules: {
             onDelete: "CASCADE",
             onUpdate: "RESTRICT",
@@ -146,7 +146,6 @@ exports.up = (db, callback) => {
       },
       carbohydrates_unit: {
         type: "string",
-        unsigned: true,
         notNull: true,
       },
       fat: {
@@ -157,7 +156,6 @@ exports.up = (db, callback) => {
       fat_unit: {
         type: "string",
         length: 8,
-        unsigned: true,
         notNull: true,
       },
       protein: {
@@ -242,14 +240,14 @@ exports.up = (db, callback) => {
           unsigned: true,
           notNull: true,
           foreignKey: {
-            name: "item_id",
-            table: "items",
+            name: "ingredient_id_recipe",
+            table: "v2_ingredients",
             notNull: true,
             rules: {
               onDelete: "CASCADE",
               onUpdate: "RESTRICT",
             },
-            mapping: "item_id",
+            mapping: "ingredient_id",
           },
         },
         quantity: {
@@ -279,7 +277,7 @@ exports.up = (db, callback) => {
           notNull: true,
           foreignKey: {
             name: "fridge_id_inventory",
-            table: "fridges",
+            table: "v2_fridges",
             rules: {
               onDelete: "CASCADE",
               onUpdate: "RESTRICT",
@@ -292,33 +290,18 @@ exports.up = (db, callback) => {
           unsigned: true,
           notNull: true,
           foreignKey: {
-            name: "product_id",
-            table: "products",
+            name: "ingredient_id_inventory",
+            table: "v2_ingredients",
             rules: {
               onDelete: "CASCADE",
               onUpdate: "RESTRICT",
             },
-            mapping: "product_id",
+            mapping: "ingredient_id",
           },
         },
         expiration_date: {
           type: "timestamp",
           default: null,
-        },
-        storable_id: {
-          type: "int",
-          unsigned: true,
-          length: 32,
-          notNull: true,
-          foreignKey: {
-            name: "storable_id",
-            table: "storables",
-            rules: {
-              onDelete: "CASCADE",
-              onUpdate: "RESTRICT",
-            },
-            mapping: "storables_id",
-          },
         },
         quantity: {
           type: "real",
