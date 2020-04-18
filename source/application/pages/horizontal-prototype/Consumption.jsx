@@ -20,19 +20,19 @@ let strings = new LocalizedStrings({
 });
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   materialHeader1: {
     minWidth: 360,
     width: "100%",
     height: 56,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   scrollArea1: {
     minWidth: 360,
     width: "100%",
     height: 628,
-    backgroundColor: "rgba(230, 230, 230,1)"
+    backgroundColor: "rgba(230, 230, 230,1)",
   },
   scrollArea1_contentContainerStyle: {
     minWidth: 360,

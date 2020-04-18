@@ -25,7 +25,6 @@ let strings = new LocalizedStrings({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    height: "100%",
   },
   materialHeader1: {
     minWidth: 360,
@@ -71,7 +70,7 @@ const styles = StyleSheet.create({
     minWidth: 360,
     width: "100%",
     height: 56,
-  }
+  },
 });
 
 export default CreateReactClass({
