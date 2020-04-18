@@ -33,6 +33,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(230, 230, 230,1)"
   },
   scrollArea_contentContainerStyle: {
+    minWidth: 360,
+    width: "100%",
     flexDirection: "column"
   },
   materialCard6: {

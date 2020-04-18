@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
   scrollArea_contentContainerStyle: {
     minWidth: 360,
     width: "100%",
-    height: 3140,
     flexDirection: "row"
   },
   recipeCard: {

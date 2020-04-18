@@ -41,7 +41,6 @@ const styles = StyleSheet.create({
   scrollArea1_contentContainerStyle: {
     minWidth: 360,
     width: "100%",
-    height: 3140,
     flexDirection: "column",
   },
   materialCardWithImageAndTitle: {
