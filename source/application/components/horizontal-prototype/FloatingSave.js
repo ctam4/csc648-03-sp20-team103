@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, TouchableOpacity } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import { IconContext } from "react-icons";
+import { MdSave } from "react-icons/md";
 
 function FloatingSave(props) {
   return (
@@ -10,7 +11,9 @@ function FloatingSave(props) {
         props.style
       ]}
     >
-      <Icon name="save" style={styles.icon}></Icon>
+      <IconContext.Provider value={{ style: iconStyles.icon }}>
+        <MdSave />
+      </IconContext.Provider>
     </TouchableOpacity>
   );
 }
@@ -31,13 +34,13 @@ const styles = StyleSheet.create({
     shadowColor: "#111",
     shadowOpacity: 0.2,
     shadowRadius: 1.2
-  },
-  icon: {
-    color: "#fff",
-    fontFamily: "Roboto",
-    fontSize: 24,
-    alignSelf: "center"
   }
 });
+const iconStyles = {
+  icon: {
+    color: "#fff",
+    fontSize: 24
+  }
+};
 
 export default FloatingSave;

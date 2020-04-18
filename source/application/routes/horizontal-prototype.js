@@ -40,4 +40,13 @@ router.get('/recipes/view', async (req, res) => {
   res.send(render);
 });
 
+router.get('/recipes/create', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_recipes-create.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: "Create - Recipes - Horizontal prototype",
+  });
+  res.send(render);
+});
+
 module.exports = router;
