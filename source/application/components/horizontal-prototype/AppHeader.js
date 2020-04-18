@@ -25,12 +25,12 @@ function AppHeader(props) {
           onPress={props.onPressRight1}
         >
           <IconContext.Provider value={{ style: iconStyles.rightIcon1 }}>
-            <MdSearch />
+            {props.rightIcon1 || <MdSearch />}
           </IconContext.Provider>
         </TouchableOpacity>
         <TouchableOpacity style={styles.iconButton2} onPress={props.onPressRight2}>
           <IconContext.Provider value={{ style: iconStyles.rightIcon2 }}>
-            <MdMoreVert />
+            {props.rightIcon2 || <MdMoreVert />}
           </IconContext.Provider>
         </TouchableOpacity>
       </View>

@@ -12,7 +12,7 @@ function FloatingSave(props) {
       ]}
     >
       <IconContext.Provider value={{ style: iconStyles.icon }}>
-        <MdSave />
+        {props.icon || <MdSave />}
       </IconContext.Provider>
     </TouchableOpacity>
   );

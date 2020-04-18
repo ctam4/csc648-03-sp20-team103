@@ -11,7 +11,7 @@ function DialogHeader(props) {
           style={styles.leftIconButton}
         >
           <IconContext.Provider value={{ style: iconStyles.leftIcon2 }}>
-            <MdClose />
+            {props.leftIcon || <MdClose />}
           </IconContext.Provider>
         </TouchableOpacity>
         <View style={styles.textWrapper}></View>
@@ -19,7 +19,7 @@ function DialogHeader(props) {
       <View style={styles.leftIconButtonRowFiller}></View>
       <TouchableOpacity style={styles.rightIconButton}>
         <IconContext.Provider value={{ style: iconStyles.rightIcon2 }}>
-          <MdMoreVert />
+          {props.rightIcon || <MdMoreVert />}
         </IconContext.Provider>
       </TouchableOpacity>
     </View>

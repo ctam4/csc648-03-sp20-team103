@@ -12,7 +12,7 @@ function FloatingCreate(props) {
       ]}
     >
       <IconContext.Provider value={{ style: iconStyles.icon }}>
-        <MdAdd />
+        {props.icon || <MdAdd />}
       </IconContext.Provider>
     </TouchableOpacity>
   );
