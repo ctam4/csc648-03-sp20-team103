@@ -11,19 +11,20 @@ function RecipeCard(props) {
         style={styles.cardItemImagePlace}
       ></Image>
       <View style={styles.buttonGroup}>
-        <TouchableOpacity style={styles.leftBtn}>
+        <TouchableOpacity style={styles.leftBtn} onPress={props.onPressLeft}>
           <IconContext.Provider value={{ style: iconStyles.icon1 }}>
             <MdFavorite />
           </IconContext.Provider>
         </TouchableOpacity>
         <TouchableOpacity /* Conditional navigation not supported at the moment */
           style={styles.centerBtn}
+          onPress={props.onPressCenter}
         >
           <IconContext.Provider value={{ style: iconStyles.icon2 }}>
             <MdEdit />
           </IconContext.Provider>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.rightBtn}>
+        <TouchableOpacity style={styles.rightBtn} onPress={props.onPressRight}>
           <IconContext.Provider value={{ style: iconStyles.icon3 }}>
             <MdHistory />
           </IconContext.Provider>

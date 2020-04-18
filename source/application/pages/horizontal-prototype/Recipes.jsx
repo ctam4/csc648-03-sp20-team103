@@ -80,7 +80,6 @@ export default CreateReactClass({
         <PersistGate loading={null} persistor={persistor}>
           <View style={styles.container}>
             <AppHeader
-              button2={strings.recipeSearch}
               text1={strings.recipes}
               style={styles.materialHeader1}
             ></AppHeader>
@@ -89,10 +88,17 @@ export default CreateReactClass({
                 contentContainerStyle={styles.scrollArea_contentContainerStyle}
               >
                 <RecipeCard
-                  button2={strings.recipeView}
+                  //onPressLeft={() => {}}
+                  //onPressCenter={() => {}}
+                  //onPressRight={() => {}}
                   style={styles.recipeCard}
                 ></RecipeCard>
-                <RecipeCard style={styles.recipeCard}></RecipeCard>
+                <RecipeCard
+                  //onPressLeft={() => {}}
+                  //onPressCenter={() => {}}
+                  //onPressRight={() => {}}
+                  style={styles.recipeCard}
+                ></RecipeCard>
               </ScrollView>
             </View>
             <MaterialToast1
@@ -100,7 +106,6 @@ export default CreateReactClass({
               style={styles.materialToast1}
             ></MaterialToast1>
             <FloatingCreate
-              button1={strings.recipesCreate}
               style={styles.materialButtonShare}
             ></FloatingCreate>
             <AppFooter style={styles.materialBasicFooter1}></AppFooter>

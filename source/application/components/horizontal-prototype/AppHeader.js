@@ -7,7 +7,7 @@ function AppHeader(props) {
   return (
     <View style={[styles.container, props.style]}>
       <View style={styles.leftIconButtonRow}>
-        <TouchableOpacity style={styles.leftIconButton}>
+        <TouchableOpacity style={styles.leftIconButton} onPress={props.onPressLeft}>
           <IconContext.Provider value={{ style: iconStyles.leftIcon2 }}>
             <MdMenu />
           </IconContext.Provider>
@@ -22,12 +22,13 @@ function AppHeader(props) {
       <View style={styles.rightIconsWrapper}>
         <TouchableOpacity /* Conditional navigation not supported at the moment */
           style={styles.iconButton}
+          onPress={props.onPressRight1}
         >
           <IconContext.Provider value={{ style: iconStyles.rightIcon1 }}>
             <MdSearch />
           </IconContext.Provider>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton2}>
+        <TouchableOpacity style={styles.iconButton2} onPress={props.onPressRight2}>
           <IconContext.Provider value={{ style: iconStyles.rightIcon2 }}>
             <MdMoreVert />
           </IconContext.Provider>

@@ -81,7 +81,10 @@ export default CreateReactClass({
       <Provider store={store}>
         <PersistGate loading={null} persistor={persistor}>
         <View style={styles.container}>
-          <AppHeader text1="Inventory" style={styles.materialHeader1}></AppHeader>
+          <AppHeader
+            text1={strings.inventory}
+            style={styles.materialHeader1}
+          ></AppHeader>
           <View style={styles.scrollArea1}>
             <ScrollView
               contentContainerStyle={styles.scrollArea1_contentContainerStyle}
@@ -91,6 +94,8 @@ export default CreateReactClass({
                 text2="2 ct by user 1 \n stored 10 days ago \n expiring in 2 days"
                 text3={strings.view_log}
                 text4={strings.discard}
+                onPressAction1={() => { window.location.href = '/horizontal-prototype/inventory/view' }}
+                //onPressAction2={() => { }}
                 style={styles.materialCardWithImageAndTitle}
               ></InventoryCard>
               <InventoryCard
@@ -98,6 +103,8 @@ export default CreateReactClass({
                 text2="1 gal by user 1 \n stored 1 day ago \n expiring in 21 days"
                 text3={strings.view_log}
                 text4={strings.discard}
+                onPressAction1={() => { window.location.href = '/horizontal-prototype/inventory/view' }}
+                //onPressAction2={() => { }}
                 style={styles.materialCardWithImageAndTitle1}
               ></InventoryCard>
             </ScrollView>
