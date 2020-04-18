@@ -9,6 +9,7 @@ function DialogHeader(props) {
       <View style={styles.leftIconButtonRow}>
         <TouchableOpacity /* Conditional navigation not supported at the moment */
           style={styles.leftIconButton}
+          onPress={props.onPressLeft}
         >
           <IconContext.Provider value={{ style: iconStyles.leftIcon2 }}>
             {props.leftIcon || <MdClose />}
@@ -17,7 +18,7 @@ function DialogHeader(props) {
         <View style={styles.textWrapper}></View>
       </View>
       <View style={styles.leftIconButtonRowFiller}></View>
-      <TouchableOpacity style={styles.rightIconButton}>
+      <TouchableOpacity style={styles.rightIconButton} onPress={props.onPressRight}>
         <IconContext.Provider value={{ style: iconStyles.rightIcon2 }}>
           {props.rightIcon || <MdMoreVert />}
         </IconContext.Provider>

@@ -7,7 +7,7 @@ function Search(props) {
     <View style={[styles.container, props.style]}>
       <View style={styles.rect1}>
         <TouchableOpacity
-          onPress={() => console.log("Navigate to Go Back")}
+          onPress={props.onPressLeft}
           style={styles.leftIconButton}
         >
           <MaterialCommunityIconsIcon
@@ -24,7 +24,7 @@ function Search(props) {
             dataDetector="all"
             style={styles.inputStyle}
           ></TextInput>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={props.onPressRight}>
             <MaterialCommunityIconsIcon
               name="close"
               style={styles.rightIcon2}

@@ -10,6 +10,7 @@ function FloatingSave(props) {
         styles.container,
         props.style
       ]}
+      onPress={props.onPress}
     >
       <IconContext.Provider value={{ style: iconStyles.icon }}>
         {props.icon || <MdSave />}

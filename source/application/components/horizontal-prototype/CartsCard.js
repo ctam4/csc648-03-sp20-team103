@@ -19,10 +19,10 @@ function CartsCard(props) {
         </Text>
       </View>
       <View style={styles.actionBody}>
-        <TouchableOpacity style={styles.actionButton1}>
+        <TouchableOpacity style={styles.actionButton1} onPress={props.onPressAction1}>
           <Text style={styles.actionText1}>{props.text4 || "ACTION 1"}</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton2}>
+        <TouchableOpacity style={styles.actionButton2} onPress={props.onPressAction2}>
           <Text style={styles.actionText2}>{props.text5 || "ACTION 2"}</Text>
         </TouchableOpacity>
       </View>
