@@ -17,9 +17,6 @@ import AppFooter from "../../components/horizontal-prototype/AppFooter";
 let strings = new LocalizedStrings({
   en: {
     inventory: "Inventory",
-    recipes: "Recipes",
-    carts: "Carts",
-    consumption: "Consumption",
     view_log: "View log",
     discard: "Discard",
     toast_added: "Item added to inventory.",
@@ -105,13 +102,7 @@ export default CreateReactClass({
             style={styles.materialToast1}
           ></MaterialToast1>
           <FloatingCreate style={styles.floatingCreate}></FloatingCreate>
-          <AppFooter
-            button1={strings.inventory}
-            button2={strings.recipes}
-            button3={strings.carts}
-            button4={strings.consumption}
-            style={styles.materialBasicFooter1}
-          ></AppFooter>
+          <AppFooter style={styles.materialBasicFooter1}></AppFooter>
         </View>
         </PersistGate>
       </Provider>

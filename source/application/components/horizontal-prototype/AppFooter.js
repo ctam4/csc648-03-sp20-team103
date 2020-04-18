@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
+import LocalizedStrings from "react-localization";
 import { IconContext } from "react-icons";
 import { MdPieChart, MdReceipt, MdShoppingCart, MdStorage } from "react-icons/md";
 
@@ -12,7 +13,7 @@ function AppFooter(props) {
         <IconContext.Provider value={{ style: iconStyles.icon1 }}>
           <MdStorage />
         </IconContext.Provider>
-        <Text style={styles.btn1Text}>Inventory</Text>
+        <Text style={styles.btn1Text}>{strings.inventory}</Text>
       </TouchableOpacity>
       <TouchableOpacity /* Conditional navigation not supported at the moment */
         style={styles.btnWrapper4}
@@ -28,20 +29,29 @@ function AppFooter(props) {
         <IconContext.Provider value={{ style: iconStyles.icon23 }}>
           <MdShoppingCart />
         </IconContext.Provider>
-        <Text style={styles.btn2Text3}>Carts</Text>
+        <Text style={styles.btn2Text3}>{strings.carts}</Text>
       </TouchableOpacity>
       <TouchableOpacity /* Conditional navigation not supported at the moment */
         style={styles.btnWrapper3}
+        onPress={() => window.location.href = '/horizontal-prototype/consumption'}
       >
         <IconContext.Provider value={{ style: iconStyles.icon3 }}>
           <MdPieChart />
         </IconContext.Provider>
-        <Text style={styles.btn3Text}>Consumption</Text>
+        <Text style={styles.btn3Text}>{strings.consumption}</Text>
       </TouchableOpacity>
     </View>
   );
 }
 
+let strings = new LocalizedStrings({
+  en: {
+    inventory: "Inventory",
+    recipes: "Recipes",
+    carts: "Carts",
+    consumption: "Consumption",
+  },
+});
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "rgba(65,117,5,1)",
