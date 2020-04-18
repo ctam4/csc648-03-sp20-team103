@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import LocalizedStrings from "react-localization";
 import { Button, StyleSheet, Text, View } from "react-native";
 
-import { login } from "../../actions/horizontal-prototype/auth";
+import { login } from "../../actions/product-prototype/auth";
 
 let apiUrl = process.env.API_HOST || location.hostname;
 if (process.env.API_PORT) {
