@@ -9,6 +9,7 @@ function AppFooter(props) {
     <View style={[styles.container, props.style]}>
       <TouchableOpacity /* Conditional navigation not supported at the moment */
         style={styles.btnWrapper1}
+        onPress={() => window.location.href = '/horizontal-prototype/inventory'}
       >
         <IconContext.Provider value={{ style: iconStyles.icon1 }}>
           <MdStorage />
@@ -17,14 +18,16 @@ function AppFooter(props) {
       </TouchableOpacity>
       <TouchableOpacity /* Conditional navigation not supported at the moment */
         style={styles.btnWrapper4}
+        onPress={() => window.location.href = '/horizontal-prototype/recipes'}
       >
         <IconContext.Provider value={{ style: iconStyles.icon22 }}>
           <MdReceipt />
         </IconContext.Provider>
-        <Text style={styles.btn2Text2}>Recipes</Text>
+        <Text style={styles.btn2Text2}>{strings.recipes}</Text>
       </TouchableOpacity>
       <TouchableOpacity /* Conditional navigation not supported at the moment */
         style={styles.btnWrapper2}
+        onPress={() => window.location.href = '/horizontal-prototype/carts'}
       >
         <IconContext.Provider value={{ style: iconStyles.icon23 }}>
           <MdShoppingCart />
