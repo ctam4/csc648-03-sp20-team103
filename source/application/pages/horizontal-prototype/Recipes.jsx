@@ -29,47 +29,46 @@ const styles = StyleSheet.create({
     flex: 1
   },
   materialHeader1: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 56
   },
   scrollArea: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 628,
     backgroundColor: "rgba(230, 230, 230,1)"
   },
   scrollArea_contentContainerStyle: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 3140,
     flexDirection: "row"
   },
   recipeCard: {
-    width: 160,
+    minWidth: 160,
+    width: "50%",
     height: 236,
     margin: 15,
-    marginRight: 5
-  },
-  recipeCard1: {
-    width: 160,
-    height: 236,
-    margin: 15,
-    marginLeft: 5
   },
   materialToast1: {
-    top: 499,
+    bottom: 132,
     left: 15,
-    width: 326,
+    minWidth: 330,
+    width: "100%" - 30,
     height: 48,
-    position: "absolute"
+    position: "absolute",
   },
   materialButtonShare: {
-    top: 557,
-    left: 285,
+    bottom: 61,
+    right: 15,
     width: 56,
     height: 56,
     position: "absolute"
   },
   materialBasicFooter1: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 56
   }
 });
@@ -93,7 +92,7 @@ export default CreateReactClass({
                   button2={strings.recipeView}
                   style={styles.recipeCard}
                 ></RecipeCard>
-                <RecipeCard style={styles.recipeCard1}></RecipeCard>
+                <RecipeCard style={styles.recipeCard}></RecipeCard>
               </ScrollView>
             </View>
             <MaterialToast1

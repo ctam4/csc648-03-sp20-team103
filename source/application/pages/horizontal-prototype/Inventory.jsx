@@ -25,48 +25,53 @@ let strings = new LocalizedStrings({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    height: "100%",
   },
   materialHeader1: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 56,
   },
   scrollArea1: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 628,
     backgroundColor: "rgba(230, 230, 230,1)",
   },
   scrollArea1_contentContainerStyle: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 3140,
     flexDirection: "column",
   },
   materialCardWithImageAndTitle: {
-    width: 330,
+    minWidth: 330,
     height: 166,
     margin: 15,
   },
   materialCardWithImageAndTitle1: {
-    width: 330,
+    minWidth: 330,
     height: 166,
     margin: 15,
   },
   materialToast1: {
-    top: 499,
+    bottom: 132,
     left: 15,
-    width: 326,
+    minWidth: 330,
     height: 48,
     position: "absolute",
   },
   floatingCreate: {
-    top: 557,
-    left: 285,
+    bottom: 61,
+    right: 15,
     width: 56,
     height: 56,
     position: "absolute",
   },
   materialBasicFooter1: {
-    width: 360,
-    height: 56
+    minWidth: 360,
+    width: "100%",
+    height: 56,
   }
 });
 

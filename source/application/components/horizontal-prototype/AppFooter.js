@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 6,
     minWidth: 80,
-    maxWidth: 168,
     paddingHorizontal: 12
   },
   btn1Text: {
@@ -91,7 +90,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 6,
     minWidth: 80,
-    maxWidth: 168,
     paddingHorizontal: 12
   },
   btn2Text2: {
@@ -106,7 +104,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 6,
     minWidth: 80,
-    maxWidth: 168,
     paddingHorizontal: 12
   },
   btn2Text3: {
@@ -121,7 +118,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 6,
     minWidth: 80,
-    maxWidth: 168,
     paddingHorizontal: 12
   },
   btn3Text: {
