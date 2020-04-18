@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import MaterialIconsIcon from "react-native-vector-icons/MaterialIcons";
-import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import { IconContext } from "react-icons";
+import { MdClose, MdMoreVert } from "react-icons/md";
 
 function DialogHeader(props) {
   return (
@@ -10,19 +10,17 @@ function DialogHeader(props) {
         <TouchableOpacity /* Conditional navigation not supported at the moment */
           style={styles.leftIconButton}
         >
-          <MaterialIconsIcon
-            name="close"
-            style={styles.leftIcon2}
-          ></MaterialIconsIcon>
+          <IconContext.Provider value={{ style: iconStyles.leftIcon2 }}>
+            <MdClose />
+          </IconContext.Provider>
         </TouchableOpacity>
         <View style={styles.textWrapper}></View>
       </View>
       <View style={styles.leftIconButtonRowFiller}></View>
       <TouchableOpacity style={styles.rightIconButton}>
-        <MaterialCommunityIconsIcon
-          name="dots-vertical"
-          style={styles.rightIcon2}
-        ></MaterialCommunityIconsIcon>
+        <IconContext.Provider value={{ style: iconStyles.rightIcon2 }}>
+          <MdMoreVert />
+        </IconContext.Provider>
       </TouchableOpacity>
     </View>
   );
@@ -47,12 +45,6 @@ const styles = StyleSheet.create({
   leftIconButton: {
     padding: 11
   },
-  leftIcon2: {
-    backgroundColor: "transparent",
-    color: "#FFFFFF",
-    fontFamily: "Roboto",
-    fontSize: 24
-  },
   textWrapper: {
     alignSelf: "flex-end",
     marginLeft: 21,
@@ -73,13 +65,17 @@ const styles = StyleSheet.create({
     padding: 11,
     marginRight: 5,
     marginTop: 5
-  },
-  rightIcon2: {
-    backgroundColor: "transparent",
-    color: "#FFFFFF",
-    fontFamily: "Roboto",
-    fontSize: 24
   }
 });
+const iconStyles = {
+  leftIcon2: {
+    color: "#FFFFFF",
+    fontSize: 24
+  },
+  rightIcon2: {
+    color: "#FFFFFF",
+    fontSize: 24
+  }
+};
 
 export default DialogHeader;

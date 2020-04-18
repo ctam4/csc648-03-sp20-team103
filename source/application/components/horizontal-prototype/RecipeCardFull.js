@@ -7,13 +7,14 @@ import {
   TouchableOpacity,
   ScrollView
 } from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { IconContext } from "react-icons";
+import { MdExpandLess } from "react-icons/md";
 
 function RecipeCardFull(props) {
   return (
     <View style={[styles.container, props.style]}>
       <Image
-        source={require("../assets/images/cardImage1.png")}
+        //source={require("../assets/images/cardImage1.png")}
         style={styles.cardItemImagePlace}
       ></Image>
       <View style={styles.bodyContent}>
@@ -32,7 +33,9 @@ function RecipeCardFull(props) {
           <Text style={styles.actionText2}>{props.text4 || "ACTION 2"}</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.actionButton3}>
-          <Icon name="chevron-up" style={styles.iconStyle}></Icon>
+          <IconContext.Provider value={{ style: iconStyles.iconStyle }}>
+            <MdExpandLess />
+          </IconContext.Provider>
         </TouchableOpacity>
       </View>
       <View style={styles.scrollArea}>
@@ -123,11 +126,6 @@ const styles = StyleSheet.create({
     bottom: 12,
     padding: 8
   },
-  iconStyle: {
-    fontSize: 24,
-    color: "#000",
-    opacity: 0.7
-  },
   scrollArea: {
     padding: 16,
     paddingTop: 8
@@ -148,5 +146,12 @@ const styles = StyleSheet.create({
     lineHeight: 20
   }
 });
+const iconStyles = {
+  iconStyle: {
+    color: "#000",
+    fontSize: 24,
+    opacity: 0.7
+  }
+};
 
 export default RecipeCardFull;
