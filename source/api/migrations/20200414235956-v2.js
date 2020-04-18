@@ -17,7 +17,7 @@ exports.setup = function(options, seedLink) {
 
 exports.up = (db, callback) => {
   async.series([
-      db.createTable.bind(db, "fridges", {
+      db.createTable.bind(db, "v2_fridges", {
       columns: {
         fridge_id: {
           type: "int",
@@ -44,7 +44,7 @@ exports.up = (db, callback) => {
     }),
     // db.dropTable("sessions", callback),
     // todo: index for fridge_id
-    db.createTable.bind(db, "sessions", {
+    db.createTable.bind(db, "v2_sessions", {
     columns: {
       session: {
         type: "string",
@@ -77,7 +77,7 @@ exports.up = (db, callback) => {
     ifNotExists: true,
     }),
 
-    db.createTable.bind(db, "users", {
+    db.createTable.bind(db, "v2_users", {
       columns: {
         user_id: {
         type: "int",
@@ -120,7 +120,7 @@ exports.up = (db, callback) => {
       ifNotExists: true,
     }),
     
-    db.createTable.bind(db, "nutrition", {
+    db.createTable.bind(db, "v2_nutrition", {
       columns: {
         nutrition_id: {
         type: "int",
@@ -155,7 +155,8 @@ exports.up = (db, callback) => {
         notNull: true,
       },
       fat_unit: {
-        type: "smallint",
+        type: "string",
+        length: 8,
         unsigned: true,
         notNull: true,
       },
@@ -173,7 +174,7 @@ exports.up = (db, callback) => {
       ifNotExists: true,
     }),
 
-    db.createTable.bind(db, "ingredients", {
+    db.createTable.bind(db, "v2_ingredients", {
       columns:{
         ingredient_id: {
           type: "int",
@@ -193,7 +194,7 @@ exports.up = (db, callback) => {
       }
     }),
     
-    db.createTable.bind(db, "recipes", {
+    db.createTable.bind(db, "v2_recipes", {
       columns: {
         recipe_id: {
           type: "int",
@@ -234,7 +235,7 @@ exports.up = (db, callback) => {
       ifNotExists: true,
     }),
 
-    db.createTable.bind(db, "recipe_ingredients", {
+    db.createTable.bind(db, "v2_recipe_ingredients", {
       columns: {
         recipe_id: {
           type: "int",
@@ -263,7 +264,7 @@ exports.up = (db, callback) => {
       },
       ifNotExists: true,
     }),
-    db.createTable.bind(db, "inventory", {
+    db.createTable.bind(db, "v2_inventory", {
       columns: {
         inventory_id: {
           type: "int",
@@ -346,8 +347,16 @@ exports.up = (db, callback) => {
 exports.down = (db, callback) => {
   async.series([
     //db.dropTable("inventory", callback),
-    db.dropTable("fridges", callback),
-    db.dropTable("sessions", callback),
+    db.dropTable("v2_fridges", callback),
+    db.dropTable("v2_sessions", callback),
+    db.dropTable("v2_users", callback),
+    db.dropTable("v2_nutrition", callback),
+    db.dropTable("v2_recipe_ingredients", callback),
+    db.dropTable("v2_inventory", callback),
+    db.dropTable("v2_recipes", callback),
+
+
+
     //db.dropTable("users", callback),
     // TODO: all tables
   ], callback);
