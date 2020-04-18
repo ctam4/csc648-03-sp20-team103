@@ -10,6 +10,7 @@ import LocalizedStrings from "react-localization";
 
 import AppHeader from "../../components/horizontal-prototype/AppHeader";
 import ConsumptionCard from "../../components/horizontal-prototype/ConsumptionCard";
+import AppFooter from "../../components/horizontal-prototype/AppFooter";
 
 let strings = new LocalizedStrings({
   en: {
@@ -43,6 +44,11 @@ const styles = StyleSheet.create({
     height: 420,
     margin: 15,
   },
+  materialBasicFooter1: {
+    minWidth: 360,
+    width: "100%",
+    height: 56,
+  },
 });
 
 export default CreateReactClass({
@@ -68,6 +74,7 @@ export default CreateReactClass({
               ></ConsumptionCard>
             </ScrollView>
           </View>
+          <AppFooter style={styles.materialBasicFooter1}></AppFooter>
         </View>
         </PersistGate>
       </Provider>

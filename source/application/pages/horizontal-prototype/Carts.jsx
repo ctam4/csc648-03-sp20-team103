@@ -10,6 +10,7 @@ import LocalizedStrings from "react-localization";
 
 import AppHeader from "../../components/horizontal-prototype/AppHeader";
 import CartsCard from "../../components/horizontal-prototype/CartsCard";
+import AppFooter from "../../components/horizontal-prototype/AppFooter";
 
 let strings = new LocalizedStrings({
   en: {
@@ -45,7 +46,12 @@ const styles = StyleSheet.create({
     minWidth: 330,
     height: 200,
     margin: 15
-  }
+  },
+  materialBasicFooter1: {
+    minWidth: 360,
+    width: "100%",
+    height: 56,
+  },
 });
 
 export default CreateReactClass({
@@ -73,6 +79,7 @@ export default CreateReactClass({
                 ></CartsCard>
               </ScrollView>
             </View>
+            <AppFooter style={styles.materialBasicFooter1}></AppFooter>
           </View>
         </PersistGate>
       </Provider>
