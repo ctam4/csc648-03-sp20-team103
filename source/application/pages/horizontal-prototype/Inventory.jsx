@@ -6,6 +6,7 @@ import { PersistGate } from "redux-persist/integration/react";
 import { store, persistor } from "../../stores/horizontal-prototype/store";
 
 import { StyleSheet, View, ScrollView } from "react-native";
+import { MdFilterList } from "react-icons/md";
 import LocalizedStrings from "react-localization";
 
 import AppHeader from "../../components/horizontal-prototype/AppHeader";
@@ -81,6 +82,7 @@ export default CreateReactClass({
         <View style={styles.container}>
           <AppHeader
             text1={strings.inventory}
+            rightIcon2={<MdFilterList />}
             style={styles.materialHeader1}
           ></AppHeader>
           <View style={styles.scrollArea1}>
