@@ -6,18 +6,23 @@
     "build-watch": "parcel watch ./public/* -d ./build/",
     "start-watch": "nodemon --watch . app.js",
     "build": "parcel build ./public/* -d ./build/",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "ava",
+    "test-watch": "ava --watch"
   },
   "author": "Team 103",
   "license": "MIT",
   "keywords": [],
   "description": "",
   "dependencies": {
+    "ava": "^3.6.0",
     "compression": "^1.7.4",
     "create-react-class": "^15.6.3",
+    "enzyme": "^3.11.0",
     "express": "^4.17.1",
     "handlebars": "^4.7.3",
     "react": "^16.13.1",
+    "react-addons-test-utils": "^15.6.2",
     "react-dom": "^16.13.1"
   },
   "devDependencies": {
