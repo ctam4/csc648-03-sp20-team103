@@ -16,8 +16,8 @@ let strings = new LocalizedStrings({
   en: {
     login: "Login",
     register: "Register",
-    sn: "Serial Number",
-    username: "Username",
+    sn: "Serial number",
+    pin: "PIN",
   },
 });
 const styles = StyleSheet.create({
@@ -66,12 +66,12 @@ export default CreateReactClass({
             <Text style={styles.stockUp}>STOCK UP</Text>
             <StackedLabelTextbox
               text1={strings.sn}
-              textInput1=""
+              textInput1={strings.sn}
               style={styles.stackedLabelTextbox}
             ></StackedLabelTextbox>
             <StackedLabelTextbox
-              text1={strings.username}
-              textInput1=""
+              text1={strings.pin}
+              textInput1={strings.pin}
               style={styles.stackedLabelTextbox1}
             ></StackedLabelTextbox>
             <MaterialButtonDark
