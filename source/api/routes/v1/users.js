@@ -23,11 +23,15 @@ users.get('/', async (req, res) => {
   }
 });
 
-users.post('/:name/:fridge_id', async (req, res) => {
+users.post('/:name', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    sql = 'INSERT INTO v2_users (name) VALUES (?) WHERE fridge_id=' + req.params.fridge_id
-    await connection.query(sql, [req.params.name])
+
+    // sql = 'UPDATE v2_users (name) VALUES (?) WHERE fridge_id=' + req.params.fridge_id;
+    // sql = 'UPDATE v2_users SET name=' + req.params.name + ' WHERE fridge_id=' + req.params.fridge_id;
+    sql = 'INSERT v2_users (name, fridge_id, role) VALUES(?, ?, ?)'
+    console.log(req.params)
+    await connection.query(sql, [req.params.name, req.body.fridge_id, req.body.role])
       .then((results) => {
         res.send(JSON.stringify(results)).end()
         // res.json(results).end();
@@ -45,7 +49,7 @@ users.post('/:name/:fridge_id', async (req, res) => {
 users.delete('/:name', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('DELETE FROM users WHERE name=(?)', req.params.name)
+    await connection.query('DELETE FROM users WHERE name=(?)', [req.params.name])
       .then((results) => {
         res.sendStatus(200).end()
       });
