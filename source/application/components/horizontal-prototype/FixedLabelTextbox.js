@@ -9,6 +9,7 @@ function FixedLabelTextbox(props) {
         placeholder={props.textInput1 || undefined}
         editable={true}
         style={styles.inputStyle}
+        onChange={props.onChange}
       ></TextInput>
     </View>
   );
