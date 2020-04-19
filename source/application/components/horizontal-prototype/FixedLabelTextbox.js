@@ -6,7 +6,7 @@ function FixedLabelTextbox(props) {
     <View style={[styles.container, props.style]}>
       <Text style={styles.label}>{props.text1 || "FixedLabel"}</Text>
       <TextInput
-        placeholder={props.textInput1 || undefined}
+        placeholder={props.textInput1}
         editable={true}
         style={styles.inputStyle}
         onChange={props.onChange}
