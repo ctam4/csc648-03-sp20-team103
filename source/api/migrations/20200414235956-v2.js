@@ -321,6 +321,11 @@ exports.up = (db, callback) => {
             notNull: true,
             defaultValue: "stored",
           },
+          page: {
+            type: "int",
+            default: 1,
+            notNull: true
+          },
         },
         ifNotExists: true,
       }),

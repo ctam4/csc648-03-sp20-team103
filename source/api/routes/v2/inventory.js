@@ -57,21 +57,40 @@ inventory.post('/manual', async (req, res) => {
   try {
     connection = await pool.getConnection();
     body = Object.keys(req.body)
-    if(body.length == 7){
-      let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price, state) VALUES(?,?,  ?, ?, ?, ?, ?)'
-      await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.state])
+    if(req.body.state !== undefined && req.body.page !== undefined){
+      let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price, state, page) VALUES(?,?,  ?, ?, ?, ?, ?, ?)'
+      await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.state, req.body.page])
+        .then((results) => {
+          res.send(JSON.stringify(results)).end()
+          // res.json(results).end();
+        });
+    }
+    else if(req.body.page===undefined && req.body.state !== undefined){
+      page = 1
+      let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price, state, page) VALUES(?,?,  ?, ?, ?, ?, ?, ?)'
+      await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.state, page])
+        .then((results) => {
+          res.send(JSON.stringify(results)).end()
+          // res.json(results).end();
+        });
+    }
+    else if(req.body.page!== undefined && req.body.state === undefined){
+      let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price, page) VALUES(?,?,  ?, ?, ?, ?, ?)'
+      await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.page])
         .then((results) => {
           res.send(JSON.stringify(results)).end()
           // res.json(results).end();
         });
     }
     else{
-      let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price) VALUES(?,?,  ?, ?, ?, ?)'
-      await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price])
+      page = 1
+      let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price, page) VALUES(?,?,  ?, ?, ?, ?, ?)'
+      await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, page])
         .then((results) => {
           res.send(JSON.stringify(results)).end()
           // res.json(results).end();
         });
+
     }
     
     // await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.state])
