@@ -85,11 +85,11 @@ router.get('/consumption', async (req, res) => {
   res.send(render);
 });
 
-router.get('/mealplans', async (req, res) => {
-  const raw = fs.readFileSync('./build/horizontal-prototype_mealplans.html').toString();
+router.get('/meal-plans', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_meal-plans.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
-    title: "MealPlans - Horizontal prototype",
+    title: "Meal Plans - Horizontal prototype",
   });
   res.send(render);
 });

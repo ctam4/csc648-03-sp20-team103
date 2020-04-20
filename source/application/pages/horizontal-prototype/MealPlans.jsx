@@ -1,5 +1,5 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
+import React, { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -9,11 +9,10 @@ import CartsCard from "../../components/horizontal-prototype/CartsCard";
 
 let strings = new LocalizedStrings({
   en: {
-mealplans: "MealPlan",
-mealplan_title: "Meal Plan #", 
-date: "mm/dd/yy",
-button: "VIEW",
-cal_per_day: "Cal per day: ",
+    mealplans: "Meal Plans",
+    date: "mm/dd/yy",
+    view: "View",
+    cal_per_day: "Cal per day: ",
   },
 });
 
@@ -22,19 +21,21 @@ const styles = StyleSheet.create({
     flex: 1
   },
   materialHeader1: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 56,
     alignSelf: "center"
   },
   scrollArea: {
-    width: 360,
-    height: 627,
+    minWidth: 360,
+    width: "100%",
+    minHeight: 684,
     backgroundColor: "rgba(230, 230, 230,1)",
     marginTop: 1
   },
   scrollArea_contentContainerStyle: {
-    width: 360,
-    height: 3134,
+    minWidth: 360,
+    width: "100%",
     flexDirection: "column"
   },
   cartsCard1: {
@@ -60,12 +61,14 @@ const styles = StyleSheet.create({
   }
 });
 
+export default () => {
+  const [cookies, setCookie] = useCookies(["session_id"]);
 
+  useEffect(async () => {
 
+  });
 
-export default CreateReactClass({
-  render: function() {
-    return (
+  return (
     <View style={styles.container}>
       <AppHeader
         text1={strings.mealplans}
@@ -76,20 +79,19 @@ export default CreateReactClass({
           contentContainerStyle={styles.scrollArea_contentContainerStyle}
         >
           <CartsCard
-            text1={strings.mealplan_title}
+            text1="Meal Plan A"
             text2={strings.cal_per_day}
-            text4={strings.button}
+            text4={strings.view}
             style={styles.cartsCard1}
           ></CartsCard>
           <CartsCard
-            text1={strings.mealplan_title}
+            text1="Meal Plan B"
             text2={strings.cal_per_day}
-            text4={strings.button}
+            text4={strings.view}
             style={styles.cartsCard2}
           ></CartsCard>
         </ScrollView>
       </View>
     </View>
-   );
-    },
-  });
+  );
+};
