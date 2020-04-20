@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   scrollArea1: {
     minWidth: 360,
     width: "100%",
-    height: 628,
+    minHeight: 628,
     backgroundColor: "rgba(230, 230, 230,1)",
   },
   scrollArea1_contentContainerStyle: {
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
   },
   materialCardWithoutImage: {
-    minWidth: 330,
+    alignSelf: "stretch",
     height: 200,
     margin: 15,
   },

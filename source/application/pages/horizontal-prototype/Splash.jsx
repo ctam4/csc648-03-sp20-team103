@@ -46,15 +46,9 @@ const styles = StyleSheet.create({
     alignSelf: "center",
   },
   materialButtonDark: {
-    width: 100,
+    minWidth: 100,
     height: 36,
     marginTop: 45,
-    alignSelf: "center",
-  },
-  materialButtonWithVioletText: {
-    width: 100,
-    height: 36,
-    marginTop: 10,
     alignSelf: "center",
   },
 });

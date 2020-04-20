@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
   },
   scrollArea1: {
     width: 360,
-    height: 684,
+    minHeight: 684,
     alignSelf: "center",
   },
   scrollArea1_contentContainerStyle: {
