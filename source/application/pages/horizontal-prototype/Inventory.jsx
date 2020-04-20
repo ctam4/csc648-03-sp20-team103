@@ -1,9 +1,5 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-
-import { store, persistor } from "../../stores/horizontal-prototype/store";
+import React, { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
 import { MdFilterList } from "react-icons/md";
@@ -74,50 +70,50 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateReactClass({
-  render: function() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-        <View style={styles.container}>
-          <AppHeader
-            text1={strings.inventory}
-            rightIcon2={<MdFilterList />}
-            style={styles.materialHeader1}
-          ></AppHeader>
-          <View style={styles.scrollArea1}>
-            <ScrollView
-              contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-            >
-              <InventoryCard
-                text1="Apple"
-                text2="2 ct by user 1 \n stored 10 days ago \n expiring in 2 days"
-                text3={strings.view_log}
-                text4={strings.discard}
-                onPressAction1={() => { window.location.href = '/horizontal-prototype/inventory/view' }}
-                //onPressAction2={() => { }}
-                style={styles.materialCardWithImageAndTitle}
-              ></InventoryCard>
-              <InventoryCard
-                text1="Milk \n Brand A 2% fat"
-                text2="1 gal by user 1 \n stored 1 day ago \n expiring in 21 days"
-                text3={strings.view_log}
-                text4={strings.discard}
-                onPressAction1={() => { window.location.href = '/horizontal-prototype/inventory/view' }}
-                //onPressAction2={() => { }}
-                style={styles.materialCardWithImageAndTitle1}
-              ></InventoryCard>
-            </ScrollView>
-          </View>
-          <MaterialToast1
-            text1={strings.toast_added}
-            style={styles.materialToast1}
-          ></MaterialToast1>
-          <FloatingCreate style={styles.floatingCreate}></FloatingCreate>
-          <AppFooter style={styles.materialBasicFooter1}></AppFooter>
-        </View>
-        </PersistGate>
-      </Provider>
-    );
-  },
-});
+export default () => {
+  const [cookies, setCookie] = useCookies(["session_id"]);
+
+  useEffect(async () => {
+
+  });
+
+  return (
+    <View style={styles.container}>
+      <AppHeader
+        text1={strings.inventory}
+        rightIcon2={<MdFilterList />}
+        style={styles.materialHeader1}
+      ></AppHeader>
+      <View style={styles.scrollArea1}>
+        <ScrollView
+          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
+        >
+          <InventoryCard
+            text1="Apple"
+            text2="2 ct by user 1 \n stored 10 days ago \n expiring in 2 days"
+            text3={strings.view_log}
+            text4={strings.discard}
+            onPressAction1={() => { window.location.href = '/horizontal-prototype/inventory/view' }}
+            //onPressAction2={() => { }}
+            style={styles.materialCardWithImageAndTitle}
+          ></InventoryCard>
+          <InventoryCard
+            text1="Milk \n Brand A 2% fat"
+            text2="1 gal by user 1 \n stored 1 day ago \n expiring in 21 days"
+            text3={strings.view_log}
+            text4={strings.discard}
+            onPressAction1={() => { window.location.href = '/horizontal-prototype/inventory/view' }}
+            //onPressAction2={() => { }}
+            style={styles.materialCardWithImageAndTitle1}
+          ></InventoryCard>
+        </ScrollView>
+      </View>
+      <MaterialToast1
+        text1={strings.toast_added}
+        style={styles.materialToast1}
+      ></MaterialToast1>
+      <FloatingCreate style={styles.floatingCreate}></FloatingCreate>
+      <AppFooter style={styles.materialBasicFooter1}></AppFooter>
+    </View>
+  );
+};

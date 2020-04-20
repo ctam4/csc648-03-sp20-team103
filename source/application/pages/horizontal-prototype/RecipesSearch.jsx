@@ -1,10 +1,9 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-import { store, persistor } from "../../stores/horizontal-prototype/store";
-import { StyleSheet, View, ScrollView, Text } from "react-native";
+import React, { useReducer } from "react";
+import { useCookies } from "react-cookie";
 
+//import { recipesSearchReducer, initialState } from "../../reducers/horizontal-prototype/RecipesCreate";
+
+import { StyleSheet, View, ScrollView, Text } from "react-native";
 import LocalizedStrings from "react-localization";
 ;
 import Search from "../components/horizontal-prototype/Search";
@@ -169,77 +168,64 @@ const styles = StyleSheet.create({
   }
 });
 
-export default CreateReactClass({
-  render: function() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-        <View style={styles.container}>
-        <Search
-            textInput1={strings.keywords}
-            style={styles.materialSearchBarWithBackground}
-        ></Search>
-        <View style={styles.scrollArea1}>
-            <ScrollView
-            contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-            >
-            <Text style={styles.chooseCalories}>Choose calories per serving</Text>
-            <View style={styles.materialChipWithCloseButtonRow}>
-            <ChipActive
-              text1={strings.fiveHundredOrLessCalories}
-              style={styles.materialChipWithCloseButton}
-            ></ChipActive>
-            <View style={styles.materialChipWithCloseButtonFiller}></View>
-            <Chip
-              text1={strings.fiveHundredOneThousandCalories}
-              style={styles.materialChipBasic1}
-            ></Chip>
+export default () => {
+  const [cookies, setCookie] = useCookies(["session_id"]);
+  //const [state, dispatch] = useReducer(recipesCreateReducer, initialState);
+
+  return (
+    <View style={styles.scrollArea1}>
+      <ScrollView
+        contentContainerStyle={styles.scrollArea1_contentContainerStyle}
+      >
+        <Text style={styles.chooseCalories}>Choose calories per serving</Text>
+        <View style={styles.materialChipWithCloseButtonRow}>
+          <ChipActive
+            text1={strings.fiveHundredOrLessCalories}
+            style={styles.materialChipWithCloseButton}
+          ></ChipActive>
+          <View style={styles.materialChipWithCloseButtonFiller}></View>
+          <Chip
+            text1={strings.fiveHundredOneThousandCalories}
+            style={styles.materialChipBasic1}
+          ></Chip>
         </View>
-          <Text style={styles.chooseServingSize}>Choose serving size</Text>
-          <View style={styles.materialChipWithCloseButton1Row}>
-            <ChipActive
-              text1={strings.threeFourServings}
-              style={styles.materialChipWithCloseButton1}
-            ></ChipActive>
-            <View style={styles.materialChipWithCloseButton1Filler}></View>
-            <Chip text1={strings.oneTwoServings} style={styles.materialChipBasic}></Chip>
-          </View>
-          <Text style={styles.chooseFatSize}>Choose fat per serving</Text>
-          <View style={styles.materialChipBasic2Row}>
-            <Chip
-              text1={strings.tenGramsOrLess}
-              style={styles.materialChipBasic2}
-            ></Chip>
-            <View style={styles.materialChipBasic2Filler}></View>
-            <Chip text1={strings.tenTwentyGrams} style={styles.materialChipBasic3}></Chip>
-          </View>
-          <Text style={styles.chooseProteinSize}>
-            Choose protein per serving
-          </Text>
-          <View style={styles.materialChipBasic4Row}>
-            <Chip
-              text1={strings.tenGramsOrLess}
-              style={styles.materialChipBasic4}
-            ></Chip>
-            <View style={styles.materialChipBasic4Filler}></View>
-            <Chip text1={strings.tenTwentyGrams} style={styles.materialChipBasic5}></Chip>
-          </View>
-          <Text style={styles.chooseProtein2}>
-            Choose carbonhydrates per serving
-          </Text>
-          <View style={styles.materialChipBasic6Row}>
-            <Chip
-              text1={strings.tenGramsOrLess}
-              style={styles.materialChipBasic6}
-            ></Chip>
-            <View style={styles.materialChipBasic6Filler}></View>
-            <Chip text1={strings.tenTwentyGrams} style={styles.materialChipBasic7}></Chip>
-          </View>
-        </ScrollView>
-      </View>
+        <Text style={styles.chooseServingSize}>Choose serving size</Text>
+        <View style={styles.materialChipWithCloseButton1Row}>
+          <ChipActive
+            text1={strings.threeFourServings}
+            style={styles.materialChipWithCloseButton1}
+          ></ChipActive>
+          <View style={styles.materialChipWithCloseButton1Filler}></View>
+          <Chip text1={strings.oneTwoServings} style={styles.materialChipBasic}></Chip>
+        </View>
+        <Text style={styles.chooseFatSize}>Choose fat per serving</Text>
+        <View style={styles.materialChipBasic2Row}>
+          <Chip
+            text1={strings.tenGramsOrLess}
+            style={styles.materialChipBasic2}
+          ></Chip>
+          <View style={styles.materialChipBasic2Filler}></View>
+          <Chip text1={strings.tenTwentyGrams} style={styles.materialChipBasic3}></Chip>
+        </View>
+        <Text style={styles.chooseProteinSize}>Choose protein per serving</Text>
+        <View style={styles.materialChipBasic4Row}>
+          <Chip
+            text1={strings.tenGramsOrLess}
+            style={styles.materialChipBasic4}
+          ></Chip>
+          <View style={styles.materialChipBasic4Filler}></View>
+          <Chip text1={strings.tenTwentyGrams} style={styles.materialChipBasic5}></Chip>
+        </View>
+        <Text style={styles.chooseProtein2}>Choose carbonhydrates per serving</Text>
+        <View style={styles.materialChipBasic6Row}>
+          <Chip
+            text1={strings.tenGramsOrLess}
+            style={styles.materialChipBasic6}
+          ></Chip>
+          <View style={styles.materialChipBasic6Filler}></View>
+          <Chip text1={strings.tenTwentyGrams} style={styles.materialChipBasic7}></Chip>
+        </View>
+      </ScrollView>
     </View>
-    </PersistGate>
-   </Provider>
   );
-  },
-});
+};
