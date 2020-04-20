@@ -33,14 +33,8 @@ function RecipesCardFull(props) {
         </TouchableOpacity>
       </View>
       <View style={styles.body2}>
-        <Text style={styles.bodyHead1}>{string.directions}</Text>
-        <Text style={styles.bodyText1}>
-          BuilderX is a screen design tool which codes React Native for you
-          which design without boundaries, the code is generated
-          simultaneously. Save your designed components as symbol and then
-          simply add it to your design next time. Live preview works on real
-          device. Shout out to the Expo team to make it happen.
-        </Text>
+        <Text style={styles.bodyHead1}>{strings.instructions}</Text>
+        <Text style={styles.bodyText1}>{props.bodyText1}</Text>
       </View>
     </View>
   );
@@ -48,7 +42,7 @@ function RecipesCardFull(props) {
 
 let strings = new LocalizedStrings({
   en: {
-    directions: "Directions",
+    instructions: "instructions",
   },
 });
 const styles = StyleSheet.create({
