@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
@@ -10,6 +10,11 @@ import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
 import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
 import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
 import AppFooter from "../../components/horizontal-prototype/AppFooter";
+
+let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
+if (process.env.API_PORT) {
+  apiUrl += ":" + process.env.API_PORT;
+}
 
 let strings = new LocalizedStrings({
   en: {
@@ -73,8 +78,44 @@ const styles = StyleSheet.create({
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
 
-  useEffect(async () => {
+  let inventory = [];
+  let ingredients = [];
 
+  useEffect(async () => {
+    await fetch(apiUrl + '/v2/inventory/list/all', {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('error ' + res.status);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      inventory = data;
+    })
+    .catch(console.log);
+    await fetch(apiUrl + '/v2/ingredients', {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('error ' + res.status);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      ingredients = data;
+    })
+    .catch(console.log);
   });
 
   return (
@@ -89,24 +130,17 @@ export default () => {
         <ScrollView
           contentContainerStyle={styles.scrollArea1_contentContainerStyle}
         >
-          <InventoryCard
-            text1="Apple"
-            text2="2 ct by user 1 \n stored 10 days ago \n expiring in 2 days"
-            text3={strings.view_log}
-            text4={strings.discard}
-            onPressAction1={() => { window.location.href = './inventory/view?id=' }}
-            //onPressAction2={() => { }}
-            style={styles.materialCardWithImageAndTitle}
-          ></InventoryCard>
-          <InventoryCard
-            text1="Milk \n Brand A 2% fat"
-            text2="1 gal by user 1 \n stored 1 day ago \n expiring in 21 days"
-            text3={strings.view_log}
-            text4={strings.discard}
-            onPressAction1={() => { window.location.href = './inventory/view?id=' }}
-            //onPressAction2={() => { }}
-            style={styles.materialCardWithImageAndTitle1}
-          ></InventoryCard>
+          {inventory.map((item, index) => {
+            <InventoryCard
+              text1={ingredients.find(ingredient => ingredient.ingredient_id == item.ingredient_id).name}
+              text2={item.quantity + " " + item.unit + " \n stored 10 days ago \n expiring on " + item.expiration_date}
+              text3={strings.view_log}
+              text4={strings.discard}
+              onPressAction1={() => { window.location.href = './inventory/view?id=' }}
+              //onPressAction2={() => { }}
+              style={styles.materialCardWithImageAndTitle}
+            ></InventoryCard>
+          })}
         </ScrollView>
       </View>
       <MaterialToast1
