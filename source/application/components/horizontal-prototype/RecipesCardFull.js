@@ -1,12 +1,6 @@
 import React, { Component } from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  TouchableOpacity,
-  ScrollView
-} from "react-native";
+import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
+import LocalizedStrings from "react-localization";
 import { IconContext } from "react-icons";
 import { MdExpandLess } from "react-icons/md";
 
@@ -38,25 +32,25 @@ function RecipesCardFull(props) {
           </IconContext.Provider>
         </TouchableOpacity>
       </View>
-      <View style={styles.scrollArea}>
-        <ScrollView
-          horizontal={false}
-          contentContainerStyle={styles.scrollArea_contentContainerStyle}
-        >
-          <Text style={styles.directions}>Directions</Text>
-          <Text style={styles.bodyText1}>
-            BuilderX is a screen design tool which codes React Native for you
-            which design without boundaries, the code is generated
-            simultaneously. Save your designed components as symbol and then
-            simply add it to your design next time. Live preview works on real
-            device. Shout out to the Expo team to make it happen.
-          </Text>
-        </ScrollView>
+      <View style={styles.body2}>
+        <Text style={styles.bodyHead1}>{string.directions}</Text>
+        <Text style={styles.bodyText1}>
+          BuilderX is a screen design tool which codes React Native for you
+          which design without boundaries, the code is generated
+          simultaneously. Save your designed components as symbol and then
+          simply add it to your design next time. Live preview works on real
+          device. Shout out to the Expo team to make it happen.
+        </Text>
       </View>
     </View>
   );
 }
 
+let strings = new LocalizedStrings({
+  en: {
+    directions: "Directions",
+  },
+});
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#FFF",
@@ -128,15 +122,11 @@ const styles = StyleSheet.create({
     bottom: 12,
     padding: 8
   },
-  scrollArea: {
+  body2: {
     padding: 16,
     paddingTop: 8
   },
-  scrollArea_contentContainerStyle: {
-    width: 359,
-    height: 910
-  },
-  directions: {
+  bodyHead1: {
     color: "#121212",
     marginBottom: 10,
     fontWeight: "700",
