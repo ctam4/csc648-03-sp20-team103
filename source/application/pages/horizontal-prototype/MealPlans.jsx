@@ -5,7 +5,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import LocalizedStrings from "react-localization";
 
 import AppHeader from "../../components/horizontal-prototype/AppHeader";
-import CartsCard from "../../components/horizontal-prototype/CartsCard";
+import MealPlansCard from "../../components/horizontal-prototype/MealPlansCard";
 
 let strings = new LocalizedStrings({
   en: {
@@ -76,18 +76,18 @@ export default () => {
         <ScrollView
           contentContainerStyle={styles.scrollArea_contentContainerStyle}
         >
-          <CartsCard
+          <MealPlansCard
             text1="Meal Plan A"
             text2={strings.cal_per_day}
             text4={strings.view}
             style={styles.cartsCard1}
-          ></CartsCard>
-          <CartsCard
+          ></MealPlansCard>
+          <MealPlansCard
             text1="Meal Plan B"
             text2={strings.cal_per_day}
             text4={strings.view}
             style={styles.cartsCard2}
-          ></CartsCard>
+          ></MealPlansCard>
         </ScrollView>
       </View>
     </View>
