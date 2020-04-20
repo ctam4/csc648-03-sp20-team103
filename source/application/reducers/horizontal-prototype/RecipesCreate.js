@@ -1,6 +1,6 @@
 export const initialState = {
   name: "",
-  serving_size: "",
+  servings: "",
   cooking_time: "",
 };
 
@@ -12,10 +12,10 @@ export const recipesCreateReducer = (state = initialState, action) => {
         name: action.name,
       };
     }
-    case 'RECIPESCREATE_SET_SERVING_SIZE': {
+    case 'RECIPESCREATE_SET_SERVINGS': {
       return {
         ...state,
-        serving_size: action.serving_size,
+        servings: action.servings,
       };
     }
     case 'RECIPESCREATE_SET_COOKING_TIME': {

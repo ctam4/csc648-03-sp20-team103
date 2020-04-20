@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import { useCookies } from "react-cookie";
 
 import { recipesCreateReducer, initialState } from "../../reducers/horizontal-prototype/RecipesCreate";
-import { setName, setServingSize, setCookingTime } from "../../actions/horizontal-prototype/RecipesCreate";
+import { setName, setServings, setCookingTime } from "../../actions/horizontal-prototype/RecipesCreate";
 
 import { StyleSheet, View, ScrollView, Text } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -15,7 +15,7 @@ let strings = new LocalizedStrings({
   en: {
     recipe_info: "Recipe info",
     name: "Name",
-    serving_size: "Serving size",
+    servings: "Servings",
     cooking_time: "Cooking time",
     ingredients: "Ingredients",
   },
@@ -107,10 +107,10 @@ export default () => {
             onChange={(e) => dispatch(setName(e.target.value))}
           ></FixedLabelTextbox>
           <FixedLabelTextbox
-            text1={strings.serving_size}
-            textInput1={state.serving_size}
+            text1={strings.servings}
+            textInput1={state.servings}
             style={styles.materialFixedLabelTextbox1}
-            onChange={(e) => dispatch(setServingSize(e.target.value))}
+            onChange={(e) => dispatch(setServings(e.target.value))}
           ></FixedLabelTextbox>
           <FixedLabelTextbox
             text1={strings.cooking_time}

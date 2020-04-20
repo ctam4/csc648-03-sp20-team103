@@ -3,9 +3,9 @@ export const setName = (name) => ({
   name: name,
 });
 
-export const setServingSize = (serving_size) => ({
-  type: 'RECIPESCREATE_SET_SERVING_SIZE',
-  serving_size: serving_size,
+export const setServings = (servings) => ({
+  type: 'RECIPESCREATE_SET_SERVINGS',
+  servings: servings,
 });
 
 export const setCookingTime = (cooking_time) => ({
