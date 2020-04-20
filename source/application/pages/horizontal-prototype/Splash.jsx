@@ -1,23 +1,26 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+import React, { useReducer } from "react";
+import { useCookies } from "react-cookie";
 
-import { store, persistor } from "../../stores/horizontal-prototype/store";
+import { splashReducer, initialState } from "../../reducers/horizontal-prototype/Splash";
+import { setSN, setPIN } from "../../actions/horizontal-prototype/Splash";
 
 import { StyleSheet, View, Text } from "react-native";
 import LocalizedStrings from "react-localization";
 
 import StackedLabelTextbox from "../../components/horizontal-prototype/StackedLabelTextbox";
 import MaterialButtonDark from "../../components/horizontal-prototype/MaterialButtonDark";
-import MaterialButtonWithVioletText from "../../components/horizontal-prototype/MaterialButtonWithVioletText";
+
+let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
+if (process.env.API_PORT) {
+  apiUrl += ":" + process.env.API_PORT;
+}
 
 let strings = new LocalizedStrings({
   en: {
     login: "Login",
     register: "Register",
-    sn: "Serial Number",
-    username: "Username",
+    sn: "Serial number",
+    pin: "PIN",
   },
 });
 const styles = StyleSheet.create({
@@ -57,36 +60,56 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateReactClass({
-  render: function() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <View style={styles.container}>
-            <Text style={styles.stockUp}>STOCK UP</Text>
-            <StackedLabelTextbox
-              text1={strings.sn}
-              textInput1=""
-              style={styles.stackedLabelTextbox}
-            ></StackedLabelTextbox>
-            <StackedLabelTextbox
-              text1={strings.username}
-              textInput1=""
-              style={styles.stackedLabelTextbox1}
-            ></StackedLabelTextbox>
-            <MaterialButtonDark
-              text1={strings.login}
-              style={styles.materialButtonDark}
-              //onPress={() => {  }}
-            ></MaterialButtonDark>
-            <MaterialButtonWithVioletText
-              text1={strings.register}
-              style={styles.materialButtonWithVioletText}
-              //onPress={() => {  }}
-            ></MaterialButtonWithVioletText>
-          </View>
-        </PersistGate>
-      </Provider>
-    );
-  },
-});
+export default () => {
+  const [cookies, setCookie] = useCookies(["session_id"]);
+  const [state, dispatch] = useReducer(splashReducer, initialState);
+
+  const login = async () => {
+    await fetch(apiUrl + '/v2/login', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        sn: state.sn,
+        pin: state.pin,
+      }),
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('error ' + res.status);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      // TODO: setCookie
+      //setCookie("session_id", data.);
+      console.log('Login successful.');
+    })
+    .catch(console.log);
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.stockUp}>STOCK UP</Text>
+      <StackedLabelTextbox
+        text1={strings.sn}
+        textInput1={state.sn}
+        style={styles.stackedLabelTextbox}
+        onChange={(e) => dispatch(setSN(e.target.value))}
+      ></StackedLabelTextbox>
+      <StackedLabelTextbox
+        text1={strings.pin}
+        textInput1={state.pin}
+        style={styles.stackedLabelTextbox1}
+        onChange={(e) => dispatch(setPIN(e.target.value))}
+      ></StackedLabelTextbox>
+      <MaterialButtonDark
+        text1={strings.login}
+        style={styles.materialButtonDark}
+        onPress={() => login()}
+      ></MaterialButtonDark>
+    </View>
+  );
+};
