@@ -1,7 +1,8 @@
 import React, { useReducer } from "react";
 import { useCookies } from "react-cookie";
 
-//import { recipesCreateReducer, initialState } from "../../reducers/horizontal-prototype/RecipesCreate";
+import { recipesCreateReducer, initialState } from "../../reducers/horizontal-prototype/RecipesCreate";
+import { setName, setServingSize, setCookingTime } from "../../actions/horizontal-prototype/RecipesCreate";
 
 import { StyleSheet, View, ScrollView, Text } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -27,7 +28,6 @@ const styles = StyleSheet.create({
     minWidth: 360,
     width: "100%",
     height: 684,
-    marginTop: 56,
     alignSelf: "center",
   },
   scrollArea1_contentContainerStyle: {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
 
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
-  //const [state, dispatch] = useReducer(recipesCreateReducer, initialState);
+  const [state, dispatch] = useReducer(recipesCreateReducer, initialState);
 
   return (
     <View style={styles.container}>
@@ -95,16 +95,21 @@ export default () => {
           <Text style={styles.recipeInfo}>{strings.recipe_info}</Text>
           <FixedLabelTextbox
             text1={strings.name}
+            textInput1={state.name}
             style={styles.materialFixedLabelTextbox}
+            onChange={(e) => dispatch(setName(e.target.value))}
           ></FixedLabelTextbox>
           <FixedLabelTextbox
             text1={strings.serving_size}
-            textInput1=""
+            textInput1={state.serving_size}
             style={styles.materialFixedLabelTextbox1}
+            onChange={(e) => dispatch(setServingSize(e.target.value))}
           ></FixedLabelTextbox>
           <FixedLabelTextbox
             text1={strings.cooking_time}
+            textInput1={state.cooking_time}
             style={styles.materialFixedLabelTextbox2}
+            onChange={(e) => dispatch(setCookingTime(e.target.value))}
           ></FixedLabelTextbox>
           <Text style={styles.ingredients3}>{strings.ingredients}</Text>
         </ScrollView>
