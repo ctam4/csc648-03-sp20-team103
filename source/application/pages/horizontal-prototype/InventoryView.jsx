@@ -52,6 +52,10 @@ export default () => {
   const [state, setState] = useState("");
 
   useEffect(() => {
+    load();
+  }, []);
+
+  const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(apiUrl + '/v2/inventory?inventory_id=' + urlParams.get('id'), {
       method: 'get',
@@ -74,7 +78,7 @@ export default () => {
       setState(data.state);
     })
     .catch(console.log);
-  });
+  };
 
   return (
     <View style={styles.container}>
