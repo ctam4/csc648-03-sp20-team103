@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
 });
 
 export default () => {
-  const [cookies, setCookie] = useCookies(["session_id"]);
+  const [cookies, setCookie] = useCookies(["session_id", "fridge_id"]);
   const [state, dispatch] = useReducer(splashReducer, initialState);
 
   useEffect(async () => {
@@ -77,6 +77,7 @@ export default () => {
       return res.json();
     })
     .then((data) => {
+      setCookie("fridge_id", data);
       console.log('Dummy fridge setup successful.');
     })
     .catch(console.log);
@@ -101,7 +102,7 @@ export default () => {
       return res.json();
     })
     .then((data) => {
-      setCookie("session_id", data);
+      setCookie("session_id", data.fridge_id);
       console.log('Login successful.');
       window.location.href = './inventory';
       //window.location.href = './auth';

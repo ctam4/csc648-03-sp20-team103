@@ -76,12 +76,59 @@ const styles = StyleSheet.create({
 });
 
 export default () => {
-  const [cookies, setCookie] = useCookies(["session_id"]);
+  const [cookies, setCookie] = useCookies(["session_id", "fridge_id"]);
 
   let inventory = [];
   let ingredients = [];
 
   useEffect(async () => {
+    await fetch(apiUrl + '/v2/ingredients', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ingredient_id: '1',
+        name: 'milk',
+        image: '',
+      }),
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('error ' + res.status);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log('Dummy ingredients setup successful.');
+    })
+    .catch(console.log);
+    await fetch(apiUrl + '/v2/inventory/manual', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fridge_id: cookies.fridge_id,
+        ingredient_id: '1',
+        quantity: 1.0,
+        unit: 'ct',
+        price: 10,
+        expiration_date: Math.round(Date.now() / 1000),
+      }),
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('error ' + res.status);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log('Dummy inventory setup successful.');
+    })
+    .catch(console.log);
     await fetch(apiUrl + '/v2/inventory/list/all', {
       method: 'get',
       headers: {
