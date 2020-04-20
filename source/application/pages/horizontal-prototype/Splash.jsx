@@ -57,7 +57,11 @@ export default () => {
   const [cookies, setCookie] = useCookies(["session_id", "fridge_id"]);
   const [state, dispatch] = useReducer(splashReducer, initialState);
 
-  useEffect(async () => {
+  useEffect(() => {
+    dummySetup();
+  }, []);
+
+  const dummySetup = async () => {
     // for dummy fridge
     await fetch(apiUrl + '/v2/fridges', {
       method: 'post',
@@ -81,7 +85,7 @@ export default () => {
       console.log('Dummy fridge setup successful.');
     })
     .catch(console.log);
-  });
+  };
 
   const handleAuth = async () => {
     await fetch(apiUrl + '/v2/login', {
