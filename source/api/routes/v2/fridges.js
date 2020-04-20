@@ -26,6 +26,23 @@ let connection;
 //   }
 // });
 
+
+fridges.get('/', async (req, res) => {
+  try {
+    connection = await pool.getConnection();
+    const results = await connection.query('SELECT * FROM v2_fridges');
+    res.send(JSON.stringify(results)).end()
+  } catch (error) {
+    res.sendStatus(401).end()
+  }
+  finally {
+    if (connection) {
+      connection.release();
+    }
+  }
+
+});
+
 fridges.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();

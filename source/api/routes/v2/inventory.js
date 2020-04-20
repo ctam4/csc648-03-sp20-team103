@@ -4,33 +4,59 @@ const inventory = express.Router();
 const pool = require('../../database.js');
 let connection;
 
-//inventory
-// inventory.get('/list/:state', async (req, res) => {
-//   try {
-//     connection = await pool.getConnection();
-//     sql = 'SELECT * FROM v2_inventory WHERE state = ' + [req.params.state] + ' LIMIT ' + [req.body.limit]
-//     await connection.query(sql)
-//       .then((results) => {
-//         res.send(JSON.stringify(results)).end()
-//         // res.json(results).end();
-//       });
-//   } catch (error) {
-//     res.sendStatus(500).end();
-//     throw error;
-//   } finally {
-//     if (connection) {
-//       connection.release(); // release to pool
-//     }
-//   }
-// });
+inventory.get('/list/:state', async (req, res) => {
+  try {
+    connection = await pool.getConnection();
+    let state = req.params.state
+    let limit = req.body.limit
+    let sql = 'SELECT * FROM v2_inventory WHERE state=? LIMIT ' + limit
+    await connection.query(sql, [state])
+      .then((results) => {
+        res.send(JSON.stringify(results)).end()
+        // res.json(results).end();
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release(); // release to pool
+    }
+  }
+});
 
+//for testing
+inventory.get('/', async (req, res) => {
+  try {
+    connection = await pool.getConnection();
+    let sql = 'SELECT * FROM v2_inventory';
+    await connection.query(sql)
+      .then((results) => {
+        res.send(JSON.stringify(results)).end()
+        // res.json(results).end();
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release(); // release to pool
+    }
+  }
+});
+
+// ('INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price, state) VALUES(?,?,  ?, ?, ?, ?, ?)', [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.state])
+
+//stuck sending request
 inventory.post('/manual', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('INSERT INTO v2_inventory VALUES(?, ?, ?, ?)', [req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date], function (error, results, fields) {
-      if (error) throw error;
-      res.json(results);
-    });
+    let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price, state) VALUES(?,?,  ?, ?, ?, ?, ?)'
+    await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.state])
+      .then((results) => {
+        res.send(JSON.stringify(results)).end()
+        // res.json(results).end();
+      });
   } catch (error) {
     res.sendStatus(500).end();
     throw error;

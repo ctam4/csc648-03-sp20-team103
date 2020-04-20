@@ -1,0 +1,20 @@
+
+
+inventory manual
+{
+	"fridge_id" :"1",
+	"ingredient_id" :"2",
+    "quantity": "344",
+    "unit": "stest",
+    "expiration_date": "2004-05-23T14:25:10",
+    "price": "12",
+    "state": "consumed"
+}
+
+
+ingrdient test
+{
+    "ingredient_id": "1",
+    "name": "Test",
+    "image": "ee"
+}
