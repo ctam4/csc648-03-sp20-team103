@@ -93,7 +93,7 @@ export default () => {
             text2="2 ct by user 1 \n stored 10 days ago \n expiring in 2 days"
             text3={strings.view_log}
             text4={strings.discard}
-            onPressAction1={() => { window.location.href = '/horizontal-prototype/inventory/view' }}
+            onPressAction1={() => { window.location.href = './inventory/view?id=' }}
             //onPressAction2={() => { }}
             style={styles.materialCardWithImageAndTitle}
           ></InventoryCard>
@@ -102,7 +102,7 @@ export default () => {
             text2="1 gal by user 1 \n stored 1 day ago \n expiring in 21 days"
             text3={strings.view_log}
             text4={strings.discard}
-            onPressAction1={() => { window.location.href = '/horizontal-prototype/inventory/view' }}
+            onPressAction1={() => { window.location.href = './inventory/view?id=' }}
             //onPressAction2={() => { }}
             style={styles.materialCardWithImageAndTitle1}
           ></InventoryCard>

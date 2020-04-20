@@ -9,7 +9,7 @@ function AppFooter(props) {
     <View style={[styles.container, props.style]}>
       <TouchableOpacity /* Conditional navigation not supported at the moment */
         style={styles.btnWrapper1}
-        onPress={() => window.location.href = '/horizontal-prototype/inventory'}
+        onPress={() => window.location.href = './inventory'}
       >
         <IconContext.Provider value={{ style: iconStyles.icon1 }}>
           <MdStorage />
@@ -18,7 +18,7 @@ function AppFooter(props) {
       </TouchableOpacity>
       <TouchableOpacity /* Conditional navigation not supported at the moment */
         style={styles.btnWrapper4}
-        onPress={() => window.location.href = '/horizontal-prototype/recipes'}
+        onPress={() => window.location.href = './recipes'}
       >
         <IconContext.Provider value={{ style: iconStyles.icon22 }}>
           <MdReceipt />
@@ -27,7 +27,7 @@ function AppFooter(props) {
       </TouchableOpacity>
       <TouchableOpacity /* Conditional navigation not supported at the moment */
         style={styles.btnWrapper2}
-        onPress={() => window.location.href = '/horizontal-prototype/carts'}
+        onPress={() => window.location.href = './carts'}
       >
         <IconContext.Provider value={{ style: iconStyles.icon23 }}>
           <MdShoppingCart />
@@ -36,7 +36,7 @@ function AppFooter(props) {
       </TouchableOpacity>
       <TouchableOpacity /* Conditional navigation not supported at the moment */
         style={styles.btnWrapper3}
-        onPress={() => window.location.href = '/horizontal-prototype/consumption'}
+        onPress={() => window.location.href = './consumption'}
       >
         <IconContext.Provider value={{ style: iconStyles.icon3 }}>
           <MdPieChart />
