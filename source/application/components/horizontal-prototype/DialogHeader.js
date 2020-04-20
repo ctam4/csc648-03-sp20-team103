@@ -3,13 +3,19 @@ import { StyleSheet, View, TouchableOpacity } from "react-native";
 import { IconContext } from "react-icons";
 import { MdClose, MdMoreVert } from "react-icons/md";
 
-function DialogHeader(props) {
+const DialogHeader = (props) => {
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
+  }
+
   return (
     <View style={[styles.container, props.style]}>
       <View style={styles.leftIconButtonRow}>
         <TouchableOpacity /* Conditional navigation not supported at the moment */
           style={styles.leftIconButton}
-          onPress={props.onPressLeft}
+          onPress={props.onPressLeft || handleGoBack}
         >
           <IconContext.Provider value={{ style: iconStyles.leftIcon2 }}>
             {props.leftIcon || <MdClose />}
