@@ -24,12 +24,12 @@ function Search(props) {
             dataDetector="all"
             style={styles.inputStyle}
           ></TextInput>
-          <TouchableOpacity style={styles.button} onPress={props.onPressRight}>
-            <IconContext.Provider value={{ style: iconStyles.rightIcon2 }}>
-              <MdClose />
-            </IconContext.Provider>
-          </TouchableOpacity>
         </View>
+        <TouchableOpacity style={styles.button} onPress={props.onPressRight}>
+          <IconContext.Provider value={{ style: iconStyles.rightIcon2 }}>
+            <MdClose />
+          </IconContext.Provider>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     padding: 11
   },
   inputStyleStack: {
-    width: 298,
+    minWidth: 298,
     height: 48,
     marginLeft: 21,
     marginTop: 4

@@ -27,17 +27,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   materialSearchBarWithBackground: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 56,
   },
   scrollArea1: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     minHeight: 684,
     alignSelf: "center",
   },
   scrollArea1_contentContainerStyle: {
-    width: 360,
-    height: 3140,
+    minWidth: 360,
+    width: "100%",
     flexDirection: "column",
   },
   chooseCalories: {
