@@ -49,6 +49,15 @@ router.get('/recipes/create', async (req, res) => {
   res.send(render);
 });
 
+router.get('/recipes/search', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_recipes-search.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: "Search - Recipes - Horizontal prototype",
+  });
+  res.send(render);
+});
+
 router.get('/carts', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_carts.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
