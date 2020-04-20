@@ -1,4 +1,4 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useCookies } from "react-cookie";
 
 import { splashReducer, initialState } from "../../reducers/horizontal-prototype/Splash";
@@ -57,6 +57,31 @@ export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
   const [state, dispatch] = useReducer(splashReducer, initialState);
 
+  useEffect(async () => {
+    // for dummy fridge
+    await fetch(apiUrl + '/v2/fridges', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        serial_number: state.serial_number,
+        pin: state.pin,
+      }),
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('error ' + res.status);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      console.log('Dummy fridge setup successful.');
+    })
+    .catch(console.log);
+  });
+
   const handleAuth = async () => {
     await fetch(apiUrl + '/v2/login', {
       method: 'post',
@@ -78,7 +103,8 @@ export default () => {
     .then((data) => {
       setCookie("session_id", data);
       console.log('Login successful.');
-      window.location.href = './auth';
+      window.location.href = './inventory';
+      //window.location.href = './auth';
     })
     .catch(console.log);
   }
