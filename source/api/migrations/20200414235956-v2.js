@@ -29,6 +29,7 @@ exports.up = (db, callback) => {
           },
           serial_number: {
             type: "string",
+            unique: true,
             notNull: true,
           },
           pin: {

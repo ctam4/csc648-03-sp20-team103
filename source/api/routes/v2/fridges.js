@@ -43,10 +43,13 @@ fridges.get('/', async (req, res) => {
 
 });
 
+
 fridges.post('/', async (req, res) => {
   try {
+    sql2 = 'SELECT fridge_id FROM v2_fridges WHERE serial_number=? AND pin=?';
     connection = await pool.getConnection();
-    const results = await connection.query('INSERT INTO v2_fridges (serial_number, pin) VALUES (?, ?  )', [req.body.serial_number, req.body.pin]);
+    await connection.query('INSERT INTO v2_fridges (serial_number, pin) VALUES (?, ?  )', [req.body.serial_number, req.body.pin]);
+    results =await connection.query(sql2, [req.body.serial_number, req.body.pin])
     res.send(JSON.stringify(results)).end()
   } catch (error) {
     res.sendStatus(401).end()
