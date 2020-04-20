@@ -13,13 +13,17 @@ import Chip from "../../components/horizontal-prototype/Chip";
 let strings = new LocalizedStrings({
   en: {
     keywords: "Keywords",
-    fiveHundredOrLessCalories: "500 calories or less",
-    fiveHundredOneThousandCalories: "500-1000 calories",
-    username: "Username",
-    threeFourServings: "3-4 servings",
-    oneTwoServings: "1-2 servings",
-    tenGramsOrLess: "10 grams or less",
-    tenTwentyGrams: "10-20 grams",
+    choose_calories: "Choose calories per serving",
+    choose_servings: "Choose servings",
+    choose_fat: "Choose fat per serving",
+    choose_protein: "Choose protein per serving",
+    choose_carbonhydrates: "Choose carbonhydrates per serving",
+    calories_500_less: "500 calories or less",
+    calories_500_1000: "500-1000 calories",
+    servings_3_4: "3-4 servings",
+    servings_1_2: "1-2 servings",
+    grams_10_less: "10 grams or less",
+    grams_10_20: "10-20 grams",
   },
 });
 const styles = StyleSheet.create({
@@ -183,53 +187,65 @@ export default () => {
         <ScrollView
           contentContainerStyle={styles.scrollArea1_contentContainerStyle}
         >
-          <Text style={styles.chooseCalories}>Choose calories per serving</Text>
+          <Text style={styles.chooseCalories}>{strings.choose_calories}</Text>
           <View style={styles.materialChipWithCloseButtonRow}>
             <ChipActive
-              text1={strings.fiveHundredOrLessCalories}
+              text1={strings.calories_500_less}
               style={styles.materialChipWithCloseButton}
             ></ChipActive>
             <View style={styles.materialChipWithCloseButtonFiller}></View>
             <Chip
-              text1={strings.fiveHundredOneThousandCalories}
+              text1={strings.calories_500_1000}
               style={styles.materialChipBasic1}
             ></Chip>
           </View>
-          <Text style={styles.chooseServingSize}>Choose serving size</Text>
+          <Text style={styles.chooseServingSize}>{strings.choose_servings}</Text>
           <View style={styles.materialChipWithCloseButton1Row}>
             <ChipActive
-              text1={strings.threeFourServings}
+              text1={strings.servings_3_4}
               style={styles.materialChipWithCloseButton1}
             ></ChipActive>
             <View style={styles.materialChipWithCloseButton1Filler}></View>
-            <Chip text1={strings.oneTwoServings} style={styles.materialChipBasic}></Chip>
+            <Chip
+              text1={strings.servings_1_2}
+              style={styles.materialChipBasic}
+            ></Chip>
           </View>
-          <Text style={styles.chooseFatSize}>Choose fat per serving</Text>
+          <Text style={styles.chooseFatSize}>{strings.choose_fat}</Text>
           <View style={styles.materialChipBasic2Row}>
             <Chip
-              text1={strings.tenGramsOrLess}
+              text1={strings.grams_10_less}
               style={styles.materialChipBasic2}
             ></Chip>
             <View style={styles.materialChipBasic2Filler}></View>
-            <Chip text1={strings.tenTwentyGrams} style={styles.materialChipBasic3}></Chip>
+            <Chip
+              text1={strings.grams_10_20}
+              style={styles.materialChipBasic3}
+            ></Chip>
           </View>
-          <Text style={styles.chooseProteinSize}>Choose protein per serving</Text>
+          <Text style={styles.chooseProteinSize}>{strings.choose_protein}</Text>
           <View style={styles.materialChipBasic4Row}>
             <Chip
-              text1={strings.tenGramsOrLess}
+              text1={strings.grams_10_less}
               style={styles.materialChipBasic4}
             ></Chip>
             <View style={styles.materialChipBasic4Filler}></View>
-            <Chip text1={strings.tenTwentyGrams} style={styles.materialChipBasic5}></Chip>
+            <Chip
+              text1={strings.grams_10_20}
+              style={styles.materialChipBasic5}
+            ></Chip>
           </View>
-          <Text style={styles.chooseProtein2}>Choose carbonhydrates per serving</Text>
+          <Text style={styles.chooseProtein2}>{strings.choose_carbonhydrates}</Text>
           <View style={styles.materialChipBasic6Row}>
             <Chip
-              text1={strings.tenGramsOrLess}
+              text1={strings.grams_10_less}
               style={styles.materialChipBasic6}
             ></Chip>
             <View style={styles.materialChipBasic6Filler}></View>
-            <Chip text1={strings.tenTwentyGrams} style={styles.materialChipBasic7}></Chip>
+            <Chip
+              text1={strings.grams_10_20}
+              style={styles.materialChipBasic7}
+            ></Chip>
           </View>
         </ScrollView>
       </View>
