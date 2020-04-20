@@ -24,26 +24,10 @@ let connection;
 //   }
 // });
 
-inventory.get('/:begin/:end', async (req, res) => {
+inventory.post('/manual', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('select * from inventory where inventory_id>=? LIMIT ?', [req.query.begin], [req.query.limit], function (error, results, fields) {
-      res.json(results.inventory_id);
-    });
-  } catch (error) {
-    res.sendStatus(500).end();
-    throw error;
-  } finally {
-    if (connection) {
-      connection.release(); // release to pool
-    }
-  }
-});
-
-inventory.post('/', async (req, res) => {
-  try {
-    connection = await pool.getConnection();
-    await connection.query('INSERT INTO inventory SET ?', req.body, function (error, results, fields) {
+    await connection.query('INSERT INTO v2_inventory VALUES(?, ?, ?, ?)', [req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date], function (error, results, fields) {
       if (error) throw error;
       res.json(results);
     });

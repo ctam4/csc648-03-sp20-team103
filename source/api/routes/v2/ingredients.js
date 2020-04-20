@@ -10,8 +10,8 @@ ingredients.get('/', async (req, res) => {
         connection = await pool.getConnection();
         await connection.query('SELECT * FROM v2_ingredients')
             .then((results) => {
-                res.send(JSON.stringify(results)).end()
-                // res.json(results).end();
+                // res.send(JSON.stringify(results)).end()
+                res.json(results).end();
             });
     } catch (error) {
         res.sendStatus(401).end();
