@@ -121,7 +121,7 @@ export default () => {
           <Text style={styles.ingredients3}>{strings.ingredients}</Text>
         </ScrollView>
       </View>
-      <FloatingSave style={styles.floatingSave} onPress={() => handleSave }></FloatingSave>
+      <FloatingSave style={styles.floatingSave} onPress={handleSave}></FloatingSave>
     </View>
   );
 };

@@ -101,7 +101,7 @@ export default () => {
       <MaterialButtonDark
         text1={strings.continue}
         style={styles.materialButtonDark}
-        onPress={() => handleAuth()}
+        onPress={handleAuth}
       ></MaterialButtonDark>
     </View>
   );
