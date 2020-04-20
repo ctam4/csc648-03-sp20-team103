@@ -5,7 +5,7 @@ import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView, Text } from "react-native";
 import LocalizedStrings from "react-localization";
-;
+
 import Search from "../components/horizontal-prototype/Search";
 import ChipActive from "../components/horizontal-prototype/ChipActive";
 import Chip from "../components/horizontal-prototype/Chip";
@@ -22,149 +22,148 @@ let strings = new LocalizedStrings({
     tenTwentyGrams: "10-20 grams",
   },
 });
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   materialSearchBarWithBackground: {
     width: 360,
-    height: 56
+    height: 56,
   },
   scrollArea1: {
     width: 360,
     height: 684,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   scrollArea1_contentContainerStyle: {
     width: 360,
     height: 3140,
-    flexDirection: "column"
+    flexDirection: "column",
   },
   chooseCalories: {
     color: "#121212",
     fontFamily: "Roboto",
     marginTop: 15,
-    marginLeft: 15
+    marginLeft: 15,
   },
   materialChipWithCloseButton: {
     width: 160,
-    height: 32
+    height: 32,
   },
   materialChipWithCloseButtonFiller: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   materialChipBasic1: {
     width: 130,
-    height: 32
+    height: 32,
   },
   materialChipWithCloseButtonRow: {
     height: 32,
     flexDirection: "row",
     marginTop: 10,
     marginLeft: 15,
-    marginRight: 45
+    marginRight: 45,
   },
   chooseServingSize: {
     color: "#121212",
     fontFamily: "Roboto",
     marginTop: 20,
-    marginLeft: 15
+    marginLeft: 15,
   },
   materialChipWithCloseButton1: {
     width: 120,
-    height: 32
+    height: 32,
   },
   materialChipWithCloseButton1Filler: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   materialChipBasic: {
     width: 100,
-    height: 32
+    height: 32,
   },
   materialChipWithCloseButton1Row: {
     height: 32,
     flexDirection: "row",
     marginTop: 10,
     marginLeft: 15,
-    marginRight: 115
+    marginRight: 115,
   },
   chooseFatSize: {
     color: "#121212",
     fontFamily: "Roboto",
     marginTop: 20,
-    marginLeft: 15
+    marginLeft: 15,
   },
   materialChipBasic2: {
     width: 125,
-    height: 32
+    height: 32,
   },
   materialChipBasic2Filler: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   materialChipBasic3: {
     width: 100,
-    height: 32
+    height: 32,
   },
   materialChipBasic2Row: {
     height: 32,
     flexDirection: "row",
     marginTop: 10,
     marginLeft: 15,
-    marginRight: 110
+    marginRight: 110,
   },
   chooseProteinSize: {
     color: "#121212",
     fontFamily: "Roboto",
     marginTop: 20,
-    marginLeft: 15
+    marginLeft: 15,
   },
   materialChipBasic4: {
     width: 125,
-    height: 32
+    height: 32,
   },
   materialChipBasic4Filler: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   materialChipBasic5: {
     width: 100,
-    height: 32
+    height: 32,
   },
   materialChipBasic4Row: {
     height: 32,
     flexDirection: "row",
     marginTop: 11,
     marginLeft: 15,
-    marginRight: 110
+    marginRight: 110,
   },
   chooseProtein2: {
     color: "#121212",
     fontFamily: "Roboto",
     marginTop: 20,
-    marginLeft: 15
+    marginLeft: 15,
   },
   materialChipBasic6: {
     width: 125,
-    height: 32
+    height: 32,
   },
   materialChipBasic6Filler: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: "row",
   },
   materialChipBasic7: {
     width: 100,
-    height: 32
+    height: 32,
   },
   materialChipBasic6Row: {
     height: 32,
     flexDirection: "row",
     marginTop: 11,
     marginLeft: 15,
-    marginRight: 110
+    marginRight: 110,
   }
 });
 
