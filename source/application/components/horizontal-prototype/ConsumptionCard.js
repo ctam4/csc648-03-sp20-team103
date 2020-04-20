@@ -21,10 +21,7 @@ function ConsumptionCard(props) {
         style={styles.cardItemImagePlace}
       ></Image>
       <View style={styles.body}>
-        <Text style={styles.bodyText}>
-          {props.text3 ||
-            "BuilderX is a screen design tool which codes React Native for you."}
-        </Text>
+        <Text style={styles.bodyText}>{props.text3}</Text>
       </View>
       <View style={styles.actionBody}>
         <TouchableOpacity style={styles.actionButton1} onPress={props.onPressAction1}>

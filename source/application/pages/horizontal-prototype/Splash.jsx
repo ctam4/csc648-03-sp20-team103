@@ -76,7 +76,6 @@ export default () => {
       return res.json();
     })
     .then((data) => {
-      // TODO: setCookie
       setCookie("session_id", data);
       console.log('Login successful.');
       window.location.href = './auth';

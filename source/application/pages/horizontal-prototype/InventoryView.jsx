@@ -84,7 +84,10 @@ export default () => {
         <ScrollView
           contentContainerStyle={styles.scrollArea1_contentContainerStyle}
         >
-          <InventoryCardFull style={styles.materialCard6}></InventoryCardFull>
+          <InventoryCardFull
+            text3={strings.discard}
+            style={styles.materialCard6}
+          ></InventoryCardFull>
         </ScrollView>
       </View>
     </View>
