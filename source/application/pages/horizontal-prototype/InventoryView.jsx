@@ -51,7 +51,7 @@ export default () => {
   const [price, setPrice] = useState("");
   const [state, setState] = useState("");
 
-  useEffect(async () => {
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(apiUrl + '/v2/inventory?inventory_id=' + urlParams.get('id'), {
       method: 'get',

@@ -53,7 +53,7 @@ export default () => {
   const [cookingTime, setCookingTime] = useState("");
   const [instructions, setInstructions] = useState("");
 
-  useEffect(async () => {
+  useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(apiUrl + '/v2/recipes?recipe_id=' + urlParams.get('id'), {
       method: 'get',

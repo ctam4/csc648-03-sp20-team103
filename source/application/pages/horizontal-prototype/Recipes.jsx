@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
 
-  useEffect(async () => {
+  useEffect(() => {
 
   });
 
