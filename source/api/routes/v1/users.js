@@ -4,15 +4,14 @@ const users = express.Router();
 const pool = require('../../database.js');
 let connection;
 
-//fridges
-users.get('/', async (req, res) => {
+//users
+
+users.get('/:name', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT * FROM v2_users')
-      .then((results) => {
-        res.send(JSON.stringify(results)).end()
-        // res.json(results).end();
-      });
+    await connection.query('select user_id from users where name =?', [req.query.name], function (error, results, fields) {
+      res.json(results.user_id);
+    });
   } catch (error) {
     res.sendStatus(500).end();
     throw error;
@@ -23,19 +22,13 @@ users.get('/', async (req, res) => {
   }
 });
 
-users.post('/:name', async (req, res) => {
+users.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
-
-    // sql = 'UPDATE v2_users (name) VALUES (?) WHERE fridge_id=' + req.params.fridge_id;
-    // sql = 'UPDATE v2_users SET name=' + req.params.name + ' WHERE fridge_id=' + req.params.fridge_id;
-    sql = 'INSERT v2_users (name, fridge_id, role) VALUES(?, ?, ?)'
-    console.log(req.params)
-    await connection.query(sql, [req.params.name, req.body.fridge_id, req.body.role])
-      .then((results) => {
-        res.send(JSON.stringify(results)).end()
-        // res.json(results).end();
-      });
+    await connection.query('INSERT INTO users SET ?', req.body, function (error, results, fields) {
+      if (error) throw error;
+      res.json(results);
+    });
   } catch (error) {
     res.sendStatus(500).end();
     throw error;
@@ -46,24 +39,7 @@ users.post('/:name', async (req, res) => {
   }
 });
 
-users.delete('/:name', async (req, res) => {
-  try {
-    connection = await pool.getConnection();
-    await connection.query('DELETE FROM users WHERE name=(?)', [req.params.name])
-      .then((results) => {
-        res.sendStatus(200).end()
-      });
-  } catch(error) {
-    res.sendStatus(404).end();
-    throw error;
-  } finally {
-    if (connection) {
-      connection.release();
-    }
-  }
-});
-
-//console.log('fridges.stack');
-//console.log(fridges.stack);
+//console.log('users.stack');
+//console.log(users.stack);
 
 module.exports = users;
