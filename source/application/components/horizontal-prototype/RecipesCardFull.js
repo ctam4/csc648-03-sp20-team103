@@ -10,7 +10,7 @@ import {
 import { IconContext } from "react-icons";
 import { MdExpandLess } from "react-icons/md";
 
-function RecipeCardFull(props) {
+function RecipesCardFull(props) {
   return (
     <View style={[styles.container, props.style]}>
       <Image
@@ -156,4 +156,4 @@ const iconStyles = {
   }
 };
 
-export default RecipeCardFull;
+export default RecipesCardFull;

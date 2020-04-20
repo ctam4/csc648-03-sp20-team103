@@ -5,7 +5,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import LocalizedStrings from "react-localization";
 
 import DialogHeader from "../../components/horizontal-prototype/DialogHeader";
-import RecipeCardFull from "../../components/horizontal-prototype/RecipeCardFull";
+import RecipesCardFull from "../../components/horizontal-prototype/RecipesCardFull";
 
 let strings = new LocalizedStrings({
   en: {
@@ -52,13 +52,13 @@ export default () => {
       <DialogHeader style={styles.materialHeader1}></DialogHeader>
       <View style={styles.scrollArea}>
         <ScrollView contentContainerStyle={styles.scrollArea_contentContainerStyle}>
-          <RecipeCardFull
+          <RecipesCardFull
             text1="Recipe name"
             text2="# servings / # calories per serving"
             text3={strings.save}
             text4={strings.add_to_cart}
             style={styles.materialCard6}
-          ></RecipeCardFull>
+          ></RecipesCardFull>
         </ScrollView>
       </View>
     </View>

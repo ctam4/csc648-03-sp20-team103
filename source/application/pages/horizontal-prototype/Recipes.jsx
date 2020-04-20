@@ -5,7 +5,7 @@ import { StyleSheet, View, ScrollView } from "react-native";
 import LocalizedStrings from "react-localization";
 
 import AppHeader from "../../components/horizontal-prototype/AppHeader";
-import RecipeCard from "../../components/horizontal-prototype/RecipeCard";
+import RecipesCard from "../../components/horizontal-prototype/RecipesCard";
 import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
 import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
 import AppFooter from "../../components/horizontal-prototype/AppFooter";
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "row",
   },
-  recipeCard: {
+  recipesCard: {
     minWidth: 160,
     width: "50%",
     height: 236,
@@ -81,18 +81,18 @@ export default () => {
         <ScrollView
           contentContainerStyle={styles.scrollArea_contentContainerStyle}
         >
-          <RecipeCard
+          <RecipesCard
             //onPressLeft={() => {}}
             //onPressCenter={() => {}}
             //onPressRight={() => {}}
-            style={styles.recipeCard}
-          ></RecipeCard>
-          <RecipeCard
+            style={styles.recipesCard}
+          ></RecipesCard>
+          <RecipesCard
             //onPressLeft={() => {}}
             //onPressCenter={() => {}}
             //onPressRight={() => {}}
-            style={styles.recipeCard}
-          ></RecipeCard>
+            style={styles.recipesCard}
+          ></RecipesCard>
         </ScrollView>
       </View>
       <MaterialToast1

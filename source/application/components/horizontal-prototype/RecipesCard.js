@@ -3,7 +3,7 @@ import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
 import { IconContext } from "react-icons";
 import { MdEdit, MdFavorite, MdHistory } from "react-icons/md";
 
-function RecipeCard(props) {
+function RecipesCard(props) {
   return (
     <View style={[styles.container, props.style]}>
       <Image
@@ -91,4 +91,4 @@ const iconStyles = {
   }
 };
 
-export default RecipeCard;
+export default RecipesCard;
