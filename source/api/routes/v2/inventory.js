@@ -8,7 +8,7 @@ inventory.get('/list/:state', async (req, res) => {
   try {
     connection = await pool.getConnection();
     let state = req.params.state
-    let limit = req.body.limit
+    let limit = req.query.limit
     let sql = 'SELECT * FROM v2_inventory WHERE state=? LIMIT ' + limit
     await connection.query(sql, [state])
       .then((results) => {
@@ -16,7 +16,7 @@ inventory.get('/list/:state', async (req, res) => {
         // res.json(results).end();
       });
   } catch (error) {
-    res.sendStatus(500).end();
+    res.sendStatus(400).end();
     throw error;
   } finally {
     if (connection) {
@@ -36,7 +36,7 @@ inventory.get('/', async (req, res) => {
         // res.json(results).end();
       });
   } catch (error) {
-    res.sendStatus(500).end();
+    res.sendStatus(400).end();
     throw error;
   } finally {
     if (connection) {
@@ -58,7 +58,7 @@ inventory.post('/manual', async (req, res) => {
         // res.json(results).end();
       });
   } catch (error) {
-    res.sendStatus(500).end();
+    res.sendStatus(400).end();
     throw error;
   } finally {
     if (connection) {

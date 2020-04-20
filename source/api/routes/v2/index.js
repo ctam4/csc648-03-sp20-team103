@@ -9,6 +9,8 @@ index.use('/users', require('./users.js'));
 index.use('/inventory', require('./inventory.js'));
 index.use('/login', require('./login.js'));
 index.use('/ingredients', require('./ingredients.js'));
+index.use('/logout', require('./logout.js'));
+
 
 
 

@@ -26,7 +26,7 @@ let connection;
 //   }
 // });
 
-
+// for testing
 fridges.get('/', async (req, res) => {
   try {
     connection = await pool.getConnection();

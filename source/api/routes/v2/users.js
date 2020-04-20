@@ -4,7 +4,6 @@ const users = express.Router();
 const pool = require('../../database.js');
 let connection;
 
-//fridges
 users.get('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
@@ -14,7 +13,7 @@ users.get('/', async (req, res) => {
         // res.json(results).end();
       });
   } catch (error) {
-    res.sendStatus(500).end();
+    res.sendStatus(401).end();
     throw error;
   } finally {
     if (connection) {
@@ -37,7 +36,7 @@ users.post('/:name', async (req, res) => {
         // res.json(results).end();
       });
   } catch (error) {
-    res.sendStatus(500).end();
+    res.sendStatus(401).end();
     throw error;
   } finally {
     if (connection) {
