@@ -8,7 +8,12 @@ inventory.get('/list/:state', async (req, res) => {
   try {
     connection = await pool.getConnection();
     let state = req.params.state
-    let limit = req.query.limit
+    let limit = 1
+    console.log(req.query.limit);
+    if(req.query.limit !== undefined){
+      console.log("teswwwwwt")
+      limit = req.query.limit
+    }
     let sql = 'SELECT * FROM v2_inventory WHERE state=? LIMIT ' + limit
     await connection.query(sql, [state])
       .then((results) => {
@@ -51,12 +56,29 @@ inventory.get('/', async (req, res) => {
 inventory.post('/manual', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price, state) VALUES(?,?,  ?, ?, ?, ?, ?)'
-    await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.state])
-      .then((results) => {
-        res.send(JSON.stringify(results)).end()
-        // res.json(results).end();
-      });
+    body = Object.keys(req.body)
+    if(body.length == 7){
+      let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price, state) VALUES(?,?,  ?, ?, ?, ?, ?)'
+      await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.state])
+        .then((results) => {
+          res.send(JSON.stringify(results)).end()
+          // res.json(results).end();
+        });
+    }
+    else{
+      let sql = 'INSERT INTO v2_inventory (fridge_id, ingredient_id, quantity, unit, expiration_date, price) VALUES(?,?,  ?, ?, ?, ?)'
+      await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price])
+        .then((results) => {
+          res.send(JSON.stringify(results)).end()
+          // res.json(results).end();
+        });
+    }
+    
+    // await connection.query(sql, [req.body.fridge_id, req.body.ingredient_id, req.body.quantity, req.body.unit, req.body.expiration_date, req.body.price, req.body.state])
+    //   .then((results) => {
+    //     res.send(JSON.stringify(results)).end()
+    //     // res.json(results).end();
+    //   });
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
