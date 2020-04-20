@@ -83,6 +83,7 @@ export default () => {
         text1={strings.inventory}
         rightIcon2={<MdFilterList />}
         style={styles.materialHeader1}
+        onPressRight1={() => window.location.href = './inventory/search' }
       ></AppHeader>
       <View style={styles.scrollArea1}>
         <ScrollView
@@ -112,7 +113,7 @@ export default () => {
         text1={strings.toast_added}
         style={styles.materialToast1}
       ></MaterialToast1>
-      <FloatingCreate style={styles.floatingCreate}></FloatingCreate>
+      <FloatingCreate style={styles.floatingCreate} onPress={() => window.location.href = './inventory/add' }></FloatingCreate>
       <AppFooter style={styles.materialBasicFooter1}></AppFooter>
     </View>
   );

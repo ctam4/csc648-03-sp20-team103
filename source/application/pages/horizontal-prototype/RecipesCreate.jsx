@@ -85,6 +85,13 @@ export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
   const [state, dispatch] = useReducer(recipesCreateReducer, initialState);
 
+  const handleSave = async () => {
+    // TODO: fetch to post
+    if (history.length > 0) {
+      history.back();
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.scrollArea1}>
@@ -114,7 +121,7 @@ export default () => {
           <Text style={styles.ingredients3}>{strings.ingredients}</Text>
         </ScrollView>
       </View>
-      <FloatingSave style={styles.floatingSave}></FloatingSave>
+      <FloatingSave style={styles.floatingSave} onPress={() => handleSave }></FloatingSave>
     </View>
   );
 };

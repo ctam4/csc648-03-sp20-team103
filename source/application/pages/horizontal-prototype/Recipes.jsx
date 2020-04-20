@@ -76,6 +76,7 @@ export default () => {
       <AppHeader
         text1={strings.recipes}
         style={styles.materialHeader1}
+        onPressRight1={() => window.location.href = './recipes/search' }
       ></AppHeader>
       <View style={styles.scrollArea}>
         <ScrollView
@@ -99,9 +100,7 @@ export default () => {
         text1={strings.toast_created}
         style={styles.materialToast1}
       ></MaterialToast1>
-      <FloatingCreate
-        style={styles.materialButtonShare}
-      ></FloatingCreate>
+      <FloatingCreate style={styles.materialButtonShare} onPress={() => window.location.href = './recipes/create' }></FloatingCreate>
       <AppFooter style={styles.materialBasicFooter1}></AppFooter>
     </View>
   );
