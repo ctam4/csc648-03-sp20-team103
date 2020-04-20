@@ -22,7 +22,8 @@ const styles = StyleSheet.create({
   caption: {
     color: "#3F51B5",
     fontSize: 14,
-    fontFamily: "Roboto"
+    fontFamily: "Roboto",
+    textTransform: "uppercase"
   }
 });
 

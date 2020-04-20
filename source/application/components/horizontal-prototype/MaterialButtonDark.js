@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
   caption: {
     color: "#fff",
     fontSize: 14,
-    fontFamily: "Roboto"
+    fontFamily: "Roboto",
+    textTransform: "uppercase"
   }
 });
 

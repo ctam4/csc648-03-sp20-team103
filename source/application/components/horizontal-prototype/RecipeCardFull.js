@@ -103,7 +103,8 @@ const styles = StyleSheet.create({
   },
   actionButton1: {
     height: 36,
-    padding: 8
+    padding: 8,
+    textTransform: "uppercase"
   },
   actionText1: {
     color: "#000",
@@ -112,7 +113,8 @@ const styles = StyleSheet.create({
   },
   actionButton2: {
     height: 36,
-    padding: 8
+    padding: 8,
+    textTransform: "uppercase"
   },
   actionText2: {
     color: "#000",
