@@ -1,9 +1,5 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-
-import { store, persistor } from "../../stores/horizontal-prototype/store";
+import React, { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -44,27 +40,27 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateReactClass({
-  render: function() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <View style={styles.container}>
-            <DialogHeader style={styles.materialHeader1}></DialogHeader>
-            <View style={styles.scrollArea}>
-              <ScrollView contentContainerStyle={styles.scrollArea_contentContainerStyle}>
-                <RecipeCardFull
-                  text1="Recipe name"
-                  text2="# servings / # calories per serving"
-                  text3={strings.save}
-                  text4={strings.add_to_cart}
-                  style={styles.materialCard6}
-                ></RecipeCardFull>
-              </ScrollView>
-            </View>
-          </View>
-        </PersistGate>
-      </Provider>
-    );
-  },
-});
+export default () => {
+  const [cookies, setCookie] = useCookies(["session_id"]);
+
+  useEffect(async () => {
+
+  });
+
+  return (
+    <View style={styles.container}>
+      <DialogHeader style={styles.materialHeader1}></DialogHeader>
+      <View style={styles.scrollArea}>
+        <ScrollView contentContainerStyle={styles.scrollArea_contentContainerStyle}>
+          <RecipeCardFull
+            text1="Recipe name"
+            text2="# servings / # calories per serving"
+            text3={strings.save}
+            text4={strings.add_to_cart}
+            style={styles.materialCard6}
+          ></RecipeCardFull>
+        </ScrollView>
+      </View>
+    </View>
+  );
+};

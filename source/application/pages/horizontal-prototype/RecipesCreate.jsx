@@ -1,9 +1,7 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
+import React, { useReducer } from "react";
+import { useCookies } from "react-cookie";
 
-import { store, persistor } from "../../stores/horizontal-prototype/store";
+//import { recipesCreateReducer, initialState } from "../../reducers/horizontal-prototype/RecipesCreate";
 
 import { StyleSheet, View, ScrollView, Text } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -80,42 +78,38 @@ const styles = StyleSheet.create({
     minWidth: 360,
     width: "100%",
     height: 56,
-    marginTop: -740,
   },
 });
 
-export default CreateReactClass({
-  render: function() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-        <View style={styles.container}>
-          <View style={styles.scrollArea1}>
-            <ScrollView
-              contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-            >
-              <Text style={styles.recipeInfo}>{strings.recipe_info}</Text>
-              <FixedLabelTextbox
-                text1={strings.name}
-                style={styles.materialFixedLabelTextbox}
-              ></FixedLabelTextbox>
-              <FixedLabelTextbox
-                text1={strings.serving_size}
-                textInput1=""
-                style={styles.materialFixedLabelTextbox1}
-              ></FixedLabelTextbox>
-              <FixedLabelTextbox
-                text1={strings.cooking_time}
-                style={styles.materialFixedLabelTextbox2}
-              ></FixedLabelTextbox>
-              <Text style={styles.ingredients3}>{strings.ingredients}</Text>
-            </ScrollView>
-          </View>
-          <FloatingSave style={styles.floatingSave}></FloatingSave>
-          <DialogHeader style={styles.materialHeader1}></DialogHeader>
-        </View>
-        </PersistGate>
-      </Provider>
-    );
-  },
-});
+export default () => {
+  const [cookies, setCookie] = useCookies(["session_id"]);
+  //const [state, dispatch] = useReducer(recipesCreateReducer, initialState);
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.scrollArea1}>
+        <DialogHeader style={styles.materialHeader1}></DialogHeader>
+        <ScrollView
+          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
+        >
+          <Text style={styles.recipeInfo}>{strings.recipe_info}</Text>
+          <FixedLabelTextbox
+            text1={strings.name}
+            style={styles.materialFixedLabelTextbox}
+          ></FixedLabelTextbox>
+          <FixedLabelTextbox
+            text1={strings.serving_size}
+            textInput1=""
+            style={styles.materialFixedLabelTextbox1}
+          ></FixedLabelTextbox>
+          <FixedLabelTextbox
+            text1={strings.cooking_time}
+            style={styles.materialFixedLabelTextbox2}
+          ></FixedLabelTextbox>
+          <Text style={styles.ingredients3}>{strings.ingredients}</Text>
+        </ScrollView>
+      </View>
+      <FloatingSave style={styles.floatingSave}></FloatingSave>
+    </View>
+  );
+};

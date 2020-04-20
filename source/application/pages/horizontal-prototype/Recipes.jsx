@@ -1,9 +1,5 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-
-import { store, persistor } from "../../stores/horizontal-prototype/store";
+import React, { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -68,45 +64,45 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateReactClass({
-  render: function() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <View style={styles.container}>
-            <AppHeader
-              text1={strings.recipes}
-              style={styles.materialHeader1}
-            ></AppHeader>
-            <View style={styles.scrollArea}>
-              <ScrollView
-                contentContainerStyle={styles.scrollArea_contentContainerStyle}
-              >
-                <RecipeCard
-                  //onPressLeft={() => {}}
-                  //onPressCenter={() => {}}
-                  //onPressRight={() => {}}
-                  style={styles.recipeCard}
-                ></RecipeCard>
-                <RecipeCard
-                  //onPressLeft={() => {}}
-                  //onPressCenter={() => {}}
-                  //onPressRight={() => {}}
-                  style={styles.recipeCard}
-                ></RecipeCard>
-              </ScrollView>
-            </View>
-            <MaterialToast1
-              text1={strings.toast_created}
-              style={styles.materialToast1}
-            ></MaterialToast1>
-            <FloatingCreate
-              style={styles.materialButtonShare}
-            ></FloatingCreate>
-            <AppFooter style={styles.materialBasicFooter1}></AppFooter>
-          </View>
-          </PersistGate>
-        </Provider>
-    );
-  },
-});
+export default () => {
+  const [cookies, setCookie] = useCookies(["session_id"]);
+
+  useEffect(async () => {
+
+  });
+
+  return (
+    <View style={styles.container}>
+      <AppHeader
+        text1={strings.recipes}
+        style={styles.materialHeader1}
+      ></AppHeader>
+      <View style={styles.scrollArea}>
+        <ScrollView
+          contentContainerStyle={styles.scrollArea_contentContainerStyle}
+        >
+          <RecipeCard
+            //onPressLeft={() => {}}
+            //onPressCenter={() => {}}
+            //onPressRight={() => {}}
+            style={styles.recipeCard}
+          ></RecipeCard>
+          <RecipeCard
+            //onPressLeft={() => {}}
+            //onPressCenter={() => {}}
+            //onPressRight={() => {}}
+            style={styles.recipeCard}
+          ></RecipeCard>
+        </ScrollView>
+      </View>
+      <MaterialToast1
+        text1={strings.toast_created}
+        style={styles.materialToast1}
+      ></MaterialToast1>
+      <FloatingCreate
+        style={styles.materialButtonShare}
+      ></FloatingCreate>
+      <AppFooter style={styles.materialBasicFooter1}></AppFooter>
+    </View>
+  );
+};

@@ -1,9 +1,5 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-
-import { store, persistor } from "../../stores/horizontal-prototype/store";
+import React, { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -54,35 +50,35 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateReactClass({
-  render: function() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <View style={styles.container}>
-            <AppHeader
-              icon2Name={strings.filter}
-              text1={strings.carts}
-              style={styles.materialHeader1}
-            ></AppHeader>
-            <View style={styles.scrollArea1}>
-              <ScrollView
-                contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-              >
-                <CartsCard
-                  text1={strings.user_cart}
-                  text2={strings.last_updated}
-                  text3={strings.preview_cart}
-                  text4={strings.edit}
-                  text5={strings.clear_cart}
-                  style={styles.materialCardWithoutImage}
-                ></CartsCard>
-              </ScrollView>
-            </View>
-            <AppFooter style={styles.materialBasicFooter1}></AppFooter>
-          </View>
-        </PersistGate>
-      </Provider>
-    );
-  },
-});
+export default () => {
+  const [cookies, setCookie] = useCookies(["session_id"]);
+
+  useEffect(async () => {
+
+  });
+
+  return (
+    <View style={styles.container}>
+      <AppHeader
+        icon2Name={strings.filter}
+        text1={strings.carts}
+        style={styles.materialHeader1}
+      ></AppHeader>
+      <View style={styles.scrollArea1}>
+        <ScrollView
+          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
+        >
+          <CartsCard
+            text1={strings.user_cart}
+            text2={strings.last_updated}
+            text3={strings.preview_cart}
+            text4={strings.edit}
+            text5={strings.clear_cart}
+            style={styles.materialCardWithoutImage}
+          ></CartsCard>
+        </ScrollView>
+      </View>
+      <AppFooter style={styles.materialBasicFooter1}></AppFooter>
+    </View>
+  );
+};

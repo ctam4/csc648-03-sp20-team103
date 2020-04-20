@@ -1,9 +1,5 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
-import { Provider } from "react-redux";
-import { PersistGate } from "redux-persist/integration/react";
-
-import { store, persistor } from "../../stores/horizontal-prototype/store";
+import React, { useEffect } from "react";
+import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
 import { MdViewWeek } from "react-icons/md";
@@ -52,34 +48,34 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateReactClass({
-  render: function() {
-    return (
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-        <View style={styles.container}>
-          <AppHeader
-            text1={strings.consumption}
-            rightIcon1={<MdViewWeek />}
-            style={styles.materialHeader1}
-          ></AppHeader>
-          <View style={styles.scrollArea1}>
-            <ScrollView
-              contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-            >
-              <ConsumptionCard
-                text1="user"
-                text2="role"
-                text3="Above is a chart for the last 30 days. This text describes how user did compared to average person only on calories."
-                text4={strings.view_details}
-                style={styles.materialCard3}
-              ></ConsumptionCard>
-            </ScrollView>
-          </View>
-          <AppFooter style={styles.materialBasicFooter1}></AppFooter>
-        </View>
-        </PersistGate>
-      </Provider>
-    );
-  },
-});
+export default () => {
+  const [cookies, setCookie] = useCookies(["session_id"]);
+
+  useEffect(async () => {
+
+  });
+
+  return (
+    <View style={styles.container}>
+      <AppHeader
+        text1={strings.consumption}
+        rightIcon1={<MdViewWeek />}
+        style={styles.materialHeader1}
+      ></AppHeader>
+      <View style={styles.scrollArea1}>
+        <ScrollView
+          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
+        >
+          <ConsumptionCard
+            text1="user"
+            text2="role"
+            text3="Above is a chart for the last 30 days. This text describes how user did compared to average person only on calories."
+            text4={strings.view_details}
+            style={styles.materialCard3}
+          ></ConsumptionCard>
+        </ScrollView>
+      </View>
+      <AppFooter style={styles.materialBasicFooter1}></AppFooter>
+    </View>
+  );
+};
