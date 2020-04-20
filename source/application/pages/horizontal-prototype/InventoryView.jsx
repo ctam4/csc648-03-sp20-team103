@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
@@ -6,6 +6,11 @@ import LocalizedStrings from "react-localization";
 
 import DialogHeader from "../../components/horizontal-prototype/DialogHeader";
 import InventoryCardFull from "../../components/horizontal-prototype/InventoryCardFull";
+
+let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
+if (process.env.API_PORT) {
+  apiUrl += ":" + process.env.API_PORT;
+}
 
 let strings = new LocalizedStrings({
   en: {
@@ -41,9 +46,35 @@ const styles = StyleSheet.create({
 
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
+  const [expirationDate, setExpirationDate] = useState("");
+  const [quantity, setQuantity] = useState("");
+  const [unit, setUnit] = useState("");
+  const [price, setPrice] = useState("");
+  const [state, setState] = useState("");
 
   useEffect(async () => {
-
+    const urlParams = new URLSearchParams(window.location.search);
+    await fetch(apiUrl + '/v2/inventory?inventory_id=' + urlParams.get('id'), {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error('error ' + res.status);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      // TODO: fetch ingrdients info
+      setQuantity(data.quantity);
+      setUnit(data.unit);
+      setPrice(data.price);
+      setState(data.state);
+    })
+    .catch(console.log);
   });
 
   return (
