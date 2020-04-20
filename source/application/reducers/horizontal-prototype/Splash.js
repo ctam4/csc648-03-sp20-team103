@@ -1,14 +1,14 @@
 export const initialState = {
-  sn: "",
-  pin: "",
+  serial_number: "1234",
+  pin: "1234",
 };
 
 export const splashReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SPLASH_SET_SN': {
+    case 'SPLASH_SET_SERIAL_NUMBER': {
       return {
         ...state,
-        sn: action.sn,
+        serial_number: action.serial_number,
       };
     }
     case 'SPLASH_SET_PIN': {

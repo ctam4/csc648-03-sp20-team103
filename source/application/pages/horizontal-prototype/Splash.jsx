@@ -2,7 +2,7 @@ import React, { useReducer } from "react";
 import { useCookies } from "react-cookie";
 
 import { splashReducer, initialState } from "../../reducers/horizontal-prototype/Splash";
-import { setSN, setPIN } from "../../actions/horizontal-prototype/Splash";
+import { setSerialNumber, setPIN } from "../../actions/horizontal-prototype/Splash";
 
 import { StyleSheet, View, Text } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -18,7 +18,7 @@ if (process.env.API_PORT) {
 let strings = new LocalizedStrings({
   en: {
     continue: "Continue",
-    sn: "Serial number",
+    serial_number: "Serial number",
     pin: "PIN",
   },
 });
@@ -65,7 +65,7 @@ export default () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        sn: state.sn,
+        serial_number: state.serial_number,
         pin: state.pin,
       }),
     })
@@ -87,10 +87,10 @@ export default () => {
     <View style={styles.container}>
       <Text style={styles.stockUp}>STOCK UP</Text>
       <StackedLabelTextbox
-        text1={strings.sn}
-        textInput1={state.sn}
+        text1={strings.serial_number}
+        textInput1={state.serial_number}
         style={styles.stackedLabelTextbox}
-        onChange={(e) => dispatch(setSN(e.target.value))}
+        onChange={(e) => dispatch(setSerialNumber(e.target.value))}
       ></StackedLabelTextbox>
       <StackedLabelTextbox
         text1={strings.pin}
