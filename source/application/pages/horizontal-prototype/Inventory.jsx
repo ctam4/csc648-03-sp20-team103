@@ -46,12 +46,10 @@ const styles = StyleSheet.create({
   },
   materialCardWithImageAndTitle: {
     alignSelf: "stretch",
-    height: 166,
     margin: 15,
   },
   materialCardWithImageAndTitle1: {
     alignSelf: "stretch",
-    height: 166,
     margin: 15,
   },
   materialToast1: {

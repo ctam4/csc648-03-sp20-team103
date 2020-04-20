@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
   },
   materialCard3: {
     alignSelf: "stretch",
-    height: 420,
     margin: 15,
   },
   materialBasicFooter1: {

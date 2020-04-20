@@ -40,7 +40,6 @@ const styles = StyleSheet.create({
   },
   materialCard6: {
     alignSelf: "stretch",
-    height: 696,
     margin: 15,
   },
 });

@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
     flexDirection: "column"
   },
   cartsCard1: {
-    height: 320,
     alignSelf: "stretch",
     margin: 15,
     shadowOffset: {
@@ -50,7 +49,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.19
   },
   cartsCard2: {
-    height: 320,
     alignSelf: "stretch",
     margin: 15,
     shadowOffset: {

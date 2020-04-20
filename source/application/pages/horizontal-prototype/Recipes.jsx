@@ -39,7 +39,6 @@ const styles = StyleSheet.create({
   recipesCard: {
     minWidth: 160,
     width: "50%",
-    height: 236,
     margin: 15,
   },
   materialToast1: {
