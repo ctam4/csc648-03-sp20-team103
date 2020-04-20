@@ -30,6 +30,15 @@ router.get('/inventory/view', async (req, res) => {
   res.send(render);
 });
 
+router.get('/inventory/search', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_inventory-search.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: "Search - Inventory - Horizontal prototype",
+  });
+  res.send(render);
+});
+
 router.get('/recipes', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_recipes.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
