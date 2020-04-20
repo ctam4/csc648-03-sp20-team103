@@ -23,65 +23,65 @@ let strings = new LocalizedStrings({
 });
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   scrollArea1: {
     minWidth: 360,
     width: "100%",
     height: 684,
     marginTop: 56,
-    alignSelf: "center"
+    alignSelf: "center",
   },
   scrollArea1_contentContainerStyle: {
     minWidth: 360,
     width: "100%",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   recipeInfo: {
     height: 14,
     color: "#121212",
     alignSelf: "stretch",
     margin: 15,
-    fontFamily: "Roboto"
+    fontFamily: "Roboto",
   },
   materialFixedLabelTextbox: {
     height: 43,
     backgroundColor: "rgba(230, 230, 230,1)",
     alignSelf: "stretch",
-    margin: 15
+    margin: 15,
   },
   materialFixedLabelTextbox1: {
     height: 43,
     backgroundColor: "rgba(230, 230, 230,1)",
     alignSelf: "stretch",
-    margin: 15
+    margin: 15,
   },
   materialFixedLabelTextbox2: {
     height: 43,
     backgroundColor: "rgba(230, 230, 230,1)",
     alignSelf: "stretch",
-    margin: 15
+    margin: 15,
   },
   ingredients3: {
     height: 14,
     color: "#121212",
     alignSelf: "stretch",
     margin: 15,
-    fontFamily: "Roboto"
+    fontFamily: "Roboto",
   },
   floatingSave: {
     bottom: 15,
     width: 56,
     height: 56,
     position: "absolute",
-    right: 15
+    right: 15,
   },
   materialHeader1: {
     minWidth: 360,
     width: "100%",
     height: 56,
-    marginTop: -740
-  }
+    marginTop: -740,
+  },
 });
 
 export default CreateReactClass({

@@ -8,7 +8,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         loggedIn: action.trueFalse,
-      }
+      };
     }
     default: {
       return state;

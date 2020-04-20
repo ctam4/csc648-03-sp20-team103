@@ -24,24 +24,24 @@ const styles = StyleSheet.create({
   materialHeader1: {
     minWidth: 360,
     width: "100%",
-    height: 56
+    height: 56,
   },
   scrollArea: {
     minWidth: 360,
     width: "100%",
     height: 684,
-    backgroundColor: "rgba(230, 230, 230,1)"
+    backgroundColor: "rgba(230, 230, 230,1)",
   },
   scrollArea_contentContainerStyle: {
     minWidth: 360,
     width: "100%",
-    flexDirection: "column"
+    flexDirection: "column",
   },
   materialCard6: {
     minWidth: 330,
     height: 696,
-    margin: 15
-  }
+    margin: 15,
+  },
 });
 
 export default CreateReactClass({

@@ -22,23 +22,23 @@ let strings = new LocalizedStrings({
 });
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
   },
   materialHeader1: {
     minWidth: 360,
     width: "100%",
-    height: 56
+    height: 56,
   },
   scrollArea: {
     minWidth: 360,
     width: "100%",
     height: 628,
-    backgroundColor: "rgba(230, 230, 230,1)"
+    backgroundColor: "rgba(230, 230, 230,1)",
   },
   scrollArea_contentContainerStyle: {
     minWidth: 360,
     width: "100%",
-    flexDirection: "row"
+    flexDirection: "row",
   },
   recipeCard: {
     minWidth: 160,
@@ -59,13 +59,13 @@ const styles = StyleSheet.create({
     right: 15,
     width: 56,
     height: 56,
-    position: "absolute"
+    position: "absolute",
   },
   materialBasicFooter1: {
     minWidth: 360,
     width: "100%",
-    height: 56
-  }
+    height: 56,
+  },
 });
 
 export default CreateReactClass({
