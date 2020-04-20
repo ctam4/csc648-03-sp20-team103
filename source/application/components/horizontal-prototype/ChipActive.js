@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text } from "react-native";
-import Icon from "react-native-vector-icons/";
+import { IconContext } from "react-icons";
+import { MdClose } from "react-icons/md";
 
 function ChipActive(props) {
   return (
     <View style={[styles.container, props.style]}>
       <Text style={styles.chipText}>{props.text1 || "Filter"}</Text>
-      <Icon name="close-circle" style={styles.iconStyle}></Icon>
+      <IconContext.Provider value={{ style: iconStyles.iconStyle }}>
+        <MdClose />
+      </IconContext.Provider>
     </View>
   );
 }
@@ -23,13 +26,15 @@ const styles = StyleSheet.create({
   chipText: {
     color: "rgba(0,0,0,0.87)",
     fontSize: 13
-  },
-  iconStyle: {
+  }
+});
+const iconStyles = {
+  icon: {
     color: "#9E9E9E",
     fontSize: 24,
     marginLeft: 4,
     marginRight: 4
   }
-});
+};
 
 export default ChipActive;

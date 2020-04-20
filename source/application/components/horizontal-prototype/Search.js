@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, View, TouchableOpacity, TextInput } from "react-native";
-import MaterialCommunityIconsIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import { IconContext } from "react-icons";
+import { MdArrowBack, MdClose } from "react-icons/md";
 
 function Search(props) {
   return (
@@ -10,10 +11,9 @@ function Search(props) {
           onPress={props.onPressLeft}
           style={styles.leftIconButton}
         >
-          <MaterialCommunityIconsIcon
-            name="arrow-left"
-            style={styles.leftIcon2}
-          ></MaterialCommunityIconsIcon>
+          <IconContext.Provider value={{ style: iconStyles.leftIcon2 }}>
+            <MdArrowBack />
+          </IconContext.Provider>
         </TouchableOpacity>
         <View style={styles.inputStyleStack}>
           <TextInput
@@ -25,10 +25,9 @@ function Search(props) {
             style={styles.inputStyle}
           ></TextInput>
           <TouchableOpacity style={styles.button} onPress={props.onPressRight}>
-            <MaterialCommunityIconsIcon
-              name="close"
-              style={styles.rightIcon2}
-            ></MaterialCommunityIconsIcon>
+            <IconContext.Provider value={{ style: iconStyles.rightIcon2 }}>
+              <MdClose />
+            </IconContext.Provider>
           </TouchableOpacity>
         </View>
       </View>
@@ -60,12 +59,6 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     marginTop: 5
   },
-  leftIcon2: {
-    backgroundColor: "transparent",
-    color: "#FFFFFF",
-    fontFamily: "Roboto",
-    fontSize: 24
-  },
   inputStyle: {
     top: 0,
     left: 0,
@@ -86,12 +79,6 @@ const styles = StyleSheet.create({
     right: 0,
     padding: 11
   },
-  rightIcon2: {
-    backgroundColor: "transparent",
-    color: "#FFFFFF",
-    fontFamily: "Roboto",
-    fontSize: 24
-  },
   inputStyleStack: {
     width: 298,
     height: 48,
@@ -99,5 +86,15 @@ const styles = StyleSheet.create({
     marginTop: 4
   }
 });
+const iconStyles = {
+  leftIcon2: {
+    color: "#FFFFFF",
+    fontSize: 24
+  },
+  rightIcon2: {
+    color: "#FFFFFF",
+    fontSize: 24
+  }
+};
 
 export default Search;
