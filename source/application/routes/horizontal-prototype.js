@@ -85,4 +85,15 @@ router.get('/consumption', async (req, res) => {
   res.send(render);
 });
 
+router.get('/mealplans', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_mealplans.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: "MealPlans - Horizontal prototype",
+  });
+  res.send(render);
+});
+
+
+
 module.exports = router;
