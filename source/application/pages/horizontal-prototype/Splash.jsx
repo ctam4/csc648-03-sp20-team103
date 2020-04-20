@@ -17,8 +17,7 @@ if (process.env.API_PORT) {
 
 let strings = new LocalizedStrings({
   en: {
-    login: "Login",
-    register: "Register",
+    continue: "Continue",
     sn: "Serial number",
     pin: "PIN",
   },
@@ -64,7 +63,7 @@ export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
   const [state, dispatch] = useReducer(splashReducer, initialState);
 
-  const login = async () => {
+  const handleAuth = async () => {
     await fetch(apiUrl + '/v2/login', {
       method: 'post',
       headers: {
@@ -84,8 +83,9 @@ export default () => {
     })
     .then((data) => {
       // TODO: setCookie
-      //setCookie("session_id", data.);
+      setCookie("session_id", data);
       console.log('Login successful.');
+      window.location.href = './auth';
     })
     .catch(console.log);
   }
@@ -106,9 +106,9 @@ export default () => {
         onChange={(e) => dispatch(setPIN(e.target.value))}
       ></StackedLabelTextbox>
       <MaterialButtonDark
-        text1={strings.login}
+        text1={strings.continue}
         style={styles.materialButtonDark}
-        onPress={() => login()}
+        onPress={() => handleAuth()}
       ></MaterialButtonDark>
     </View>
   );
