@@ -11,7 +11,7 @@ import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1
 
 let strings = new LocalizedStrings({
   en: {
-    centerBarcode: "Center Barcode inside box area ",
+    center_barcode: "Center barcode inside box area",
   },
 });
 
@@ -100,7 +100,7 @@ export default () => {
             {/*<Icon name="info-circle" style={styles.icon1}></Icon>*/}
           </View>
           <MaterialToast1
-            text1={strings.centerBarcode}
+            text1={strings.center_barcode}
             style={styles.materialToast1}
           ></MaterialToast1>
         </View>

@@ -11,7 +11,7 @@ import DialogHeader from "../../components/horizontal-prototype/DialogHeader";
 
 let strings = new LocalizedStrings({
   en: {
-    centerReciept: "Center front of Reciept inside box",
+    center_receipt: "Center front of receipt inside box area",
   },
 });
 
@@ -106,7 +106,7 @@ export default () => {
             {/*<Icon name="info-circle" style={styles.icon}></Icon>*/}
           </View>
           <MaterialToast1
-            text1={strings.centerReciept}
+            text1={strings.center_receipt}
             style={styles.materialToast1}
           ></MaterialToast1>
         </View>

@@ -42,7 +42,7 @@ function RecipesCardFull(props) {
 
 let strings = new LocalizedStrings({
   en: {
-    instructions: "instructions",
+    instructions: "Instructions",
   },
 });
 const styles = StyleSheet.create({
