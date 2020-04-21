@@ -113,6 +113,7 @@ export default () => {
               text2={item.cal_per_day + strings.calories}
               text4={strings.view}
               style={styles.cartsCard1}
+              onPressAction1={() => { window.location.href = './meal-plans/view?id=' }}
             ></MealPlansCard>
           ))}
         </ScrollView>

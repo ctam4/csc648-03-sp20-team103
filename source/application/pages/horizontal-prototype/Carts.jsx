@@ -57,6 +57,10 @@ export default () => {
 
   });
 
+  const handleClearCart = async () => {
+    // TODO: fetch
+  };
+
   return (
     <View style={styles.container}>
       <AppHeader
@@ -75,6 +79,8 @@ export default () => {
             text4={strings.edit}
             text5={strings.clear_cart}
             style={styles.materialCardWithoutImage}
+            onPressAction1={() => { window.location.href = './carts/view?id=' }}
+            onPressAction2={handleClearCart}
           ></CartsCard>
         </ScrollView>
       </View>

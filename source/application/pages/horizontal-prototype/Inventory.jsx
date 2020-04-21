@@ -76,6 +76,10 @@ export default () => {
 
   });
 
+  const handleDiscard = async () => {
+    // TODO: fetch
+  };
+
   return (
     <View style={styles.container}>
       <AppHeader
@@ -94,7 +98,7 @@ export default () => {
             text3={strings.view_log}
             text4={strings.discard}
             onPressAction1={() => { window.location.href = './inventory/view?id=' }}
-            //onPressAction2={() => { }}
+            onPressAction2={handleDiscard}
             style={styles.materialCardWithImageAndTitle}
           ></InventoryCard>
           <InventoryCard
@@ -103,7 +107,7 @@ export default () => {
             text3={strings.view_log}
             text4={strings.discard}
             onPressAction1={() => { window.location.href = './inventory/view?id=' }}
-            //onPressAction2={() => { }}
+            onPressAction2={handleDiscard}
             style={styles.materialCardWithImageAndTitle1}
           ></InventoryCard>
         </ScrollView>

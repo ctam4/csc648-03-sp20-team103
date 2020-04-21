@@ -81,6 +81,10 @@ export default () => {
     .catch(console.log);
   };
 
+  const handleDiscard = async () => {
+    // TODO: fetch
+  };
+
   return (
     <View style={styles.container}>
       <DialogHeader style={styles.materialHeader1}></DialogHeader>
@@ -91,6 +95,7 @@ export default () => {
           <InventoryCardFull
             text3={strings.discard}
             style={styles.materialCard6}
+            onPressAction1={handleDiscard}
           ></InventoryCardFull>
         </ScrollView>
       </View>

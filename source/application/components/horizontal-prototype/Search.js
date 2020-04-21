@@ -4,6 +4,12 @@ import { IconContext } from "react-icons";
 import { MdArrowBack, MdClose } from "react-icons/md";
 
 function Search(props) {
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
+  }
+
   const handleClear = () => {
     // TODO
   }
@@ -12,7 +18,7 @@ function Search(props) {
     <View style={[styles.container, props.style]}>
       <View style={styles.rect1}>
         <TouchableOpacity
-          onPress={props.onPressLeft}
+          onPress={handleGoBack}
           style={styles.leftIconButton}
         >
           <IconContext.Provider value={{ style: iconStyles.leftIcon2 }}>

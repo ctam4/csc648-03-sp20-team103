@@ -72,6 +72,7 @@ export default () => {
             text3="Above is a chart for the last 30 days. This text describes how user did compared to average person only on calories."
             text4={strings.view_details}
             style={styles.materialCard3}
+            onPressAction1={() => { window.location.href = './consumption/view?id=' }}
           ></ConsumptionCard>
         </ScrollView>
       </View>

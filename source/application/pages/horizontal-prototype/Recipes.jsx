@@ -84,13 +84,13 @@ export default () => {
         >
           <RecipesCard
             //onPressLeft={() => {}}
-            //onPressCenter={() => {}}
+            onPressCenter={() => { window.location.href = './recipes/view?id=' }}
             //onPressRight={() => {}}
             style={styles.recipesCard}
           ></RecipesCard>
           <RecipesCard
             //onPressLeft={() => {}}
-            //onPressCenter={() => {}}
+            onPressCenter={() => { window.location.href = './recipes/view?id=' }}
             //onPressRight={() => {}}
             style={styles.recipesCard}
           ></RecipesCard>

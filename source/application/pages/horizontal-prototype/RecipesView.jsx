@@ -84,6 +84,14 @@ export default () => {
     .catch(console.log);
   };
 
+  const handleSave = async () => {
+    // TODO: fetch
+  };
+
+  const handleAddToCart = async () => {
+    // TODO: fetch
+  };
+
   return (
     <View style={styles.container}>
       <DialogHeader style={styles.materialHeader1}></DialogHeader>
@@ -96,6 +104,8 @@ export default () => {
             text4={strings.add_to_cart}
             bodyText1={instructions}
             style={styles.materialCard6}
+            onPressAction1={handleSave}
+            onPressAction2={handleAddToCart}
           ></RecipesCardFull>
         </ScrollView>
       </View>
