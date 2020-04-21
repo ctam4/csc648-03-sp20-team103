@@ -23,7 +23,6 @@ exports.up = (db, callback) => {
           fridge_id: {
             type: "int",
             unsigned: true,
-            length: 32,
             primaryKey: true,
             autoIncrement: true,
           },
@@ -36,6 +35,7 @@ exports.up = (db, callback) => {
             type: "string",
             notNull: true,
           },
+          //to do: default current timestamp
           registered_ts: {
             type: "timestamp",
             notNull: true,
@@ -53,6 +53,7 @@ exports.up = (db, callback) => {
           fridge_id: {
             type: "int",
             unsigned: true,
+            notNull: true,
             foreignKey: {
               name: "fridge_id_sessions",
               table: "v2_fridges",
@@ -83,13 +84,11 @@ exports.up = (db, callback) => {
             type: "int",
             unsigned: true,
             autoIncrement: true,
-            length: 32,
             primaryKey: true,
           },
           fridge_id: {
             type: "int",
             unsigned: true,
-            length: 32,
             notNull: true,
             foreignKey: {
               name: "fridge_id_users",
@@ -110,8 +109,8 @@ exports.up = (db, callback) => {
             type: "string",
             length: 64,
             notNull: true,
-            unique: true,
           },
+          //to do: default current timestamp
           created_ts: {
             type: "timestamp",
             notNull: true,
@@ -125,7 +124,6 @@ exports.up = (db, callback) => {
           nutrition_id: {
             type: "int",
             unsigned: true,
-            length: 32,
             primaryKey: true,
             autoIncrement: true,
           },
@@ -137,15 +135,6 @@ exports.up = (db, callback) => {
           calories_unit: {
             type: "string",
             length: 8,
-            notNull: true,
-          },
-          carbohydrates: {
-            type: "smallint",
-            unsigned: true,
-            notNull: true,
-          },
-          carbohydrates_unit: {
-            type: "string",
             notNull: true,
           },
           fat: {
@@ -164,6 +153,16 @@ exports.up = (db, callback) => {
             notNull: true,
           },
           protein_unit: {
+            type: "string",
+            length: 8,
+            notNull: true,
+          },
+          carbohydrates: {
+            type: "smallint",
+            unsigned: true,
+            notNull: true,
+          },
+          carbohydrates_unit: {
             type: "string",
             length: 8,
             notNull: true,
@@ -197,7 +196,6 @@ exports.up = (db, callback) => {
           recipe_id: {
             type: "int",
             unsigned: true,
-            length: 32,
             primaryKey: true,
             autoIncrement: true,
           },
@@ -213,7 +211,7 @@ exports.up = (db, callback) => {
           },
           image: {
             type: "text",
-            defaultValue: null,
+            notNull: true,
           },
           servings: {
             type: "smallint",
@@ -227,7 +225,7 @@ exports.up = (db, callback) => {
           },
           instructions: {
             type: "text",
-            defaultValue: null,
+            notNull: true,
           },
         },
         ifNotExists: true,
@@ -240,16 +238,16 @@ exports.up = (db, callback) => {
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: "ingredient_id_recipe",
-              table: "v2_ingredients",
-              notNull: true,
+              name: "recipe_id_recipe_ingredients",
+              table: "v2_recipes",
               rules: {
                 onDelete: "CASCADE",
                 onUpdate: "RESTRICT",
               },
-              mapping: "ingredient_id",
+              mapping: "recipe_id",
             },
           },
+          // todo: ingredients_id with fk
           quantity: {
             type: "real",
             notNull: true,
@@ -262,6 +260,7 @@ exports.up = (db, callback) => {
         },
         ifNotExists: true,
       }),
+
       db.createTable.bind(db, "v2_inventory", {
         columns: {
           inventory_id: {
@@ -273,7 +272,6 @@ exports.up = (db, callback) => {
           fridge_id: {
             type: "int",
             unsigned: true,
-            length: 32,
             notNull: true,
             foreignKey: {
               name: "fridge_id_inventory",
@@ -314,6 +312,7 @@ exports.up = (db, callback) => {
           },
           price: {
             type: "int",
+            unsigned: true,
             notNull: true,
           },
           state: {
@@ -336,14 +335,15 @@ exports.down = (db, callback) => {
       db.dropTable("v2_sessions", callback),
       db.dropTable("v2_users", callback),
       db.dropTable("v2_nutrition", callback),
+      db.dropTable("v2_ingredients", callback),
+      db.dropTable("v2_recipes", callback),
       db.dropTable("v2_recipe_ingredients", callback),
       db.dropTable("v2_inventory", callback),
-      db.dropTable("v2_recipes", callback),
     ],
     callback
   );
 };
 
 exports._meta = {
-  version: 1,
+  version: 2,
 };
