@@ -120,7 +120,7 @@ export default () => {
         text1={strings.toast_added}
         style={styles.materialToast1}
       ></MaterialToast1>
-      <FloatingCreate style={styles.floatingCreate} onPress={() => window.location.href = './inventory/add' }></FloatingCreate>
+      <FloatingCreate style={styles.floatingCreate} onPress={() => window.location.href = './inventory/add/receipt' }></FloatingCreate>
       <AppFooter style={styles.materialBasicFooter1}></AppFooter>
     </View>
   );

@@ -72,10 +72,14 @@ export default () => {
     // TODO: fetch
   };
 
+  const handleRemove = async () => {
+    // TODO: fetch
+  }
+
   const handleSave = async () => {
     // TODO: fetch to post
     if (history.length > 0) {
-      history.back();
+      history.go(-2);
     }
   }
 
@@ -98,6 +102,8 @@ export default () => {
             button1={strings.consumption}
             button2={strings.inventory}
             style={styles.materialCardWithImageAndTitle1}
+            //onPressAction1={() => { window.location.href = './inventory/view?id=' }}
+            onPressAction2={handleRemove}
           ></InventoryCard>
           <InventoryCard
             text1={strings.foodName}
@@ -107,6 +113,8 @@ export default () => {
             button1={strings.consumption}
             button2={strings.inventory}
             style={styles.materialCardWithImageAndTitle2}
+            //onPressAction1={() => { window.location.href = './inventory/view?id=' }}
+            onPressAction2={handleRemove}
           ></InventoryCard>
         </ScrollView>
       </View>
