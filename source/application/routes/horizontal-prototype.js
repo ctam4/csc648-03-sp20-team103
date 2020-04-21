@@ -39,6 +39,34 @@ router.get('/inventory/search', async (req, res) => {
   res.send(render);
 });
 
+router.get('/inventory/add', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_inventory-add.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: "Add - Inventory - Horizontal prototype",
+  });
+  res.send(render);
+});
+
+
+router.get('/inventory/addBarcode', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_inventory-add-barcode.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: "Add Barcode - Inventory - Horizontal prototype",
+  });
+  res.send(render);
+});
+
+router.get('/inventory/scanReciept', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_inventory-scan-reciept.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: "Scan Reciept - Inventory - Horizontal prototype",
+  });
+  res.send(render);
+});
+
 router.get('/recipes', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_recipes.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
