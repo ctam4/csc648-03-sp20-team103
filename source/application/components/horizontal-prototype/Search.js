@@ -23,7 +23,6 @@ function Search(props) {
           <TextInput
             placeholder={props.textInput1 || "Search"}
             placeholderTextColor="#ffffff"
-            editable={true}
             selectTextOnFocus={true}
             dataDetector="all"
             style={styles.inputStyle}
