@@ -52,8 +52,12 @@ export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
 
   useEffect(() => {
+    load();
+  }, []);
 
-  });
+  const load = async () => {
+    // TODO: fetch
+  };
 
   return (
     <View style={styles.container}>
