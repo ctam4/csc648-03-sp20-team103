@@ -8,8 +8,8 @@ function RecipesCardFull(props) {
   return (
     <View style={[styles.container, props.style]}>
       <Image
-        //source={require("../assets/images/cardImage1.png")}
-        style={styles.cardItemImagePlace}
+        source={props.cardItemimage}
+        style={styles.cardItemImage}
       ></Image>
       <View style={styles.bodyContent}>
         <Text style={styles.titleStyle}>
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1.5,
     overflow: "hidden"
   },
-  cardItemImagePlace: {
+  cardItemImage: {
     flex: 1,
     backgroundColor: "#ccc",
     minHeight: 210

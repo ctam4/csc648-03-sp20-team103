@@ -14,8 +14,8 @@ function InventoryCard(props) {
           </Text>
         </View>
         <Image
-          //source={require("../assets/images/cardImage2.png")}
-          style={styles.cardItemImagePlace}
+          source={props.cardItemimage}
+          style={styles.cardItemImage}
         ></Image>
       </View>
       <View style={styles.actionBody}>
@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     lineHeight: 16
   },
-  cardItemImagePlace: {
+  cardItemImage: {
     width: 80,
     height: 80,
     backgroundColor: "#ccc",
