@@ -55,6 +55,10 @@ export default () => {
   const [instructions, setInstructions] = useState("");
 
   useEffect(() => {
+    load();
+  }, []);
+
+  const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(apiUrl + '/v2/recipes?recipe_id=' + urlParams.get('id'), {
       method: 'get',
@@ -78,7 +82,7 @@ export default () => {
       setInstructions(data.instructions);
     })
     .catch(console.log);
-  });
+  };
 
   return (
     <View style={styles.container}>
