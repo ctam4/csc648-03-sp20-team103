@@ -1,7 +1,8 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useCookies } from "react-cookie";
 
-//import { inventorySearchReducer, initialState } from "../../reducers/horizontal-prototype/InventorySearch";
+import { inventorySearchReducer, initialState } from "../../reducers/horizontal-prototype/InventorySearch";
+import { setKeywords } from "../../actions/horizontal-prototype/InventorySearch";
 
 import { StyleSheet, View, ScrollView } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -10,7 +11,6 @@ import Search from "../../components/horizontal-prototype/Search";
 
 let strings = new LocalizedStrings({
   en: {
-    keywords: "Keywords",
   },
 });
 const styles = StyleSheet.create({
@@ -37,13 +37,22 @@ const styles = StyleSheet.create({
 
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
-  //const [state, dispatch] = useReducer(inventorySearchReducer, initialState);
+  const [state, dispatch] = useReducer(inventorySearchReducer, initialState);
+
+  useEffect(() => {
+    load();
+  });
+
+  const load = async () => {
+    // TODO: fetch
+  };
 
   return (
     <View style={styles.container}>
       <Search
-        textInput1={strings.keywords}
+        textInput1={state.keywords}
         style={styles.materialSearchBarWithBackground1}
+        onChange={(e) => dispatch(setKeywords(e.target.value))}
       ></Search>
       <View style={styles.scrollArea1}>
         <ScrollView

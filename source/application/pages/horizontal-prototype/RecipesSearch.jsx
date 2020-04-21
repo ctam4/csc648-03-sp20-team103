@@ -1,7 +1,8 @@
-import React, { useReducer } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useCookies } from "react-cookie";
 
-//import { recipesSearchReducer, initialState } from "../../reducers/horizontal-prototype/RecipesCreate";
+import { recipesSearchReducer, initialState } from "../../reducers/horizontal-prototype/RecipesSearch";
+import { setKeywords } from "../../actions/horizontal-prototype/RecipesSearch";
 
 import { StyleSheet, View, ScrollView, Text } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -12,7 +13,6 @@ import Chip from "../../components/horizontal-prototype/Chip";
 
 let strings = new LocalizedStrings({
   en: {
-    keywords: "Keywords",
     choose_calories: "Choose calories per serving",
     choose_servings: "Choose servings",
     choose_fat: "Choose fat per serving",
@@ -176,13 +176,22 @@ const styles = StyleSheet.create({
 
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
-  //const [state, dispatch] = useReducer(recipesCreateReducer, initialState);
+  const [state, dispatch] = useReducer(recipesSearchReducer, initialState);
+
+  useEffect(() => {
+    load();
+  });
+
+  const load = async () => {
+    // TODO: fetch
+  };
 
   return (
     <View style={styles.container}>
       <Search
-        textInput1={strings.keywords}
+        textInput1={state.keywords}
         style={styles.materialSearchBarWithBackground}
+        onChange={(e) => dispatch(setKeywords(e.target.value))}
       ></Search>
       <View style={styles.scrollArea1}>
         <ScrollView

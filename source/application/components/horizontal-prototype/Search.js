@@ -4,6 +4,10 @@ import { IconContext } from "react-icons";
 import { MdArrowBack, MdClose } from "react-icons/md";
 
 function Search(props) {
+  const handleClear = () => {
+    // TODO
+  }
+
   return (
     <View style={[styles.container, props.style]}>
       <View style={styles.rect1}>
@@ -23,9 +27,10 @@ function Search(props) {
             selectTextOnFocus={true}
             dataDetector="all"
             style={styles.inputStyle}
+            onChange={props.onChange}
           ></TextInput>
         </View>
-        <TouchableOpacity style={styles.button} onPress={props.onPressRight}>
+        <TouchableOpacity style={styles.button} onPress={handleClear}>
           <IconContext.Provider value={{ style: iconStyles.rightIcon2 }}>
             <MdClose />
           </IconContext.Provider>
