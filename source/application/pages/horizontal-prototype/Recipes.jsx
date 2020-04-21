@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     minWidth: 360,
     width: "100%",
     minHeight: 628,
+    maxHeight: "100%",
     backgroundColor: "rgba(230, 230, 230,1)",
   },
   scrollArea_contentContainerStyle: {

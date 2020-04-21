@@ -18,11 +18,11 @@ const styles = StyleSheet.create({
     flex: 1
   },
   scrollArea1: {
-    width: 360,
+    minWidth: 360,
     width: "100%",
     minHeight: 684,
-    marginTop: 56,
-    alignSelf: "center"
+    maxHeight: "100%",
+    alignSelf: "center",
   },
   scrollArea1_contentContainerStyle: {
     minWidth: 360,
@@ -32,7 +32,6 @@ const styles = StyleSheet.create({
     minWidth: 360,
     width: "100%",
     height: 56,
-    marginTop: -740
   }
 });
 
@@ -42,15 +41,15 @@ export default () => {
 
   return (
     <View style={styles.container}>
+      <Search
+        textInput1={strings.keywords}
+        style={styles.materialSearchBarWithBackground1}
+      ></Search>
       <View style={styles.scrollArea1}>
         <ScrollView
           contentContainerStyle={styles.scrollArea1_contentContainerStyle}
         ></ScrollView>
       </View>
-      <Search
-        textInput1={strings.keywords}
-        style={styles.materialSearchBarWithBackground1}
-      ></Search>
     </View>
   );
 };
