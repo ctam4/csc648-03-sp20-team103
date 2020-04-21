@@ -13,12 +13,7 @@ import FloatingSave from "../../components/horizontal-prototype/FloatingSave";
 
 let strings = new LocalizedStrings({
   en: {
-    foodName: "Apple",
-    details: "2 ct by user 1 \n stored 10 days ago \n expiring in 2 days",
-    select: "SELECT",
-    empty: "",
-    consumption: "Consumption",
-    inventory: "Inventory",
+    select: "Select",
     remove: "Remove",
   },
 });
@@ -95,23 +90,19 @@ export default () => {
           contentContainerStyle={styles.scrollArea1_contentContainerStyle}
         >
           <InventoryCard
-            text1={strings.foodName}
-            text2={strings.details}
+            text1="Apple"
+            text2={"2 ct by user 1 \nstored 10 days ago \nexpiring in 2 days"}
             text3={strings.select}
-            text4={strings.empty}
-            button1={strings.consumption}
-            button2={strings.inventory}
+            text4={strings.remove}
             style={styles.materialCardWithImageAndTitle1}
             //onPressAction1={() => { window.location.href = './inventory/view?id=' }}
             onPressAction2={handleRemove}
           ></InventoryCard>
           <InventoryCard
-            text1={strings.foodName}
-            text2={strings.details}
+            text1="Milk"
+            text2={"2 ct by user 1 \nstored 10 days ago \nexpiring in 2 days"}
             text3={strings.select}
             text4={strings.remove}
-            button1={strings.consumption}
-            button2={strings.inventory}
             style={styles.materialCardWithImageAndTitle2}
             //onPressAction1={() => { window.location.href = './inventory/view?id=' }}
             onPressAction2={handleRemove}
