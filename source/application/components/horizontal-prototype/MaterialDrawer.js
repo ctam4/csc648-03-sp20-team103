@@ -10,6 +10,10 @@ import LocalizedStrings from "react-localization";
 let strings = new LocalizedStrings({
   en: {
     meal_plans: "Meal Plans",
+    inventory: "Inventory",
+    consumption: "Consumption",
+    carts: "Carts",
+    users: "Users",
   },
 });
 
@@ -25,9 +29,25 @@ function MaterialDrawer(props) {
       </DrawerHeader>
       <DrawerContent>
         <List singleSelection selectedIndex={selectedIndex}>
-          <ListItem>
+          <ListItem  onClick={() => window.location.href = './meal-plans'}>
             <ListItemGraphic graphic={<MaterialIcon icon='folder'/>} />
             <ListItemText primaryText={strings.meal_plans} />
+          </ListItem>
+          <ListItem  onClick={() => window.location.href = './inventory'}>
+            <ListItemGraphic graphic={<MaterialIcon icon='list_alt'/>} />
+            <ListItemText primaryText={strings.inventory} />
+          </ListItem>
+          <ListItem onClick={() => window.location.href = './consumption'}>
+            <ListItemGraphic graphic={<MaterialIcon icon='bar_chart'/>} />
+            <ListItemText primaryText={strings.consumption} />
+          </ListItem>
+          <ListItem onClick={() => window.location.href = './carts'}>
+            <ListItemGraphic graphic={<MaterialIcon icon='shopping_cart'/>} />
+            <ListItemText primaryText={strings.carts} />
+          </ListItem>
+          <ListItem >
+            <ListItemGraphic graphic={<MaterialIcon icon='supervisor_account'/>} />
+            <ListItemText primaryText={strings.users} />
           </ListItem>
         </List>
       </DrawerContent>
