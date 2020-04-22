@@ -5,7 +5,7 @@ import { StyleSheet, View } from "react-native";
 import { MdAdd } from "react-icons/md";
 import LocalizedStrings from "react-localization";
 
-import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
+import MaterialSnackbar from "../../components/horizontal-prototype/MaterialSnackbar";
 import DialogHeader from "../../components/horizontal-prototype/DialogHeader";
 
 //import Icon from "react-icons/md";
@@ -47,14 +47,6 @@ const styles = StyleSheet.create({
     width: 18,
     marginTop: 24,
     marginLeft: 269,
-  },
-  materialToast1: {
-    top: 66,
-    left: 15,
-    minWidth: 330,
-    width: "100%",
-    height: 48,
-    position: "absolute",
   },
   rect2Stack: {
     width: 330,
@@ -126,10 +118,7 @@ export default () => {
         </View>
         */}
       </View>
-      <MaterialToast1
-        text1={strings.center_receipt}
-        style={styles.materialToast1}
-      ></MaterialToast1>
+      <MaterialSnackbar message={strings.center_receipt} />
     </View>
   );
 };

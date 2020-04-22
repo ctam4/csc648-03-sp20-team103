@@ -8,8 +8,8 @@ import LocalizedStrings from "react-localization";
 
 import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
 import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
+import MaterialSnackbar from "../../components/horizontal-prototype/MaterialSnackbar";
 import RecipesCard from "../../components/horizontal-prototype/RecipesCard";
-import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
 import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
 import AppFooter from "../../components/horizontal-prototype/AppFooter";
 
@@ -36,14 +36,6 @@ const styles = StyleSheet.create({
     minWidth: 160,
     width: "50%",
     margin: 15,
-  },
-  materialToast1: {
-    bottom: 132,
-    left: 15,
-    minWidth: 330,
-    width: "100%" - 30,
-    height: 48,
-    position: "absolute",
   },
   materialButtonShare: {
     bottom: 61,
@@ -106,10 +98,7 @@ export default () => {
               ></RecipesCard>
             </ScrollView>
           </View>
-          <MaterialToast1
-            text1={strings.toast_created}
-            style={styles.materialToast1}
-          ></MaterialToast1>
+          <MaterialSnackbar message={strings.toast_created} />
           <FloatingCreate style={styles.materialButtonShare} onPress={() => window.location.href = './recipes/create' }></FloatingCreate>
           <AppFooter style={styles.materialBasicFooter1}></AppFooter>
         </DrawerAppContent>
