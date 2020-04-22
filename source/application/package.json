@@ -3,25 +3,58 @@
   "version": "1.0.0",
   "main": "app.js",
   "scripts": {
-    "build-watch": "parcel watch ./public/* -d ./build/",
+    "build-watch": "parcel watch ./public/*.html -d ./build/",
     "start-watch": "nodemon --watch . app.js",
     "build": "parcel build ./public/* -d ./build/",
-    "start": "node app.js"
+    "start": "node app.js",
+    "test": "ava",
+    "test-watch": "ava --watch"
   },
   "author": "Team 103",
   "license": "MIT",
   "keywords": [],
   "description": "",
   "dependencies": {
+    "@material/react-button": "^0.15.0",
+    "@material/react-drawer": "^0.15.0",
+    "@material/react-fab": "^0.15.0",
+    "@material/react-list": "^0.15.0",
+    "@material/react-material-icon": "^0.15.0",
+    "@material/react-snackbar": "^0.15.0",
+    "@material/react-text-field": "^0.15.0",
+    "@material/react-top-app-bar": "^0.15.0",
+    "ava": "^3.6.0",
     "compression": "^1.7.4",
     "create-react-class": "^15.6.3",
+    "enzyme": "^3.11.0",
     "express": "^4.17.1",
-    "handlebars": "^4.7.3",
+    "handlebars": "^4.7.6",
+    "parcel-bundler": "^1.12.4",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1"
+    "react-addons-test-utils": "^15.6.2",
+    "react-cookie": "^4.0.3",
+    "react-dom": "^16.13.1",
+    "react-icons": "^3.9.0",
+    "react-localization": "^1.0.15",
+    "react-native-web": "^0.12.2",
+    "react-redux": "^7.2.0",
+    "redux": "^4.0.5",
+    "redux-persist": "^6.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.2",
+    "nodemon": "^2.0.3",
     "parcel-bundler": "^1.12.4"
-  }
+  },
+  "alias": {
+    "react-native": "react-native-web"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 ChromeAndroid versions",
+    "last 2 FirefoxAndroid versions",
+    "last 2 iOS versions",
+    "last 2 Android versions"
+  ]
 }
