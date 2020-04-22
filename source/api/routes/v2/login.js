@@ -27,11 +27,12 @@ login.post('/', async (req, res) => {
       if (rows.length > 0) {
         // @todo handle possible duplicate sessions
         const fridgeID = rows[0].fridge_id
-        const sessionID = uuid.v4();
+        const session = uuid.v4();
 
-        await connection.query("INSERT INTO v2_sessions(session, fridge_id, expires_ts) VALUES (?, ?, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 MONTH))", [ sessionID, fridgeID ]);
-        res.setHeader("SessionID", sessionID);
-        res.sendStatus(200).end();
+        const results = (await connection.query("SELECT CURRENT_TIMESTAMP as logged_in_ts, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 MONTH) as expires_ts"))[0];
+        await connection.query("INSERT INTO v2_sessions(session, fridge_id, logged_in_ts, expires_ts) VALUES (?, ?, ?, ?)", [session, fridgeID, results.logged_in_ts, results.expires_ts]);
+
+        res.send({...results, session: session}).end();
       } else {
         res.sendStatus(404).end();
       }
@@ -76,7 +77,6 @@ login.delete('/', async (req, res) => {
     await connection.query(sql)
     .then((results) => {
       res.send(JSON.stringify(results)).end()
-      // res.json(results).end();
     });
   } catch (error) {
     res.sendStatus(500).end();
