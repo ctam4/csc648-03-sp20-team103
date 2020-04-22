@@ -88,8 +88,7 @@ export default () => {
       return res.json()
     })
     .then((data) => {
-      console.log(data);
-      setCookie("Session", data.session, {
+      setCookie("session", data.session, {
         //httpOnly: true,
         expires: new Date(data.expires_ts),
       });

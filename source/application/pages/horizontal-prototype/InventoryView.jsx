@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
 });
 
 export default () => {
-  const [cookies, setCookie] = useCookies(["session_id"]);
+  const [cookies, setCookie] = useCookies(["session"]);
   const [expirationDate, setExpirationDate] = useState("");
   const [quantity, setQuantity] = useState("");
   const [unit, setUnit] = useState("");

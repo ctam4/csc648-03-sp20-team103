@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
 });
 
 export default () => {
-  const [cookies, setCookie] = useCookies(["session_id"]);
+  const [cookies, setCookie] = useCookies(["session"]);
 
   return (
     <View style={styles.container}>

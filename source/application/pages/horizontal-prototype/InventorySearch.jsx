@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
 });
 
 export default () => {
-  const [cookies, setCookie] = useCookies(["session_id"]);
+  const [cookies, setCookie] = useCookies(["session"]);
   const [state, dispatch] = useReducer(inventorySearchReducer, initialState);
 
   useEffect(() => {
