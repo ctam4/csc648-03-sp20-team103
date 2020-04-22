@@ -22,7 +22,7 @@ function MaterialDrawer(props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   return (
-    <Drawer modal open={props.open}>
+    <Drawer modal open={props.open} onClose={props.onClose}>
       <DrawerHeader>
         <DrawerTitle tag='h2'>
           {props.title}

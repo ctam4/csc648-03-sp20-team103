@@ -112,6 +112,7 @@ export default () => {
       <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer
           open={drawerOpen}
+          onClose={toggleDrawer}
         ></MaterialDrawer>
         <DrawerAppContent className="drawer-app-content">
           <View style={styles.scrollArea}>
