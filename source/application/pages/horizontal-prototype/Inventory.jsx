@@ -21,6 +21,9 @@ let strings = new LocalizedStrings({
     view_log: "View log",
     discard: "Discard",
     toast_added: "Item added to inventory.",
+    toast_edited: "Item edited in inventory.",
+    toast_consumed: "Item consumed from inventory.",
+    toast_discarded: "Item discarded from inventory.",
   },
 });
 const styles = StyleSheet.create({

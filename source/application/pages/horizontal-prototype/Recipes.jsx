@@ -19,6 +19,8 @@ let strings = new LocalizedStrings({
   en: {
     recipes: "Recipes",
     toast_created: "Recipe created.",
+    toast_edited: "Recipe edited.",
+    toast_favorited: "Recipe favorited.",
   },
 });
 const styles = StyleSheet.create({

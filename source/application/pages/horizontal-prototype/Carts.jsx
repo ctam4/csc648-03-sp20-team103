@@ -16,7 +16,7 @@ let strings = new LocalizedStrings({
     carts: "Carts",
     last_updated: "last updated",
     user_cart: "'s cart",
-    preview_cart: "this is the preview of the cart, maybe upto 10 lines of items with quantity",
+    preview_cart: "This is the preview of the cart. It may shows up to 10 lines of items with quantity",
     edit: "Edit",
     clear_cart: "Clear cart",
   },
