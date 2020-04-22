@@ -7,8 +7,8 @@ import { setSerialNumber, setPIN } from "../../actions/horizontal-prototype/Spla
 import { StyleSheet, View, Text } from "react-native";
 import LocalizedStrings from "react-localization";
 
-import StackedLabelTextbox from "../../components/horizontal-prototype/StackedLabelTextbox";
-import MaterialButtonDark from "../../components/horizontal-prototype/MaterialButtonDark";
+import MaterialTextField from "../../components/horizontal-prototype/MaterialTextField";
+import MaterialButton from "../../components/horizontal-prototype/MaterialButton";
 
 let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
 if (process.env.API_PORT) {
@@ -19,36 +19,22 @@ let strings = new LocalizedStrings({
   en: {
     continue: "Continue",
     serial_number: "Serial number",
+    serial_number_helper: "This is located in the front of interior or exterior of your fridge.",
     pin: "PIN",
+    pin_helper: "This is the PIN number to log-in to your fridge.",
   },
 });
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    width: 320,
+    margin: "auto",
   },
   stockUp: {
     color: "rgba(65,117,5,1)",
     fontSize: 60,
     fontWeight: "100",
     fontFamily: "Roboto",
-    marginTop: 223,
-    alignSelf: "center",
-  },
-  stackedLabelTextbox: {
-    width: 270,
-    height: 60,
-    marginTop: 37,
-    alignSelf: "center",
-  },
-  stackedLabelTextbox1: {
-    width: 270,
-    height: 60,
-    alignSelf: "center",
-  },
-  materialButtonDark: {
-    minWidth: 100,
-    height: 36,
-    marginTop: 45,
+    marginBottom: 50,
     alignSelf: "center",
   },
 });
@@ -117,23 +103,19 @@ export default () => {
   return (
     <View style={styles.container}>
       <Text style={styles.stockUp}>STOCK UP</Text>
-      <StackedLabelTextbox
-        text1={strings.serial_number}
-        textInput1={state.serial_number}
-        style={styles.stackedLabelTextbox}
+      <MaterialTextField
+        label={strings.serial_number}
+        helperText={strings.serial_number_helper}
         onChange={(e) => dispatch(setSerialNumber(e.target.value))}
-      ></StackedLabelTextbox>
-      <StackedLabelTextbox
-        text1={strings.pin}
-        textInput1={state.pin}
-        style={styles.stackedLabelTextbox1}
+        onTrailingIconSelect={() => dispatch(setSerialNumber(""))}
+      ></MaterialTextField>
+      <MaterialTextField
+        label={strings.pin}
+        helperText={strings.pin_helper}
         onChange={(e) => dispatch(setPIN(e.target.value))}
-      ></StackedLabelTextbox>
-      <MaterialButtonDark
-        text1={strings.continue}
-        style={styles.materialButtonDark}
-        onPress={handleAuth}
-      ></MaterialButtonDark>
+        onTrailingIconSelect={() => dispatch(setPIN(""))}
+      ></MaterialTextField>
+      <MaterialButton onClick={handleAuth} raised>{strings.continue}</MaterialButton>
     </View>
   );
 };
