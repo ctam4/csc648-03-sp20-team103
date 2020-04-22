@@ -1,8 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
 import { MdFilterList } from "react-icons/md";
+import { TopAppBarFixedAdjust } from "@material/react-top-app-bar";
+import { DrawerAppContent } from "@material/react-drawer";
 import LocalizedStrings from "react-localization";
 
 import AppHeader from "../../components/horizontal-prototype/AppHeader";
@@ -10,6 +12,8 @@ import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
 import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
 import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
 import AppFooter from "../../components/horizontal-prototype/AppFooter";
+import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
+import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
 
 let strings = new LocalizedStrings({
   en: {
@@ -71,6 +75,7 @@ const styles = StyleSheet.create({
 
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     load();
@@ -84,14 +89,22 @@ export default () => {
     // TODO: fetch
   };
 
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
   return (
-    <View style={styles.container}>
-      <AppHeader
-        text1={strings.inventory}
-        rightIcon2={<MdFilterList />}
-        style={styles.materialHeader1}
-        onPressRight1={() => window.location.href = './inventory/search' }
-      ></AppHeader>
+    <View style={styles.drawerContainer}>
+      <MaterialTopAppBar
+        title={strings.inventory}
+        onClick={() => toggleDrawer()}
+        //icon2Name={strings.filter}
+      ></MaterialTopAppBar>
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <MaterialDrawer
+          open={drawerOpen}
+        ></MaterialDrawer>
+        <DrawerAppContent className="drawer-app-content">
       <View style={styles.scrollArea1}>
         <ScrollView
           contentContainerStyle={styles.scrollArea1_contentContainerStyle}
@@ -122,6 +135,8 @@ export default () => {
       ></MaterialToast1>
       <FloatingCreate style={styles.floatingCreate} onPress={() => window.location.href = './inventory/add/receipt' }></FloatingCreate>
       <AppFooter style={styles.materialBasicFooter1}></AppFooter>
+      </DrawerAppContent>
+      </TopAppBarFixedAdjust>
     </View>
   );
 };

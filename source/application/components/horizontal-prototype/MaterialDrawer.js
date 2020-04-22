@@ -14,6 +14,7 @@ let strings = new LocalizedStrings({
     consumption: "Consumption",
     carts: "Carts",
     users: "Users",
+    recipes: "Recipes",
   },
 });
 
@@ -45,9 +46,9 @@ function MaterialDrawer(props) {
             <ListItemGraphic graphic={<MaterialIcon icon='shopping_cart'/>} />
             <ListItemText primaryText={strings.carts} />
           </ListItem>
-          <ListItem >
-            <ListItemGraphic graphic={<MaterialIcon icon='supervisor_account'/>} />
-            <ListItemText primaryText={strings.users} />
+          <ListItem onClick={() => window.location.href = './recipes'} >
+            <ListItemGraphic graphic={<MaterialIcon icon='description'/>} />
+            <ListItemText primaryText={strings.recipes} />
           </ListItem>
         </List>
       </DrawerContent>

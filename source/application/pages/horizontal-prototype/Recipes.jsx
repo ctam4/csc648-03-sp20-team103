@@ -1,8 +1,13 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
+import { TopAppBarFixedAdjust } from "@material/react-top-app-bar";
+import { DrawerAppContent } from "@material/react-drawer";
 import LocalizedStrings from "react-localization";
+
+import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
+import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
 
 import AppHeader from "../../components/horizontal-prototype/AppHeader";
 import RecipesCard from "../../components/horizontal-prototype/RecipesCard";
@@ -66,6 +71,7 @@ const styles = StyleSheet.create({
 
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     load();
@@ -75,13 +81,22 @@ export default () => {
     // TODO: fetch
   };
 
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
   return (
-    <View style={styles.container}>
-      <AppHeader
-        text1={strings.recipes}
-        style={styles.materialHeader1}
-        onPressRight1={() => window.location.href = './recipes/search' }
-      ></AppHeader>
+    <View style={styles.drawerContainer}>
+      <MaterialTopAppBar
+        title={strings.recipes}
+        onClick={() => toggleDrawer()}
+        //icon2Name={strings.filter}
+      ></MaterialTopAppBar>
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <MaterialDrawer
+          open={drawerOpen}
+        ></MaterialDrawer>
+        <DrawerAppContent className="drawer-app-content">
       <View style={styles.scrollArea}>
         <ScrollView
           contentContainerStyle={styles.scrollArea_contentContainerStyle}
@@ -106,6 +121,8 @@ export default () => {
       ></MaterialToast1>
       <FloatingCreate style={styles.materialButtonShare} onPress={() => window.location.href = './recipes/create' }></FloatingCreate>
       <AppFooter style={styles.materialBasicFooter1}></AppFooter>
+      </DrawerAppContent>
+      </TopAppBarFixedAdjust>
     </View>
   );
 };
