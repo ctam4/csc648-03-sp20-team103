@@ -1,5 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useReducer } from "react";
 import { useCookies } from "react-cookie";
+
+import { inventoryAddReducer, initialState } from "../../reducers/horizontal-prototype/InventoryAdd";
+import { setKeywords } from "../../actions/horizontal-prototype/InventoryAdd";
 
 import { StyleSheet, View, ScrollView } from "react-native";
 import LocalizedStrings from "react-localization";
@@ -10,110 +13,103 @@ import FloatingSave from "../../components/horizontal-prototype/FloatingSave";
 
 let strings = new LocalizedStrings({
   en: {
-    foodName: "Apple",
-    details: "2 ct by user 1 \n stored 10 days ago \n expiring in 2 days",
-    select: "SELECT",
-    empty: "",
-    consumption: "Consumption",
-    inventory: "Inventory",
-    remove: "REMOVE",
-    keywords: "Keywords",
+    select: "Select",
+    remove: "Remove",
   },
 });
-
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1
-  },
-  search: {
-    width: 375,
-    height: 56,
-    marginTop: 12
+    flex: 1,
   },
   scrollArea1: {
-    width: 360,
-    height: 684,
+    minWidth: 360,
+    width: "100%",
+    minHeight: 684,
+    maxHeight: "100%",
     backgroundColor: "rgba(230, 230, 230,1)",
-    marginLeft: 20
   },
   scrollArea1_contentContainerStyle: {
-    width: 360,
-    height: 2812,
-    flexDirection: "column"
+    minWidth: 360,
+    width: "100%",
+    flexDirection: "column",
   },
   materialCardWithImageAndTitle1: {
-    width: 330,
-    height: 166,
-    alignSelf: "center",
-    marginTop: 16
+    alignSelf: "stretch",
+    margin: 15,
   },
   materialCardWithImageAndTitle2: {
-    width: 330,
-    height: 166,
-    alignSelf: "center",
-    marginTop: 14
+    alignSelf: "stretch",
+    margin: 15,
   },
   floatingSave1: {
+    bottom: 15,
     width: 56,
     height: 56,
-    marginTop: 251,
-    marginLeft: 289
-  },
-  searchRow: {
-    height: 684,
-    flexDirection: "row",
-    marginTop: 56,
-    marginLeft: -395
+    position: "absolute",
+    right: 15,
   },
   materialSearchBarWithBackground1: {
-    width: 360,
+    minWidth: 360,
+    width: "100%",
     height: 56,
-    marginTop: -740
   }
 });
 
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
+  const [state, dispatch] = useReducer(inventoryAddReducer, initialState);
 
   useEffect(() => {
-
+    load();
   });
+
+  const load = async () => {
+    // TODO: fetch
+  };
+
+  const handleRemove = async () => {
+    // TODO: fetch
+  }
+
+  const handleSave = async () => {
+    // TODO: fetch to post
+    if (history.length > 0) {
+      history.go(-2);
+    }
+  }
 
   return (
     <View style={styles.container}>
-      <View style={styles.searchRow}>
-        <Search style={styles.search}></Search>
-        <View style={styles.scrollArea1}>
-          <ScrollView
-            contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-          >
-            <InventoryCard
-              text1={strings.foodName}
-              text2={strings.details}
-              text3={strings.select}
-              text4={strings.empty}
-              button1={strings.consumption}
-              button2={strings.inventory}
-              style={styles.materialCardWithImageAndTitle1}
-            ></InventoryCard>
-            <InventoryCard
-              text1={strings.foodName}
-              text2={strings.details}
-              text3={strings.select}
-              text4={strings.remove}
-              button1={strings.consumption}
-              button2={strings.inventory}
-              style={styles.materialCardWithImageAndTitle2}
-            ></InventoryCard>
-            <FloatingSave style={styles.floatingSave1}></FloatingSave>
-          </ScrollView>
-        </View>
-      </View>
       <Search
-        textInput1={strings.keywords}
+        textInput1={state.keywords}
         style={styles.materialSearchBarWithBackground1}
+        onChange={(e) => dispatch(setKeywords(e.target.value))}
       ></Search>
+      <View style={styles.scrollArea1}>
+        <ScrollView
+          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
+        >
+          <InventoryCard
+            text1="Apple"
+            text2={"2 ct by user 1 \nstored 10 days ago \nexpiring in 2 days"}
+            text3={strings.select}
+            text4={strings.remove}
+            style={styles.materialCardWithImageAndTitle1}
+            //onPressAction1={() => { window.location.href = './inventory/view?id=' }}
+            onPressAction2={handleRemove}
+          ></InventoryCard>
+          <InventoryCard
+            text1="Milk"
+            text2={"2 ct by user 1 \nstored 10 days ago \nexpiring in 2 days"}
+            text3={strings.select}
+            text4={strings.remove}
+            style={styles.materialCardWithImageAndTitle2}
+            //onPressAction1={() => { window.location.href = './inventory/view?id=' }}
+            onPressAction2={handleRemove}
+          ></InventoryCard>
+        </ScrollView>
+      </View>
+      <FloatingSave style={styles.floatingSave1} onPress={handleSave}></FloatingSave>
     </View>
   );
 };

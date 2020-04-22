@@ -7,8 +7,8 @@ function RecipesCard(props) {
   return (
     <View style={[styles.container, props.style]}>
       <Image
-        //source={require("../assets/images/cardImage.png")}
-        style={styles.cardItemImagePlace}
+        source={props.cardItemimage}
+        style={styles.cardItemImage}
       ></Image>
       <View style={styles.buttonGroup}>
         <TouchableOpacity style={styles.leftBtn} onPress={props.onPressLeft}>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     shadowRadius: 1.5,
     overflow: "hidden"
   },
-  cardItemImagePlace: {
+  cardItemImage: {
     flex: 1,
     backgroundColor: "#ccc",
     minHeight: 180

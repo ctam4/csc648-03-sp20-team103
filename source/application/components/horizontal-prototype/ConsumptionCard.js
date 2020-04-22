@@ -7,7 +7,7 @@ function ConsumptionCard(props) {
       <View style={styles.cardItem1Style}>
         <View style={styles.headerStyle}>
           <Image
-            //source={require("assets/images/cardImage3.png")}
+            source={props.leftImage}
             style={styles.leftImage}
           ></Image>
           <View style={styles.headerContent}>
@@ -17,8 +17,8 @@ function ConsumptionCard(props) {
         </View>
       </View>
       <Image
-        //source={require("assets/images/cardImage4.png")}
-        style={styles.cardItemImagePlace}
+        source={props.cardItemimage}
+        style={styles.cardItemImage}
       ></Image>
       <View style={styles.body}>
         <Text style={styles.bodyText}>{props.text3}</Text>
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     lineHeight: 16
   },
-  cardItemImagePlace: {
+  cardItemImage: {
     flex: 1,
     backgroundColor: "#ccc",
     minHeight: 210

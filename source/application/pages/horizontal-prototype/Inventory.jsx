@@ -98,7 +98,7 @@ export default () => {
         >
           <InventoryCard
             text1="Apple"
-            text2="2 ct by user 1 \n stored 10 days ago \n expiring in 2 days"
+            text2={"2 ct by user 1 \nstored 10 days ago \nexpiring in 2 days"}
             text3={strings.view_log}
             text4={strings.discard}
             onPressAction1={() => { window.location.href = './inventory/view?id=' }}
@@ -106,8 +106,8 @@ export default () => {
             style={styles.materialCardWithImageAndTitle}
           ></InventoryCard>
           <InventoryCard
-            text1="Milk \n Brand A 2% fat"
-            text2="1 gal by user 1 \n stored 1 day ago \n expiring in 21 days"
+            text1="Milk"
+            text2={"1 gal by user 1 \nstored 1 day ago \nexpiring in 21 days"}
             text3={strings.view_log}
             text4={strings.discard}
             onPressAction1={() => { window.location.href = './inventory/view?id=' }}
@@ -120,7 +120,7 @@ export default () => {
         text1={strings.toast_added}
         style={styles.materialToast1}
       ></MaterialToast1>
-      <FloatingCreate style={styles.floatingCreate} onPress={() => window.location.href = './inventory/add' }></FloatingCreate>
+      <FloatingCreate style={styles.floatingCreate} onPress={() => window.location.href = './inventory/add/receipt' }></FloatingCreate>
       <AppFooter style={styles.materialBasicFooter1}></AppFooter>
     </View>
   );
