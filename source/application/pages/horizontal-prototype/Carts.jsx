@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
-import { DrawerAppContent } from "@material/react-top-app-bar";
-import TopAppBarFixedAdjust from "@material/react-top-app-bar";
+import { TopAppBarFixedAdjust } from "@material/react-top-app-bar";
+import { DrawerAppContent } from "@material/react-drawer";
 import LocalizedStrings from "react-localization";
 
 import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
@@ -22,23 +22,10 @@ let strings = new LocalizedStrings({
   },
 });
 const styles = StyleSheet.create({
-  drawerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    height: "100vh",
-    overflow: "hidden",
-  },
-  topAppBarFixAdjust: {
-    display: "flex",
-    width: "100%",
-  },
-  drawerAppContent: {
-    flex: "auto",
-    overflow: "auto",
-  },
   scrollArea1: {
     minWidth: 360,
     width: "100%",
+    height: "100%",
     minHeight: 628,
     maxHeight: "100%",
     backgroundColor: "rgba(230, 230, 230,1)",
@@ -86,12 +73,11 @@ export default () => {
         onClick={() => toggleDrawer()}
         //icon2Name={strings.filter}
       ></MaterialTopAppBar>
-      <TopAppBarFixedAdjust style={styles.topAppBarFixAdjust}>
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer
           open={drawerOpen}
         ></MaterialDrawer>
-        {/*
-        <DrawerAppContent style={styles.drawerAppContent}>
+        <DrawerAppContent className="drawer-app-content">
           <View style={styles.scrollArea1}>
             <ScrollView
               contentContainerStyle={styles.scrollArea1_contentContainerStyle}
@@ -107,10 +93,9 @@ export default () => {
                 onPressAction2={handleClearCart}
               ></CartsCard>
             </ScrollView>
+            <AppFooter style={styles.materialBasicFooter1}></AppFooter>
           </View>
         </DrawerAppContent>
-        <AppFooter style={styles.materialBasicFooter1}></AppFooter>
-        */}
       </TopAppBarFixedAdjust>
     </View>
   );
