@@ -20,6 +20,16 @@ services:
       - .:/home/node/app/:ro
       - ./node_modules/:/home/node/app/node_modules/:ro
     command: "npm run start-watch"
+  node-ava:
+    image: "node:12.15.0"
+    user: "node"
+    environment:
+      NODE_ENV: "development"
+    working_dir: /home/node/app/
+    volumes:
+      - .:/home/node/app/
+      - ./node_modules/:/home/node/app/node_modules/:ro
+    command: "npm run test-watch"
   mariadb:
     image: "mariadb:10.4.12"
     ports:
