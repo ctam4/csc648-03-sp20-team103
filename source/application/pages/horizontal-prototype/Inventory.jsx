@@ -6,12 +6,12 @@ import { TopAppBarFixedAdjust } from "@material/react-top-app-bar";
 import { DrawerAppContent } from "@material/react-drawer";
 import LocalizedStrings from "react-localization";
 
+import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
+import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
 import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
 import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
 import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
 import AppFooter from "../../components/horizontal-prototype/AppFooter";
-import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
-import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
 
 let strings = new LocalizedStrings({
   en: {
@@ -94,37 +94,37 @@ export default () => {
           open={drawerOpen}
         ></MaterialDrawer>
         <DrawerAppContent className="drawer-app-content">
-      <View style={styles.scrollArea1}>
-        <ScrollView
-          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-        >
-          <InventoryCard
-            text1="Apple"
-            text2={"2 ct by user 1 \nstored 10 days ago \nexpiring in 2 days"}
-            text3={strings.view_log}
-            text4={strings.discard}
-            onPressAction1={() => { window.location.href = './inventory/view?id=' }}
-            onPressAction2={handleDiscard}
-            style={styles.materialCardWithImageAndTitle}
-          ></InventoryCard>
-          <InventoryCard
-            text1="Milk"
-            text2={"1 gal by user 1 \nstored 1 day ago \nexpiring in 21 days"}
-            text3={strings.view_log}
-            text4={strings.discard}
-            onPressAction1={() => { window.location.href = './inventory/view?id=' }}
-            onPressAction2={handleDiscard}
-            style={styles.materialCardWithImageAndTitle1}
-          ></InventoryCard>
-        </ScrollView>
-      </View>
-      <MaterialToast1
-        text1={strings.toast_added}
-        style={styles.materialToast1}
-      ></MaterialToast1>
-      <FloatingCreate style={styles.floatingCreate} onPress={() => window.location.href = './inventory/add/receipt' }></FloatingCreate>
-      <AppFooter style={styles.materialBasicFooter1}></AppFooter>
-      </DrawerAppContent>
+        <View style={styles.scrollArea1}>
+          <ScrollView
+            contentContainerStyle={styles.scrollArea1_contentContainerStyle}
+          >
+            <InventoryCard
+              text1="Apple"
+              text2={"2 ct by user 1 \nstored 10 days ago \nexpiring in 2 days"}
+              text3={strings.view_log}
+              text4={strings.discard}
+              onPressAction1={() => { window.location.href = './inventory/view?id=' }}
+              onPressAction2={handleDiscard}
+              style={styles.materialCardWithImageAndTitle}
+            ></InventoryCard>
+            <InventoryCard
+              text1="Milk"
+              text2={"1 gal by user 1 \nstored 1 day ago \nexpiring in 21 days"}
+              text3={strings.view_log}
+              text4={strings.discard}
+              onPressAction1={() => { window.location.href = './inventory/view?id=' }}
+              onPressAction2={handleDiscard}
+              style={styles.materialCardWithImageAndTitle1}
+            ></InventoryCard>
+          </ScrollView>
+        </View>
+        <MaterialToast1
+          text1={strings.toast_added}
+          style={styles.materialToast1}
+        ></MaterialToast1>
+        <FloatingCreate style={styles.floatingCreate} onPress={() => window.location.href = './inventory/add/receipt' }></FloatingCreate>
+        <AppFooter style={styles.materialBasicFooter1}></AppFooter>
+        </DrawerAppContent>
       </TopAppBarFixedAdjust>
     </View>
   );

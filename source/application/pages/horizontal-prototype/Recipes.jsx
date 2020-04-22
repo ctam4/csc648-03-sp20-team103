@@ -86,31 +86,31 @@ export default () => {
           open={drawerOpen}
         ></MaterialDrawer>
         <DrawerAppContent className="drawer-app-content">
-      <View style={styles.scrollArea}>
-        <ScrollView
-          contentContainerStyle={styles.scrollArea_contentContainerStyle}
-        >
-          <RecipesCard
-            //onPressLeft={() => {}}
-            onPressCenter={() => { window.location.href = './recipes/view?id=' }}
-            //onPressRight={() => {}}
-            style={styles.recipesCard}
-          ></RecipesCard>
-          <RecipesCard
-            //onPressLeft={() => {}}
-            onPressCenter={() => { window.location.href = './recipes/view?id=' }}
-            //onPressRight={() => {}}
-            style={styles.recipesCard}
-          ></RecipesCard>
-        </ScrollView>
-      </View>
-      <MaterialToast1
-        text1={strings.toast_created}
-        style={styles.materialToast1}
-      ></MaterialToast1>
-      <FloatingCreate style={styles.materialButtonShare} onPress={() => window.location.href = './recipes/create' }></FloatingCreate>
-      <AppFooter style={styles.materialBasicFooter1}></AppFooter>
-      </DrawerAppContent>
+          <View style={styles.scrollArea}>
+            <ScrollView
+              contentContainerStyle={styles.scrollArea_contentContainerStyle}
+            >
+              <RecipesCard
+                //onPressLeft={() => {}}
+                onPressCenter={() => { window.location.href = './recipes/view?id=' }}
+                //onPressRight={() => {}}
+                style={styles.recipesCard}
+              ></RecipesCard>
+              <RecipesCard
+                //onPressLeft={() => {}}
+                onPressCenter={() => { window.location.href = './recipes/view?id=' }}
+                //onPressRight={() => {}}
+                style={styles.recipesCard}
+              ></RecipesCard>
+            </ScrollView>
+          </View>
+          <MaterialToast1
+            text1={strings.toast_created}
+            style={styles.materialToast1}
+          ></MaterialToast1>
+          <FloatingCreate style={styles.materialButtonShare} onPress={() => window.location.href = './recipes/create' }></FloatingCreate>
+          <AppFooter style={styles.materialBasicFooter1}></AppFooter>
+        </DrawerAppContent>
       </TopAppBarFixedAdjust>
     </View>
   );
