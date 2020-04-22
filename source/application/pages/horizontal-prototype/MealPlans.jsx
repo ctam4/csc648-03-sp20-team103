@@ -107,7 +107,6 @@ export default () => {
       <MaterialTopAppBar
         title={strings.meal_plans}
         onClick={() => toggleDrawer()}
-        //icon2Name={strings.filter}
       ></MaterialTopAppBar>
       <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer

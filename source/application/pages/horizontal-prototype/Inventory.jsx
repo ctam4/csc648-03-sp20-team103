@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
-import { MdFilterList } from "react-icons/md";
 import { TopAppBarFixedAdjust } from "@material/react-top-app-bar";
 import { DrawerAppContent } from "@material/react-drawer";
 import LocalizedStrings from "react-localization";
 
-import AppHeader from "../../components/horizontal-prototype/AppHeader";
 import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
 import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
 import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
@@ -24,14 +22,6 @@ let strings = new LocalizedStrings({
   },
 });
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  materialHeader1: {
-    minWidth: 360,
-    width: "100%",
-    height: 56,
-  },
   scrollArea1: {
     minWidth: 360,
     width: "100%",
@@ -98,7 +88,6 @@ export default () => {
       <MaterialTopAppBar
         title={strings.inventory}
         onClick={() => toggleDrawer()}
-        //icon2Name={strings.filter}
       ></MaterialTopAppBar>
       <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer

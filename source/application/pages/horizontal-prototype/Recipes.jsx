@@ -8,8 +8,6 @@ import LocalizedStrings from "react-localization";
 
 import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
 import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
-
-import AppHeader from "../../components/horizontal-prototype/AppHeader";
 import RecipesCard from "../../components/horizontal-prototype/RecipesCard";
 import MaterialToast1 from "../../components/horizontal-prototype/MaterialToast1";
 import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
@@ -22,14 +20,6 @@ let strings = new LocalizedStrings({
   },
 });
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  materialHeader1: {
-    minWidth: 360,
-    width: "100%",
-    height: 56,
-  },
   scrollArea: {
     minWidth: 360,
     width: "100%",
@@ -90,7 +80,6 @@ export default () => {
       <MaterialTopAppBar
         title={strings.recipes}
         onClick={() => toggleDrawer()}
-        //icon2Name={strings.filter}
       ></MaterialTopAppBar>
       <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer

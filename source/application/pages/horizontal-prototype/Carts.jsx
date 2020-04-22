@@ -71,7 +71,6 @@ export default () => {
       <MaterialTopAppBar
         title={strings.carts}
         onClick={() => toggleDrawer()}
-        //icon2Name={strings.filter}
       ></MaterialTopAppBar>
       <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer
