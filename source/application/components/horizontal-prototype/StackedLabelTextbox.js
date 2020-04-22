@@ -7,6 +7,7 @@ function StackedLabelTextbox(props) {
       <Text style={styles.label}>{props.text1 || "StackedLabel"}</Text>
       <TextInput
         placeholder={props.textInput1}
+        value={state.value}
         style={styles.inputStyle}
         onChange={props.onChange}
       ></TextInput>

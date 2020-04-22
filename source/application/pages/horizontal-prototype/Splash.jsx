@@ -40,35 +40,30 @@ const styles = StyleSheet.create({
 });
 
 export default () => {
-  const [cookies, setCookie] = useCookies(["session_id", "fridge_id"]);
+  const [cookies, setCookie] = useCookies(["Session"]);
   const [state, dispatch] = useReducer(splashReducer, initialState);
 
   useEffect(() => {
-    dummySetup();
+    dummySetup().then((data) => {
+      dispatch(setSerialNumber(data.serialNumber));
+      dispatch(setPIN(data.pin));
+    }).catch(console.log);
   }, []);
 
-  const dummySetup = async () => {
+  const dummySetup = () => {
     // for dummy fridge
-    await fetch(apiUrl + '/v2/fridges', {
+    return fetch(apiUrl + '/v2/fridges', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        serial_number: state.serial_number,
-        pin: state.pin,
-      }),
     })
     .then((res) => {
       if (!res.ok) {
         throw new Error('error ' + res.status);
       }
       return res.json();
-    })
-    .then((data) => {
-      setCookie("fridge_id", data);
-      console.log('Dummy fridge setup successful.');
     })
     .catch(console.log);
   };
@@ -81,7 +76,7 @@ export default () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        serial_number: state.serial_number,
+        serialNumber: state.serial_number,
         pin: state.pin,
       }),
     })
@@ -89,10 +84,15 @@ export default () => {
       if (!res.ok) {
         throw new Error('error ' + res.status);
       }
-      return res.json();
+
+      return res.json()
     })
     .then((data) => {
-      setCookie("session_id", data.fridge_id);
+      console.log(data);
+      setCookie("Session", data.session, {
+        //httpOnly: true,
+        expires: new Date(data.expires_ts)
+      });
       console.log('Login successful.');
       window.location.href = './inventory';
       //window.location.href = './auth';
