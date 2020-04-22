@@ -9,7 +9,7 @@ import "@material/react-material-icon/dist/material-icon.css";
 
 function MaterialTopAppBar(props) {
   return (
-    <TopAppBar>
+    <TopAppBar style={{background: 'rgba(65,117,5,1)'}}>
       <TopAppBarRow>
         <TopAppBarSection align='start'>
           <TopAppBarIcon navIcon tabIndex={0}>
@@ -20,9 +20,9 @@ function MaterialTopAppBar(props) {
         <TopAppBarSection align='end' role='toolbar'>
           <TopAppBarIcon actionItem tabIndex={0}>
             <MaterialIcon
-              aria-label="print page"
+              aria-label="search"
               hasRipple
-              icon='print'
+              icon='search'
               onClick={() => console.log('print')}
             />
           </TopAppBarIcon>
@@ -65,6 +65,7 @@ function MaterialTopAppBar(props) {
 }
 
 const styles = StyleSheet.create({
+
 
 });
 const iconStyles = {
