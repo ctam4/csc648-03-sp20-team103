@@ -96,6 +96,7 @@ export default () => {
             text3={strings.discard}
             style={styles.materialCard6}
             onPressAction1={handleDiscard}
+            cardItemimage = {require("/images/apple.png")}
           ></InventoryCardFull>
         </ScrollView>
       </View>

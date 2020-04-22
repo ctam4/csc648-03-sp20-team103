@@ -107,6 +107,7 @@ export default () => {
             style={styles.materialCard6}
             onPressAction1={handleSave}
             onPressAction2={handleAddToCart}
+            cardItemimage = {require("/images/pasta.png")}
           ></RecipesCardFull>
         </ScrollView>
       </View>
