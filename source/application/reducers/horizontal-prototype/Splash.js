@@ -1,6 +1,6 @@
 export const initialState = {
-  serial_number: "1234",
-  pin: "1234",
+  serial_number: "",
+  pin: "",
 };
 
 export const splashReducer = (state = initialState, action) => {

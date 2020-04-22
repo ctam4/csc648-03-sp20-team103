@@ -44,15 +44,12 @@ export default () => {
   const [state, dispatch] = useReducer(splashReducer, initialState);
 
   useEffect(() => {
-    dummySetup().then((data) => {
-      dispatch(setSerialNumber(data.serialNumber));
-      dispatch(setPIN(data.pin));
-    }).catch(console.log);
+    dummySetup();
   }, []);
 
-  const dummySetup = () => {
+  const dummySetup = async () => {
     // for dummy fridge
-    return fetch(apiUrl + '/v2/fridges', {
+    return await fetch(apiUrl + '/v2/fridges', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -64,6 +61,10 @@ export default () => {
         throw new Error('error ' + res.status);
       }
       return res.json();
+    })
+    .then((data) => {
+      dispatch(setSerialNumber(data.serialNumber));
+      dispatch(setPIN(data.pin));
     })
     .catch(console.log);
   };
@@ -84,14 +85,13 @@ export default () => {
       if (!res.ok) {
         throw new Error('error ' + res.status);
       }
-
       return res.json()
     })
     .then((data) => {
       console.log(data);
       setCookie("Session", data.session, {
         //httpOnly: true,
-        expires: new Date(data.expires_ts)
+        expires: new Date(data.expires_ts),
       });
       console.log('Login successful.');
       window.location.href = './inventory';
@@ -106,12 +106,14 @@ export default () => {
       <MaterialTextField
         label={strings.serial_number}
         helperText={strings.serial_number_helper}
+        value={state.serial_number}
         onChange={(e) => dispatch(setSerialNumber(e.target.value))}
         onTrailingIconSelect={() => dispatch(setSerialNumber(""))}
       ></MaterialTextField>
       <MaterialTextField
         label={strings.pin}
         helperText={strings.pin_helper}
+        value={state.pin}
         onChange={(e) => dispatch(setPIN(e.target.value))}
         onTrailingIconSelect={() => dispatch(setPIN(""))}
       ></MaterialTextField>
