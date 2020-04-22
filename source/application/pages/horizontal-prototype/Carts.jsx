@@ -70,7 +70,7 @@ export default () => {
     <View style={styles.drawerContainer}>
       <MaterialTopAppBar
         title={strings.carts}
-        onClick1={() => toggleDrawer()}
+        onClick1={toggleDrawer}
         //onClick2={() => window.location.href = './' }
       ></MaterialTopAppBar>
       <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
