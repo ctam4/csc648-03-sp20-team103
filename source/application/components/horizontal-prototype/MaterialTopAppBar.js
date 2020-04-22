@@ -12,20 +12,27 @@ function MaterialTopAppBar(props) {
       <TopAppBarRow>
         <TopAppBarSection align='start'>
           <TopAppBarIcon navIcon tabIndex={0}>
-            <MaterialIcon hasRipple icon='menu' onClick={props.onClick}/>
+            <MaterialIcon
+              aria-label={props.icon1 || "menu"}
+              hasRipple
+              icon={props.icon1 || "menu"}
+              onClick={props.onClick1}
+            />
           </TopAppBarIcon>
           <TopAppBarTitle>{props.title}</TopAppBarTitle>
         </TopAppBarSection>
+        {(props.icon2 || props.onClick2) && (
         <TopAppBarSection align='end' role='toolbar'>
           <TopAppBarIcon actionItem tabIndex={0}>
             <MaterialIcon
-              aria-label="search"
+              aria-label={props.icon2}
               hasRipple
-              icon='search'
-              onClick={() => console.log('print')}
+              icon={props.icon2 || "search"}
+              onClick={props.onClick2}
             />
           </TopAppBarIcon>
         </TopAppBarSection>
+        )}
       </TopAppBarRow>
     </TopAppBar>
   );
