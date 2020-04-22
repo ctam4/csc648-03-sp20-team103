@@ -5,11 +5,13 @@ import { inventoryAddReducer, initialState } from "../../reducers/horizontal-pro
 import { setKeywords } from "../../actions/horizontal-prototype/InventoryAdd";
 
 import { StyleSheet, View, ScrollView } from "react-native";
+import MaterialIcon from "@material/react-material-icon";
+import "@material/react-material-icon/dist/material-icon.css";
 import LocalizedStrings from "react-localization";
 
+import MaterialFab from "../../components/horizontal-prototype/MaterialFab";
 import Search from "../../components/horizontal-prototype/Search";
 import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
-import FloatingSave from "../../components/horizontal-prototype/FloatingSave";
 
 let strings = new LocalizedStrings({
   en: {
@@ -40,13 +42,6 @@ const styles = StyleSheet.create({
   materialCardWithImageAndTitle2: {
     alignSelf: "stretch",
     margin: 15,
-  },
-  floatingSave1: {
-    bottom: 15,
-    width: 56,
-    height: 56,
-    position: "absolute",
-    right: 15,
   },
   materialSearchBarWithBackground1: {
     minWidth: 360,
@@ -109,7 +104,11 @@ export default () => {
           ></InventoryCard>
         </ScrollView>
       </View>
-      <FloatingSave style={styles.floatingSave1} onPress={handleSave}></FloatingSave>
+      <MaterialFab
+        icon={<MaterialIcon icon="check"/>}
+        style={{ position: "absolute", right: 16, bottom: 16 }}
+        onClick={handleSave}
+      ></MaterialFab>
     </View>
   );
 };

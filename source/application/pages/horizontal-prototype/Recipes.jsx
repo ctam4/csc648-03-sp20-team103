@@ -4,13 +4,15 @@ import { useCookies } from "react-cookie";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { TopAppBarFixedAdjust } from "@material/react-top-app-bar";
 import { DrawerAppContent } from "@material/react-drawer";
+import MaterialIcon from "@material/react-material-icon";
+import "@material/react-material-icon/dist/material-icon.css";
 import LocalizedStrings from "react-localization";
 
 import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
 import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
+import MaterialFab from "../../components/horizontal-prototype/MaterialFab";
 import MaterialSnackbar from "../../components/horizontal-prototype/MaterialSnackbar";
 import RecipesCard from "../../components/horizontal-prototype/RecipesCard";
-import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
 import AppFooter from "../../components/horizontal-prototype/AppFooter";
 
 let strings = new LocalizedStrings({
@@ -99,7 +101,11 @@ export default () => {
             </ScrollView>
           </View>
           <MaterialSnackbar message={strings.toast_created} />
-          <FloatingCreate style={styles.materialButtonShare} onPress={() => window.location.href = './recipes/create' }></FloatingCreate>
+          <MaterialFab
+            icon={<MaterialIcon icon="note_add"/>}
+            style={{ position: "absolute", right: 16, bottom: 74 }}
+            onClick={() => window.location.href = './recipes/create' }
+          ></MaterialFab>
           <AppFooter style={styles.materialBasicFooter1}></AppFooter>
         </DrawerAppContent>
       </TopAppBarFixedAdjust>

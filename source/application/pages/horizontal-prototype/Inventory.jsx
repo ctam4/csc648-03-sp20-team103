@@ -4,13 +4,15 @@ import { useCookies } from "react-cookie";
 import { StyleSheet, View, ScrollView } from "react-native";
 import { TopAppBarFixedAdjust } from "@material/react-top-app-bar";
 import { DrawerAppContent } from "@material/react-drawer";
+import MaterialIcon from "@material/react-material-icon";
+import "@material/react-material-icon/dist/material-icon.css";
 import LocalizedStrings from "react-localization";
 
 import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
 import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
+import MaterialFab from "../../components/horizontal-prototype/MaterialFab";
 import MaterialSnackbar from "../../components/horizontal-prototype/MaterialSnackbar";
 import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
-import FloatingCreate from "../../components/horizontal-prototype/FloatingCreate";
 import AppFooter from "../../components/horizontal-prototype/AppFooter";
 
 let strings = new LocalizedStrings({
@@ -41,13 +43,6 @@ const styles = StyleSheet.create({
   materialCardWithImageAndTitle1: {
     alignSelf: "stretch",
     margin: 15,
-  },
-  floatingCreate: {
-    bottom: 61,
-    right: 15,
-    width: 56,
-    height: 56,
-    position: "absolute",
   },
   materialBasicFooter1: {
     minWidth: 360,
@@ -89,33 +84,37 @@ export default () => {
           onClose={toggleDrawer}
         ></MaterialDrawer>
         <DrawerAppContent className="drawer-app-content">
-        <View style={styles.scrollArea1}>
-          <ScrollView
-            contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-          >
-            <InventoryCard
-              text1="Apple"
-              text2={"2 ct by user 1 \nstored 10 days ago \nexpiring in 2 days"}
-              text3={strings.view_log}
-              text4={strings.discard}
-              onPressAction1={() => { window.location.href = './inventory/view?id=' }}
-              onPressAction2={handleDiscard}
-              style={styles.materialCardWithImageAndTitle}
-            ></InventoryCard>
-            <InventoryCard
-              text1="Milk"
-              text2={"1 gal by user 1 \nstored 1 day ago \nexpiring in 21 days"}
-              text3={strings.view_log}
-              text4={strings.discard}
-              onPressAction1={() => { window.location.href = './inventory/view?id=' }}
-              onPressAction2={handleDiscard}
-              style={styles.materialCardWithImageAndTitle1}
-            ></InventoryCard>
-          </ScrollView>
-        </View>
-        <MaterialSnackbar message={strings.toast_added} />
-        <FloatingCreate style={styles.floatingCreate} onPress={() => window.location.href = './inventory/add/receipt' }></FloatingCreate>
-        <AppFooter style={styles.materialBasicFooter1}></AppFooter>
+          <View style={styles.scrollArea1}>
+            <ScrollView
+              contentContainerStyle={styles.scrollArea1_contentContainerStyle}
+            >
+              <InventoryCard
+                text1="Apple"
+                text2={"2 ct by user 1 \nstored 10 days ago \nexpiring in 2 days"}
+                text3={strings.view_log}
+                text4={strings.discard}
+                onPressAction1={() => { window.location.href = './inventory/view?id=' }}
+                onPressAction2={handleDiscard}
+                style={styles.materialCardWithImageAndTitle}
+              ></InventoryCard>
+              <InventoryCard
+                text1="Milk"
+                text2={"1 gal by user 1 \nstored 1 day ago \nexpiring in 21 days"}
+                text3={strings.view_log}
+                text4={strings.discard}
+                onPressAction1={() => { window.location.href = './inventory/view?id=' }}
+                onPressAction2={handleDiscard}
+                style={styles.materialCardWithImageAndTitle1}
+              ></InventoryCard>
+            </ScrollView>
+          </View>
+          <MaterialSnackbar message={strings.toast_added} />
+          <MaterialFab
+            icon={<MaterialIcon icon="library_add"/>}
+            style={{ position: "absolute", right: 16, bottom: 74 }}
+            onClick={() => window.location.href = './inventory/add/receipt' }
+          ></MaterialFab>
+          <AppFooter style={styles.materialBasicFooter1}></AppFooter>
         </DrawerAppContent>
       </TopAppBarFixedAdjust>
     </View>

@@ -5,10 +5,12 @@ import { recipesCreateReducer, initialState } from "../../reducers/horizontal-pr
 import { setName, setServings, setCookingTime } from "../../actions/horizontal-prototype/RecipesCreate";
 
 import { StyleSheet, View, ScrollView, Text } from "react-native";
+import MaterialIcon from "@material/react-material-icon";
+import "@material/react-material-icon/dist/material-icon.css";
 import LocalizedStrings from "react-localization";
 
+import MaterialFab from "../../components/horizontal-prototype/MaterialFab";
 import FixedLabelTextbox from "../../components/horizontal-prototype/FixedLabelTextbox";
-import FloatingSave from "../../components/horizontal-prototype/FloatingSave";
 import DialogHeader from "../../components/horizontal-prototype/DialogHeader";
 
 let strings = new LocalizedStrings({
@@ -68,13 +70,6 @@ const styles = StyleSheet.create({
     margin: 15,
     fontFamily: "Roboto",
   },
-  floatingSave: {
-    bottom: 15,
-    width: 56,
-    height: 56,
-    position: "absolute",
-    right: 15,
-  },
   materialHeader1: {
     minWidth: 360,
     width: "100%",
@@ -122,7 +117,11 @@ export default () => {
           <Text style={styles.ingredients3}>{strings.ingredients}</Text>
         </ScrollView>
       </View>
-      <FloatingSave style={styles.floatingSave} onPress={handleSave}></FloatingSave>
+      <MaterialFab
+        icon={<MaterialIcon icon="check"/>}
+        style={{ position: "absolute", right: 16, bottom: 16 }}
+        onClick={handleSave}
+      ></MaterialFab>
     </View>
   );
 };
