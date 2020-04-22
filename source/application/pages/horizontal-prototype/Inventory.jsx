@@ -107,6 +107,7 @@ export default () => {
               onPressAction1={() => { window.location.href = './inventory/view?id=' }}
               onPressAction2={handleDiscard}
               style={styles.materialCardWithImageAndTitle}
+              cardItemimage = {require("/images/apple.png")}
             ></InventoryCard>
             <InventoryCard
               text1="Milk"
@@ -116,6 +117,7 @@ export default () => {
               onPressAction1={() => { window.location.href = './inventory/view?id=' }}
               onPressAction2={handleDiscard}
               style={styles.materialCardWithImageAndTitle1}
+              cardItemimage = {require("/images/milk.png")}
             ></InventoryCard>
           </ScrollView>
         </View>

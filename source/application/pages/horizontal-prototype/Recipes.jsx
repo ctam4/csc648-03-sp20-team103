@@ -96,12 +96,14 @@ export default () => {
                 onPressCenter={() => { window.location.href = './recipes/view?id=' }}
                 //onPressRight={() => {}}
                 style={styles.recipesCard}
+                cardItemimage = {require("/images/pasta.png")}
               ></RecipesCard>
               <RecipesCard
                 //onPressLeft={() => {}}
                 onPressCenter={() => { window.location.href = './recipes/view?id=' }}
                 //onPressRight={() => {}}
                 style={styles.recipesCard}
+                cardItemimage = {require("/images/steak.png")}
               ></RecipesCard>
             </ScrollView>
           </View>

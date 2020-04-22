@@ -81,6 +81,7 @@ export default () => {
                 text4={strings.view_details}
                 style={styles.materialCard3}
                 onPressAction1={() => { window.location.href = './consumption/view?id=' }}
+                cardItemimage = {require("/images/chartfiller-1.png")}
               ></ConsumptionCard>
             </ScrollView>
             <AppFooter style={styles.materialBasicFooter1}></AppFooter>
