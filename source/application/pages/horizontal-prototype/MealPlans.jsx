@@ -2,9 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
 import { StyleSheet, View, ScrollView } from "react-native";
+import { TopAppBarFixedAdjust } from "@material/react-top-app-bar";
+import { DrawerAppContent } from "@material/react-drawer";
 import LocalizedStrings from "react-localization";
 
-import AppHeader from "../../components/horizontal-prototype/AppHeader";
+import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
+import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
 import MealPlansCard from "../../components/horizontal-prototype/MealPlansCard";
 
 let strings = new LocalizedStrings({
@@ -14,17 +17,7 @@ let strings = new LocalizedStrings({
     view: "View",
   },
 });
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  materialHeader1: {
-    minWidth: 360,
-    width: "100%",
-    height: 56,
-    alignSelf: "center"
-  },
   scrollArea: {
     minWidth: 360,
     width: "100%",
@@ -52,6 +45,7 @@ const styles = StyleSheet.create({
 
 export default () => {
   const [cookies, setCookie] = useCookies(["session_id"]);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [mealPlans, setMealPlans] = useState([]);
 
   useEffect(() => {
@@ -104,28 +98,40 @@ export default () => {
     // TODO: fetch
   };
 
+  const toggleDrawer = () => {
+    setDrawerOpen(!drawerOpen);
+  };
+
   return (
-    <View style={styles.container}>
-      <AppHeader
-        text1={strings.meal_plans}
-        style={styles.materialHeader1}
-      ></AppHeader>
-      <View style={styles.scrollArea}>
-        <ScrollView
-          contentContainerStyle={styles.scrollArea_contentContainerStyle}
-        >
-          {mealPlans.map((item) => (
-            <MealPlansCard
-              text1={item.date}
-              text2={item.cal_per_day + strings.calories}
-              text3={item.description}
-              text4={strings.view}
-              style={styles.cartsCard1}
-              onPressAction1={() => { window.location.href = './meal-plans/view?id=' }}
-            ></MealPlansCard>
-          ))}
-        </ScrollView>
-      </View>
+    <View style={styles.drawerContainer}>
+      <MaterialTopAppBar
+        title={strings.meal_plans}
+        onClick={() => toggleDrawer()}
+        //icon2Name={strings.filter}
+      ></MaterialTopAppBar>
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <MaterialDrawer
+          open={drawerOpen}
+        ></MaterialDrawer>
+        <DrawerAppContent className="drawer-app-content">
+          <View style={styles.scrollArea}>
+            <ScrollView
+              contentContainerStyle={styles.scrollArea_contentContainerStyle}
+            >
+              {mealPlans.map((item) => (
+                <MealPlansCard
+                  text1={item.date}
+                  text2={item.cal_per_day + strings.calories}
+                  text3={item.description}
+                  text4={strings.view}
+                  style={styles.cartsCard1}
+                  onPressAction1={() => { window.location.href = './meal-plans/view?id=' }}
+                ></MealPlansCard>
+              ))}
+            </ScrollView>
+          </View>
+        </DrawerAppContent>
+      </TopAppBarFixedAdjust>
     </View>
   );
 };
