@@ -14,6 +14,7 @@ if (process.env.API_PORT) {
 
 let strings = new LocalizedStrings({
   en: {
+    Name: "Pasta Alfredo",
     save: "Save",
     add_to_cart: "Add to Cart",
   },
@@ -98,11 +99,11 @@ export default () => {
       <View style={styles.scrollArea}>
         <ScrollView contentContainerStyle={styles.scrollArea_contentContainerStyle}>
           <RecipesCardFull
-            text1={name}
-            text2="# servings / # calories per serving"
+            text1={strings.Name}
+            text2="2 servings / 500 calories per serving"
             text3={strings.save}
             text4={strings.add_to_cart}
-            bodyText1={instructions}
+            bodyText1={"1. Cook the pasta according to the package instructions \n2. Melt the butter in a large skillet over medium high heat. Add the garlic and cook for 30 seconds, or until fragrant.\n3. Pour in the milk and cream. Stir consistently to avoid burning on the bottom of the pan until the mixture comes to a boil. Turn the heat down to medium, and mix in the parmesan cheese, salt, and pepper. Adjust the seasoning to your own taste \n4. Remove the pan from the heat and mix in the cooked pasta until the sauce begins to thicken. Garnish with parsley, and serve."}
             style={styles.materialCard6}
             onPressAction1={handleSave}
             onPressAction2={handleAddToCart}
