@@ -1,76 +1,91 @@
+"use strict";
+
 const express = require('express');
+const uuid = require('uuid');
 const login = express.Router();
 
 const pool = require('../../database.js');
-let connection;
-let someVar = []
 
+/**
+ * POST /v2/login
+ * @description
+ * @param {string} serialNumber
+ * @param {string} pin
+ */
 login.post('/', async (req, res) => {
-    try {
-        connection = await pool.getConnection();
-        let sql = 'SELECT count(*) FROM v2_fridges WHERE pin=' + [req.body.pin] + ' AND serial_number=' + [req.body.serial_number];
-        let sql2 = 'INSERT INTO v2_sessions(session) VALUES(UUID())'
-        let id = Math.floor(Math.random() * 100);
-        // let sql = 'INSERT INTO v2_sessions (session, fridge_id) VALUES(3131, 1)';
-        // console.log(sql)
-        await connection.query(sql)
-            .then(connection.query(sql2))
-            .then((results) => res.send(JSON.stringify(results)).end())
-                // res.json(results).end();
-            .catch((error) => {
-                console.log(error)
-                res.sendStatus(400).end()
-            });
-    } catch (error) {
-        console.log(error)
-        res.sendStatus(401).end()
-    }
-    finally {
-        if (connection) {
-            connection.release();
-        }
-    }
+  let connection;
+  
+  if (!('serialNumber' in req.body && 'pin' in req.body)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  
+  try {
+    connection = await pool.getConnection();
+    
+    connection.query('SELECT fridge_id FROM v2_fridges WHERE serial_number=? AND pin=?', [req.body.serialNumber, req.body.pin]).then(async rows => {
+      if (rows.length > 0) {
+        // @todo handle possible duplicate sessions
+        const fridgeID = rows[0].fridge_id
+        const sessionID = uuid.v4();
 
+        await connection.query("INSERT INTO v2_sessions(session, fridge_id, expires_ts) VALUES (?, ?, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 MONTH))", [ sessionID, fridgeID ]);
+        res.setHeader("SessionID", sessionID);
+        res.sendStatus(200).end();
+      } else {
+        res.sendStatus(404).end();
+      }
+    }).catch(error => {
+      throw error;
+    });
+  } catch (error) {
+    console.log(error);
+    res.sendStatus(500).end();
+  } finally {
+    if (connection) {
+      connection.release();
+    }
+  }
 });
 
 //for testing
 login.get('/', async (req, res) => {
-    try {
-        connection = await pool.getConnection();
-        let sql = 'SELECT * FROM v2_sessions';
-        await connection.query(sql)
-            .then((results) => {
-                res.send(JSON.stringify(results)).end()
-                // res.json(results).end();
-            });
-    } catch (error) {
-        res.sendStatus(500).end();
-        throw error;
-    } finally {
-        if (connection) {
-            connection.release(); // release to pool
-        }
+  try {
+    connection = await pool.getConnection();
+    let sql = 'SELECT * FROM v2_sessions';
+    await connection.query(sql)
+    .then((results) => {
+      res.send(JSON.stringify(results)).end()
+      // res.json(results).end();
+    });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release(); // release to pool
     }
+  }
 });
 
 //for testing
 login.delete('/', async (req, res) => {
-    try {
-        connection = await pool.getConnection();
-        let sql = 'DELETE FROM v2_sessions';
-        await connection.query(sql)
-            .then((results) => {
-                res.send(JSON.stringify(results)).end()
-                // res.json(results).end();
-            });
-    } catch (error) {
-        res.sendStatus(500).end();
-        throw error;
-    } finally {
-        if (connection) {
-            connection.release(); // release to pool
-        }
+  try {
+    connection = await pool.getConnection();
+    let sql = 'DELETE FROM v2_sessions';
+    await connection.query(sql)
+    .then((results) => {
+      res.send(JSON.stringify(results)).end()
+      // res.json(results).end();
+    });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release(); // release to pool
     }
+  }
 });
 
 //console.log('fridges.stack');

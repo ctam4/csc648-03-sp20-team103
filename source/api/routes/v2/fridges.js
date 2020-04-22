@@ -1,68 +1,40 @@
+"use strict";
+
 const express = require('express');
 const fridges = express.Router();
 
 const pool = require('../../database.js');
-let connection;
 
-//fridges
+/**
+ * POST /v2/fridges
+ * @description Creates a new fridge and yields its serial number and pin.
+ * @returns {string} The serial number.
+ */
+fridges.post('/', async (req, res) => {
+  let connection;
 
-// fridges.get('/', async (req, res) => {
-//   if (Object.keys(req.query).length > 0) { // TODO: need to check contains either begin & limit
-//     res.sendStatus(400).end();
-//   }
-//   try {
-//     connection = await pool.getConnection();
-//     await connection.query('SELECT fridge_id FROM fridges')
-//       .then((results) => {
-//         res.json(results).end();
-//       });
-//   } catch (error) {
-//     res.sendStatus(500).end();
-//     throw error;
-//   } finally {
-//     if (connection) {
-//       connection.release(); // release to pool
-//     }
-//   }
-// });
-
-// for testing
-fridges.get('/', async (req, res) => {
   try {
+    const generate = (n) => Array(n).fill().map(() => Math.floor(10*Math.random())).join(''); // @todo is there a better way?
+    let serialNumber;
+    let results;
+    const pin = generate(4);
+    
     connection = await pool.getConnection();
-    const results = await connection.query('SELECT * FROM v2_fridges');
-    res.send(JSON.stringify(results)).end()
+
+    do {
+      results = await connection.query('SELECT 1 FROM v2_fridges WHERE serial_number=?', [serialNumber = generate(10)]);
+    } while (results.length > 0);
+
+    await connection.query('INSERT INTO v2_fridges (serial_number, pin) VALUES (?, ?)', [serialNumber, pin]);
+    res.send(JSON.stringify({serialNumber: serialNumber, pin: pin})).end();
   } catch (error) {
-    res.sendStatus(401).end()
-  }
-  finally {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
     if (connection) {
       connection.release();
     }
   }
-
 });
-
-
-fridges.post('/', async (req, res) => {
-  try {
-    sql2 = 'SELECT fridge_id FROM v2_fridges WHERE serial_number=? AND pin=?';
-    connection = await pool.getConnection();
-    await connection.query('INSERT INTO v2_fridges (serial_number, pin) VALUES (?, ?  )', [req.body.serial_number, req.body.pin]);
-    results =await connection.query(sql2, [req.body.serial_number, req.body.pin])
-    res.send(JSON.stringify(results)).end()
-  } catch (error) {
-    res.sendStatus(401).end()
-  }
-  finally {
-    if(connection) {
-      connection.release();
-    }
-  }
-  
-});
-
-//console.log('fridges.stack');
-//console.log(fridges.stack);
 
 module.exports = fridges;
