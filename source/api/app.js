@@ -19,6 +19,8 @@ app.use(compression());
 app.use(cors());
 
 app.use('/v1', require('./routes/v1/index.js'));
+app.use('/v2', require('./routes/v2/index.js'));
+
 
 app.get('/', (req, res) => res.sendStatus(401).end());
 
