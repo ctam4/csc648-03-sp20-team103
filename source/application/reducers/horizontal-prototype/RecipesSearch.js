@@ -1,5 +1,5 @@
 export const initialState = {
-  keywords: "",
+  keywords: '',
 };
 
 export const recipesSearchReducer = (state = initialState, action) => {

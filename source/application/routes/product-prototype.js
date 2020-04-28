@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
   const raw = fs.readFileSync('./build/product-prototype.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
-    title: "Product prototype",
+    title: 'Product prototype',
   });
   res.send(render);
 });

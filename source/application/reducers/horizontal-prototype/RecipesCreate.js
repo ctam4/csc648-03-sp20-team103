@@ -1,7 +1,7 @@
 export const initialState = {
-  name: "",
-  servings: "",
-  cooking_time: "",
+  name: '',
+  servings: '',
+  cooking_time: '',
 };
 
 export const recipesCreateReducer = (state = initialState, action) => {

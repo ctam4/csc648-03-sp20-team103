@@ -1,11 +1,11 @@
-import React from "react";
-import { AppRegistry } from "react-native";
+import React from 'react';
+import { AppRegistry } from 'react-native';
 
-import InventoryAddBarcode from "../pages/horizontal-prototype/InventoryAddBarcode.jsx";
+import InventoryAddBarcode from '../pages/horizontal-prototype/InventoryAddBarcode.jsx';
 
-AppRegistry.registerComponent("InventoryAddBarcode", () => InventoryAddBarcode);
+AppRegistry.registerComponent('InventoryAddBarcode', () => InventoryAddBarcode);
 
-AppRegistry.runApplication("InventoryAddBarcode", {
+AppRegistry.runApplication('InventoryAddBarcode', {
   initialProps: {},
-  rootTag: document.getElementById("react-root")
+  rootTag: document.getElementById('react-root')
 });

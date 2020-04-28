@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { StyleSheet, View, Image, TouchableOpacity } from "react-native";
-import { IconContext } from "react-icons";
-import { MdEdit, MdFavorite, MdHistory } from "react-icons/md";
+import React, { Component } from 'react';
+import { StyleSheet, View, Image, TouchableOpacity } from 'react-native';
+import { IconContext } from 'react-icons';
+import { MdEdit, MdFavorite, MdHistory } from 'react-icons/md';
 
 function RecipesCard(props) {
   return (
@@ -38,29 +38,29 @@ const styles = StyleSheet.create({
   container: {
     width: 185,
     flex: 1,
-    backgroundColor: "#FFF",
-    flexWrap: "nowrap",
+    backgroundColor: '#FFF',
+    flexWrap: 'nowrap',
     elevation: 3,
     borderRadius: 2,
-    borderColor: "#CCC",
+    borderColor: '#CCC',
     borderWidth: 1,
     shadowOffset: {
       height: 2,
       width: -2
     },
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOpacity: 0.1,
     shadowRadius: 1.5,
-    overflow: "hidden"
+    overflow: 'hidden'
   },
   cardItemImage: {
     flex: 1,
-    backgroundColor: "#ccc",
+    backgroundColor: '#ccc',
     minHeight: 180
   },
   buttonGroup: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     padding: 8
   },
   leftBtn: {
@@ -75,17 +75,17 @@ const styles = StyleSheet.create({
 });
 const iconStyles = {
   icon1: {
-    color: "#000",
+    color: '#000',
     fontSize: 24,
     opacity: 0.5
   },
   icon2: {
-    color: "#000",
+    color: '#000',
     fontSize: 24,
     opacity: 0.5
   },
   icon3: {
-    color: "#000",
+    color: '#000',
     fontSize: 24,
     opacity: 0.5
   }

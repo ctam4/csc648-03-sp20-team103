@@ -1,11 +1,11 @@
-import React from "react";
-import { AppRegistry } from "react-native";
+import React from 'react';
+import { AppRegistry } from 'react-native';
 
-import Splash from "../pages/horizontal-prototype/Splash.jsx";
+import Splash from '../pages/horizontal-prototype/Splash.jsx';
 
-AppRegistry.registerComponent("Splash", () => Splash);
+AppRegistry.registerComponent('Splash', () => Splash);
 
-AppRegistry.runApplication("Splash", {
+AppRegistry.runApplication('Splash', {
   initialProps: {},
-  rootTag: document.getElementById("react-root")
+  rootTag: document.getElementById('react-root')
 });

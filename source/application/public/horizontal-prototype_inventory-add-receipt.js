@@ -1,11 +1,11 @@
-import React from "react";
-import { AppRegistry } from "react-native";
+import React from 'react';
+import { AppRegistry } from 'react-native';
 
-import InventoryAddReceipt from "../pages/horizontal-prototype/InventoryAddReceipt.jsx";
+import InventoryAddReceipt from '../pages/horizontal-prototype/InventoryAddReceipt.jsx';
 
-AppRegistry.registerComponent("InventoryAddReceipt", () => InventoryAddReceipt);
+AppRegistry.registerComponent('InventoryAddReceipt', () => InventoryAddReceipt);
 
-AppRegistry.runApplication("InventoryAddReceipt", {
+AppRegistry.runApplication('InventoryAddReceipt', {
   initialProps: {},
-  rootTag: document.getElementById("react-root")
+  rootTag: document.getElementById('react-root')
 });

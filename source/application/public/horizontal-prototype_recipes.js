@@ -1,11 +1,11 @@
-import React from "react";
-import { AppRegistry } from "react-native";
+import React from 'react';
+import { AppRegistry } from 'react-native';
 
-import Recipes from "../pages/horizontal-prototype/Recipes.jsx";
+import Recipes from '../pages/horizontal-prototype/Recipes.jsx';
 
-AppRegistry.registerComponent("Recipes", () => Recipes);
+AppRegistry.registerComponent('Recipes', () => Recipes);
 
-AppRegistry.runApplication("Recipes", {
+AppRegistry.runApplication('Recipes', {
   initialProps: {},
-  rootTag: document.getElementById("react-root")
+  rootTag: document.getElementById('react-root')
 });

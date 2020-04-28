@@ -1,11 +1,11 @@
-import React from "react";
-import { AppRegistry } from "react-native";
+import React from 'react';
+import { AppRegistry } from 'react-native';
 
-import Consumption from "../pages/horizontal-prototype/Consumption.jsx";
+import Consumption from '../pages/horizontal-prototype/Consumption.jsx';
 
-AppRegistry.registerComponent("Consumption", () => Consumption);
+AppRegistry.registerComponent('Consumption', () => Consumption);
 
-AppRegistry.runApplication("Consumption", {
+AppRegistry.runApplication('Consumption', {
   initialProps: {},
-  rootTag: document.getElementById("react-root")
+  rootTag: document.getElementById('react-root')
 });
