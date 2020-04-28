@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { IconContext } from "react-icons";
-import { MdClose, MdMoreVert } from "react-icons/md";
+import React, { Component } from 'react';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { IconContext } from 'react-icons';
+import { MdClose, MdMoreVert } from 'react-icons/md';
 
 const DialogHeader = (props) => {
   const handleGoBack = () => {
@@ -35,17 +35,17 @@ const DialogHeader = (props) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(65,117,5,1)",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    backgroundColor: 'rgba(65,117,5,1)',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 4,
     elevation: 3,
     shadowOffset: {
       height: 2,
       width: 0
     },
-    shadowColor: "#111",
+    shadowColor: '#111',
     shadowOpacity: 0.2,
     shadowRadius: 1.2
   },
@@ -53,22 +53,22 @@ const styles = StyleSheet.create({
     padding: 11
   },
   textWrapper: {
-    alignSelf: "flex-end",
+    alignSelf: 'flex-end',
     marginLeft: 21,
     marginBottom: 14
   },
   leftIconButtonRow: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginLeft: 5,
     marginTop: 5,
     marginBottom: 5
   },
   leftIconButtonRowFiller: {
     flex: 1,
-    flexDirection: "row"
+    flexDirection: 'row'
   },
   rightIconButton: {
-    alignItems: "center",
+    alignItems: 'center',
     padding: 11,
     marginRight: 5,
     marginTop: 5
@@ -76,11 +76,11 @@ const styles = StyleSheet.create({
 });
 const iconStyles = {
   leftIcon2: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 24
   },
   rightIcon2: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 24
   }
 };

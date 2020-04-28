@@ -1,8 +1,8 @@
-import React, { Component } from "react";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import LocalizedStrings from "react-localization";
-import { IconContext } from "react-icons";
-import { MdPieChart, MdReceipt, MdShoppingCart, MdStorage } from "react-icons/md";
+import React, { Component } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import LocalizedStrings from 'react-localization';
+import { IconContext } from 'react-icons';
+import { MdPieChart, MdReceipt, MdShoppingCart, MdStorage } from 'react-icons/md';
 
 function AppFooter(props) {
   return (
@@ -49,98 +49,98 @@ function AppFooter(props) {
 
 let strings = new LocalizedStrings({
   en: {
-    inventory: "Inventory",
-    recipes: "Recipes",
-    carts: "Carts",
-    consumption: "Consumption",
+    inventory: 'Inventory',
+    recipes: 'Recipes',
+    carts: 'Carts',
+    consumption: 'Consumption',
   },
 });
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(65,117,5,1)",
-    flexDirection: "row",
-    alignItems: "center",
+    backgroundColor: 'rgba(65,117,5,1)',
+    flexDirection: 'row',
+    alignItems: 'center',
     elevation: 3,
     shadowOffset: {
       height: -2,
       width: 0
     },
-    shadowColor: "#111",
+    shadowColor: '#111',
     shadowOpacity: 0.2,
     shadowRadius: 1.2
   },
   btnWrapper1: {
     flex: 1,
-    alignItems: "center",
-    alignSelf: "center",
+    alignItems: 'center',
+    alignSelf: 'center',
     paddingTop: 8,
     paddingBottom: 6,
     minWidth: 80,
     paddingHorizontal: 12
   },
   btn1Text: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     opacity: 0.8,
-    fontFamily: "Roboto"
+    fontFamily: 'Roboto'
   },
   btnWrapper4: {
     flex: 1,
-    alignItems: "center",
-    alignSelf: "center",
+    alignItems: 'center',
+    alignSelf: 'center',
     paddingTop: 8,
     paddingBottom: 6,
     minWidth: 80,
     paddingHorizontal: 12
   },
   btn2Text2: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     opacity: 0.8,
-    fontFamily: "Roboto"
+    fontFamily: 'Roboto'
   },
   btnWrapper2: {
     flex: 1,
-    alignItems: "center",
-    alignSelf: "center",
+    alignItems: 'center',
+    alignSelf: 'center',
     paddingTop: 8,
     paddingBottom: 6,
     minWidth: 80,
     paddingHorizontal: 12
   },
   btn2Text3: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     opacity: 0.8,
-    fontFamily: "Roboto"
+    fontFamily: 'Roboto'
   },
   btnWrapper3: {
     flex: 1,
-    alignItems: "center",
-    alignSelf: "center",
+    alignItems: 'center',
+    alignSelf: 'center',
     paddingTop: 8,
     paddingBottom: 6,
     minWidth: 80,
     paddingHorizontal: 12
   },
   btn3Text: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     opacity: 0.8,
-    fontFamily: "Roboto"
+    fontFamily: 'Roboto'
   }
 });
 const iconStyles = {
   icon1: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 24
   },
   icon22: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 24
   },
   icon23: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 24
   },
   icon3: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 24
   }
 };

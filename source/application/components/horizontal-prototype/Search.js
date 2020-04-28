@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { StyleSheet, View, TouchableOpacity, TextInput } from "react-native";
-import { IconContext } from "react-icons";
-import { MdArrowBack, MdClose } from "react-icons/md";
+import React, { Component } from 'react';
+import { StyleSheet, View, TouchableOpacity, TextInput } from 'react-native';
+import { IconContext } from 'react-icons';
+import { MdArrowBack, MdClose } from 'react-icons/md';
 
 function Search(props) {
   const handleGoBack = () => {
@@ -27,10 +27,10 @@ function Search(props) {
         </TouchableOpacity>
         <View style={styles.inputStyleStack}>
           <TextInput
-            placeholder={props.textInput1 || "Search"}
-            placeholderTextColor="#ffffff"
+            placeholder={props.textInput1 || 'Search'}
+            placeholderTextColor='#ffffff'
             selectTextOnFocus={true}
-            dataDetector="all"
+            dataDetector='all'
             style={styles.inputStyle}
             onChange={props.onChange}
           ></TextInput>
@@ -47,21 +47,21 @@ function Search(props) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "rgba(65,117,5,1)",
+    backgroundColor: 'rgba(65,117,5,1)',
     padding: 4,
     elevation: 3,
     shadowOffset: {
       height: 2,
       width: 0
     },
-    shadowColor: "#111",
+    shadowColor: '#111',
     shadowOpacity: 0.2,
     shadowRadius: 1.2
   },
   rect1: {
-    backgroundColor: "transparent",
-    flexDirection: "row",
-    alignItems: "center",
+    backgroundColor: 'transparent',
+    flexDirection: 'row',
+    alignItems: 'center',
     flex: 1
   },
   leftIconButton: {
@@ -74,18 +74,18 @@ const styles = StyleSheet.create({
     left: 0,
     width: 263,
     height: 48,
-    color: "#FFFFFF",
-    position: "absolute",
-    alignSelf: "flex-start",
+    color: '#FFFFFF',
+    position: 'absolute',
+    alignSelf: 'flex-start',
     paddingRight: 5,
     fontSize: 16,
-    fontFamily: "Roboto",
+    fontFamily: 'Roboto',
     lineHeight: 16
   },
   button: {
     top: 1,
-    position: "absolute",
-    alignItems: "center",
+    position: 'absolute',
+    alignItems: 'center',
     right: 0,
     padding: 11
   },
@@ -98,11 +98,11 @@ const styles = StyleSheet.create({
 });
 const iconStyles = {
   leftIcon2: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 24
   },
   rightIcon2: {
-    color: "#FFFFFF",
+    color: '#FFFFFF',
     fontSize: 24
   }
 };

@@ -11,7 +11,7 @@
   "author": "Team 103",
   "license": "MIT",
   "keywords": [],
-  "description": "- HTTP: `http://localhost:8080/` - HTTPS: `https://localhost:8443/`",
+  "description": "",
   "dependencies": {
     "compression": "^1.7.4",
     "cors": "^2.8.5",

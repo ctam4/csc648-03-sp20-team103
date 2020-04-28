@@ -42,8 +42,7 @@
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.3",
-    "parcel-bundler": "^1.12.4"
+    "nodemon": "^2.0.3"
   },
   "alias": {
     "react-native": "react-native-web"

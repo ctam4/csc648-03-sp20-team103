@@ -1,10 +1,10 @@
-import React, { Component } from "react";
-import TopAppBar, { TopAppBarIcon, TopAppBarRow, TopAppBarSection, TopAppBarTitle } from "@material/react-top-app-bar";
-import MaterialIcon from "@material/react-material-icon";
-import "@material/react-top-app-bar/dist/top-app-bar.css";
-import "@material/react-material-icon/dist/material-icon.css";
-//import { IconContext } from "react-icons";
-//import { MdMenu, MdSearch, MdMoreVert } from "react-icons/md";
+import React, { Component } from 'react';
+import TopAppBar, { TopAppBarIcon, TopAppBarRow, TopAppBarSection, TopAppBarTitle } from '@material/react-top-app-bar';
+import MaterialIcon from '@material/react-material-icon';
+import '@material/react-top-app-bar/dist/top-app-bar.css';
+import '@material/react-material-icon/dist/material-icon.css';
+//import { IconContext } from 'react-icons';
+//import { MdMenu, MdSearch, MdMoreVert } from 'react-icons/md';
 
 function MaterialTopAppBar(props) {
   return (
@@ -13,9 +13,9 @@ function MaterialTopAppBar(props) {
         <TopAppBarSection align='start'>
           <TopAppBarIcon navIcon tabIndex={0}>
             <MaterialIcon
-              aria-label={props.icon1 || "menu"}
+              aria-label={props.icon1 || 'menu'}
               hasRipple
-              icon={props.icon1 || "menu"}
+              icon={props.icon1 || 'menu'}
               onClick={props.onClick1}
             />
           </TopAppBarIcon>
@@ -27,7 +27,7 @@ function MaterialTopAppBar(props) {
             <MaterialIcon
               aria-label={props.icon2}
               hasRipple
-              icon={props.icon2 || "search"}
+              icon={props.icon2 || 'search'}
               onClick={props.onClick2}
             />
           </TopAppBarIcon>
