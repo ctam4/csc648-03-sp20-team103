@@ -1,7 +1,7 @@
 "use strict";
 
 const express = require('express');
-const uuid = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 const login = express.Router();
 
 const pool = require('../../database.js');
@@ -27,7 +27,7 @@ login.post('/', async (req, res) => {
       if (rows.length > 0) {
         // @todo handle possible duplicate sessions
         const fridgeID = rows[0].fridge_id
-        const session = uuid.v4();
+        const session = uuidv4();
 
         const results = (await connection.query("SELECT CURRENT_TIMESTAMP as logged_in_ts, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 MONTH) as expires_ts"))[0];
         await connection.query("INSERT INTO v2_sessions(session, fridge_id, logged_in_ts, expires_ts) VALUES (?, ?, ?, ?)", [session, fridgeID, results.logged_in_ts, results.expires_ts]);
