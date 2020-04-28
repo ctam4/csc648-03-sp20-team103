@@ -1,12 +1,12 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 
-import { Headline6, Subtitle2, Body2 } from "./MaterialTypography";
-import MaterialCard, { CardPrimaryContent, CardMedia, CardActions, CardActionButtons } from "./MaterialCard";
-import MaterialButton from "./MaterialButton";
+import { Headline6, Subtitle2, Body2 } from './MaterialTypography';
+import MaterialCard, { CardPrimaryContent, CardMedia, CardActions, CardActionButtons } from './MaterialCard';
+import MaterialButton from './MaterialButton';
 
 function ConsumptionCard(props) {
   return (
-    <MaterialCard className="mdc-card">
+    <MaterialCard className='mdc-card'>
       <CardPrimaryContent onClick={props.onClickUser} style={{padding: 16}}>
         {/*
         <CardMedia square imageUrl={props.userImage} style={{width: 40, height: 40, borderRadius: 20, marginRight: 20}}></CardMedia>

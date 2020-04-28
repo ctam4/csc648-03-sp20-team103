@@ -1,13 +1,13 @@
-import React, { Component } from "react";
-import { View } from "react-native";
+import React, { Component } from 'react';
+import { View } from 'react-native';
 
-import { Headline6, Subtitle2 } from "./MaterialTypography";
-import MaterialCard, { CardPrimaryContent, CardMedia, CardActions, CardActionButtons } from "./MaterialCard";
-import MaterialButton from "./MaterialButton";
+import { Headline6, Subtitle2 } from './MaterialTypography';
+import MaterialCard, { CardPrimaryContent, CardMedia, CardActions, CardActionButtons } from './MaterialCard';
+import MaterialButton from './MaterialButton';
 
 function InventoryCard(props) {
   return (
-    <MaterialCard className="mdc-card">
+    <MaterialCard className='mdc-card'>
       <CardPrimaryContent onClick={props.onClickMain} style={{padding: 16}}>
         <CardMedia wide imageUrl={props.mainImage}></CardMedia>
         <View style={{padding: 16}}>

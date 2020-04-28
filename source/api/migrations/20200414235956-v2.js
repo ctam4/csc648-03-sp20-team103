@@ -1,5 +1,5 @@
-"use strict";
-const async = require("async");
+'use strict';
+const async = require('async');
 
 let dbm;
 let type;
@@ -18,152 +18,152 @@ exports.setup = function (options, seedLink) {
 exports.up = (db, callback) => {
   async.series(
     [
-      db.createTable.bind(db, "v2_fridges", {
+      db.createTable.bind(db, 'v2_fridges', {
         columns: {
           fridge_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             primaryKey: true,
             autoIncrement: true,
           },
           serial_number: {
-            type: "string",
+            type: 'string',
             unique: true,
             notNull: true,
           },
           pin: {
-            type: "string",
+            type: 'string',
             notNull: true,
           },
           //to do: default current timestamp
           registered_ts: {
-            type: "timestamp",
+            type: 'timestamp',
             notNull: true,
           },
         },
         ifNotExists: true,
       }),
       // todo: index for fridge_id
-      db.createTable.bind(db, "v2_sessions", {
+      db.createTable.bind(db, 'v2_sessions', {
         columns: {
           session: {
-            type: "string",
+            type: 'string',
             primaryKey: true,
           },
           fridge_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: "fridge_id_sessions",
-              table: "v2_fridges",
+              name: 'fridge_id_sessions',
+              table: 'v2_fridges',
               notNull: true,
               rules: {
-                onDelete: "CASCADE",
-                onUpdate: "RESTRICT",
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
               },
-              mapping: "fridge_id",
+              mapping: 'fridge_id',
             },
           },
           //to do: default current timestamp
           logged_in_ts: {
-            type: "timestamp",
+            type: 'timestamp',
             notNull: true,
           },
           expires_ts: {
-            type: "timestamp",
+            type: 'timestamp',
             notNull: true,
           },
         },
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, "v2_users", {
+      db.createTable.bind(db, 'v2_users', {
         columns: {
           user_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             autoIncrement: true,
             primaryKey: true,
           },
           fridge_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: "fridge_id_users",
-              table: "v2_fridges",
+              name: 'fridge_id_users',
+              table: 'v2_fridges',
               rules: {
-                onDelete: "CASCADE",
-                onUpdate: "RESTRICT",
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
               },
-              mapping: "fridge_id",
+              mapping: 'fridge_id',
             },
           },
           name: {
-            type: "string",
+            type: 'string',
             length: 64,
             notNull: true,
           },
           role: {
-            type: "string",
+            type: 'string',
             length: 64,
             notNull: true,
           },
           //to do: default current timestamp
           created_ts: {
-            type: "timestamp",
+            type: 'timestamp',
             notNull: true,
           },
         },
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, "v2_nutrition", {
+      db.createTable.bind(db, 'v2_nutrition', {
         columns: {
           nutrition_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             primaryKey: true,
             autoIncrement: true,
           },
           calories: {
-            type: "smallint",
+            type: 'smallint',
             notNull: true,
             unsigned: true,
           },
           calories_unit: {
-            type: "string",
+            type: 'string',
             length: 8,
             notNull: true,
           },
           fat: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             notNull: true,
           },
           fat_unit: {
-            type: "string",
+            type: 'string',
             length: 8,
             notNull: true,
           },
           protein: {
-            type: "smallint",
+            type: 'smallint',
             unsigned: true,
             notNull: true,
           },
           protein_unit: {
-            type: "string",
+            type: 'string',
             length: 8,
             notNull: true,
           },
           carbohydrates: {
-            type: "smallint",
+            type: 'smallint',
             unsigned: true,
             notNull: true,
           },
           carbohydrates_unit: {
-            type: "string",
+            type: 'string',
             length: 8,
             notNull: true,
           },
@@ -171,89 +171,89 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, "v2_ingredients", {
+      db.createTable.bind(db, 'v2_ingredients', {
         columns: {
           ingredient_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             primaryKey: true,
           },
           name: {
-            type: "string",
+            type: 'string',
             length: 128,
             unique: true,
             notNull: true,
           },
           image: {
-            type: "text",
+            type: 'text',
             notNull: true,
           },
         },
       }),
 
-      db.createTable.bind(db, "v2_recipes", {
+      db.createTable.bind(db, 'v2_recipes', {
         columns: {
           recipe_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             primaryKey: true,
             autoIncrement: true,
           },
           name: {
-            type: "string",
+            type: 'string',
             length: 128,
             notNull: true,
             unique: true,
           },
           title: {
-            type: "text",
+            type: 'text',
             notNull: true,
           },
           image: {
-            type: "text",
+            type: 'text',
             notNull: true,
           },
           servings: {
-            type: "smallint",
+            type: 'smallint',
             unsigned: true,
             notNull: true,
           },
           cooking_time: {
-            type: "smallint",
+            type: 'smallint',
             unsigned: true,
             notNull: true,
           },
           instructions: {
-            type: "text",
+            type: 'text',
             notNull: true,
           },
         },
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, "v2_recipe_ingredients", {
+      db.createTable.bind(db, 'v2_recipe_ingredients', {
         columns: {
           recipe_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: "recipe_id_recipe_ingredients",
-              table: "v2_recipes",
+              name: 'recipe_id_recipe_ingredients',
+              table: 'v2_recipes',
               rules: {
-                onDelete: "CASCADE",
-                onUpdate: "RESTRICT",
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
               },
-              mapping: "recipe_id",
+              mapping: 'recipe_id',
             },
           },
           // todo: ingredients_id with fk
           quantity: {
-            type: "real",
+            type: 'real',
             notNull: true,
           },
           unit: {
-            type: "string",
+            type: 'string',
             length: 8,
             notNull: true,
           },
@@ -261,64 +261,64 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, "v2_inventory", {
+      db.createTable.bind(db, 'v2_inventory', {
         columns: {
           inventory_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             primaryKey: true,
             autoIncrement: true,
           },
           fridge_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: "fridge_id_inventory",
-              table: "v2_fridges",
+              name: 'fridge_id_inventory',
+              table: 'v2_fridges',
               rules: {
-                onDelete: "CASCADE",
-                onUpdate: "RESTRICT",
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
               },
-              mapping: "fridge_id",
+              mapping: 'fridge_id',
             },
           },
           ingredient_id: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: "ingredient_id_inventory",
-              table: "v2_ingredients",
+              name: 'ingredient_id_inventory',
+              table: 'v2_ingredients',
               rules: {
-                onDelete: "CASCADE",
-                onUpdate: "RESTRICT",
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
               },
-              mapping: "ingredient_id",
+              mapping: 'ingredient_id',
             },
           },
           expiration_date: {
-            type: "timestamp",
+            type: 'timestamp',
             default: null,
           },
           quantity: {
-            type: "real",
+            type: 'real',
             notNull: true,
           },
           unit: {
-            type: "string",
+            type: 'string',
             length: 16,
             notNull: true,
           },
           price: {
-            type: "int",
+            type: 'int',
             unsigned: true,
             notNull: true,
           },
           state: {
-            type: "string",
+            type: 'string',
             notNull: true,
-            defaultValue: "stored",
+            defaultValue: 'stored',
           },
         },
         ifNotExists: true,
@@ -331,14 +331,14 @@ exports.up = (db, callback) => {
 exports.down = (db, callback) => {
   async.series(
     [
-      db.dropTable("v2_fridges", callback),
-      db.dropTable("v2_sessions", callback),
-      db.dropTable("v2_users", callback),
-      db.dropTable("v2_nutrition", callback),
-      db.dropTable("v2_ingredients", callback),
-      db.dropTable("v2_recipes", callback),
-      db.dropTable("v2_recipe_ingredients", callback),
-      db.dropTable("v2_inventory", callback),
+      db.dropTable('v2_fridges', callback),
+      db.dropTable('v2_sessions', callback),
+      db.dropTable('v2_users', callback),
+      db.dropTable('v2_nutrition', callback),
+      db.dropTable('v2_ingredients', callback),
+      db.dropTable('v2_recipes', callback),
+      db.dropTable('v2_recipe_ingredients', callback),
+      db.dropTable('v2_inventory', callback),
     ],
     callback
   );

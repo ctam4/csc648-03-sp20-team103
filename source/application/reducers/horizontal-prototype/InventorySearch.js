@@ -1,5 +1,5 @@
 export const initialState = {
-  keywords: "",
+  keywords: '',
 };
 
 export const inventorySearchReducer = (state = initialState, action) => {

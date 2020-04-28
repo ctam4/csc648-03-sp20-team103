@@ -1,12 +1,12 @@
-import React, { Component, useState } from "react";
-import { View } from "react-native";
-import LocalizedStrings from "react-localization";
+import React, { Component, useState } from 'react';
+import { View } from 'react-native';
+import LocalizedStrings from 'react-localization';
 
-import { Headline6, Subtitle1, Subtitle2, Body2 } from "./MaterialTypography";
-import MaterialIcon from "@material/react-material-icon";
-import MaterialCard, { CardMedia, CardActions, CardActionButtons, CardActionIcons } from "./MaterialCard";
-import MaterialButton from "./MaterialButton";
-import "@material/react-material-icon/dist/material-icon.css";
+import { Headline6, Subtitle1, Subtitle2, Body2 } from './MaterialTypography';
+import MaterialIcon from '@material/react-material-icon';
+import MaterialCard, { CardMedia, CardActions, CardActionButtons, CardActionIcons } from './MaterialCard';
+import MaterialButton from './MaterialButton';
+import '@material/react-material-icon/dist/material-icon.css';
 
 function InventoryCardFull(props) {
   const [cardOpen, setCardOpen] = useState(false);
@@ -16,8 +16,8 @@ function InventoryCardFull(props) {
   };
 
   return (
-    <MaterialCard className="mdc-card">
-      <CardMedia wide imageUrl={props.mainImage} style={{display: 'flex', alignItems: "flex-end"}}>
+    <MaterialCard className='mdc-card'>
+      <CardMedia wide imageUrl={props.mainImage} style={{display: 'flex', alignItems: 'flex-end'}}>
         <View style={{padding: 16, position: 'absolute', bottom: 0}}>
           <Headline6 style={{margin: 0}}>{props.mainText1}</Headline6>
           <Subtitle2 style={{margin: 0}}>{props.mainText2}</Subtitle2>
@@ -29,9 +29,9 @@ function InventoryCardFull(props) {
         </CardActionButtons>
         <CardActionIcons>
           <MaterialIcon
-            aria-label={cardOpen && "expand_less" || "expand_more"}
+            aria-label={cardOpen && 'expand_less' || 'expand_more'}
             hasRipple
-            icon={cardOpen && "expand_less" || "expand_more"}
+            icon={cardOpen && 'expand_less' || 'expand_more'}
             onClick={toggleCard}
           />
         </CardActionIcons>
@@ -46,7 +46,7 @@ function InventoryCardFull(props) {
 
 let strings = new LocalizedStrings({
   en: {
-    log: "Log",
+    log: 'Log',
   },
 });
 

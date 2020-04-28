@@ -1,20 +1,20 @@
-import React, { Component, useState } from "react";
-import Drawer, { DrawerContent, DrawerHeader, DrawerTitle } from "@material/react-drawer";
-import List, { ListItem, ListItemGraphic, ListItemText } from "@material/react-list";
-import MaterialIcon from "@material/react-material-icon";
-import "@material/react-drawer/dist/drawer.css";
-import "@material/react-list/dist/list.css";
-import "@material/react-material-icon/dist/material-icon.css";
-import LocalizedStrings from "react-localization";
+import React, { Component, useState } from 'react';
+import Drawer, { DrawerContent, DrawerHeader, DrawerTitle } from '@material/react-drawer';
+import List, { ListItem, ListItemGraphic, ListItemText } from '@material/react-list';
+import MaterialIcon from '@material/react-material-icon';
+import '@material/react-drawer/dist/drawer.css';
+import '@material/react-list/dist/list.css';
+import '@material/react-material-icon/dist/material-icon.css';
+import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings({
   en: {
-    meal_plans: "Meal Plans",
-    inventory: "Inventory",
-    consumption: "Consumption",
-    carts: "Carts",
-    users: "Users",
-    recipes: "Recipes",
+    meal_plans: 'Meal Plans',
+    inventory: 'Inventory',
+    consumption: 'Consumption',
+    carts: 'Carts',
+    users: 'Users',
+    recipes: 'Recipes',
   },
 });
 

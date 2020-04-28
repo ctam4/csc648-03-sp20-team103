@@ -9,7 +9,7 @@ users.get('/', async (req, res) => {
     connection = await pool.getConnection();
     await connection.query('SELECT * FROM v2_users')
       .then((results) => {
-        res.send(JSON.stringify(results)).end()
+        res.send(JSON.stringify(results)).end();
         // res.json(results).end();
       });
   } catch (error) {
@@ -25,14 +25,13 @@ users.get('/', async (req, res) => {
 users.post('/:name', async (req, res) => {
   try {
     connection = await pool.getConnection();
-
     // sql = 'UPDATE v2_users (name) VALUES (?) WHERE fridge_id=' + req.params.fridge_id;
     // sql = 'UPDATE v2_users SET name=' + req.params.name + ' WHERE fridge_id=' + req.params.fridge_id;
     sql = 'INSERT INTO v2_users (name, fridge_id, role) VALUES(?, ?, ?)';
     console.log(req.params)
     await connection.query(sql, [req.params.name, req.body.fridge_id, req.body.role])
       .then((results) => {
-        res.send(JSON.stringify(results)).end()
+        res.send(JSON.stringify(results)).end();
         // res.json(results).end();
       });
   } catch (error) {
@@ -52,7 +51,7 @@ users.delete('/:name', async (req, res) => {
       .then((results) => {
         res.sendStatus(200).end()
       });
-  } catch(error) {
+  } catch (error) {
     res.sendStatus(404).end();
     throw error;
   } finally {
@@ -61,8 +60,5 @@ users.delete('/:name', async (req, res) => {
     }
   }
 });
-
-//console.log('fridges.stack');
-//console.log(fridges.stack);
 
 module.exports = users;
