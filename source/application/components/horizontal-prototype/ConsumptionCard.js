@@ -11,43 +11,43 @@ import Card, {
 function ConsumptionCard(props) {
   return (
     <Card>
-    <CardPrimaryContent>
-    <View style={[styles.container, props.style]}>
-      <View style={styles.cardItem1Style}>
-        <View style={styles.headerStyle}>
-        <CardMedia square imageUrl={props.leftImage}>
-        <span></span>
-        </CardMedia>
-          {/*<Image
+      <CardPrimaryContent>
+        <View style={[styles.container, props.style]}>
+          <View style={styles.cardItem1Style}>
+            <View style={styles.headerStyle}>
+              <CardMedia square imageUrl={props.leftImage}>
+                <span></span>
+              </CardMedia>
+              {/*<Image
             source={props.leftImage}
             style={styles.leftImage}
           ></Image>*/}
-          <View style={styles.headerContent}>
-            <Text style={styles.textStyle}>{props.text1 || "Title"}</Text>
-            <Text style={styles.noteTextStyle}>{props.text2 || "Subhead"}</Text>
+              <View style={styles.headerContent}>
+                <Text style={styles.textStyle}>{props.text1 || "Title"}</Text>
+                <Text style={styles.noteTextStyle}>{props.text2 || "Subhead"}</Text>
+              </View>
+            </View>
           </View>
-        </View>
-      </View>
-      <CardMedia wide imageUrl={props.cardItemimage}>
-        <span></span>
-        </CardMedia>
-      {/* <Image
+          <CardMedia wide imageUrl={props.cardItemimage}>
+            <span></span>
+          </CardMedia>
+          {/* <Image
         source={props.cardItemimage}
         style={styles.cardItemImage}
       ></Image>*/}
-      <View style={styles.body}>
-        <Text style={styles.bodyText}>{props.text3}</Text>
-      </View>
-        <CardActions>
-        <View style={styles.actionBody}>
-        <CardActionButtons>
-        <button onClick={props.onPressAction1}>{props.text4 || "ACTION 1"} </button>
-        <button onClick={props.onPressAction2}>{props.text5 || "ACTION 2"}</button>
-        </CardActionButtons>
+          <View style={styles.body}>
+            <Text style={styles.bodyText}>{props.text3}</Text>
+          </View>
+          <CardActions>
+            <View style={styles.actionBody}>
+              <CardActionButtons>
+                <button onClick={props.onPressAction1}>{props.text4 || "ACTION 1"} </button>
+                <button onClick={props.onPressAction2}>{props.text5 || "ACTION 2"}</button>
+              </CardActionButtons>
+            </View>
+          </CardActions>
         </View>
-        </CardActions>
-    </View>
-    </CardPrimaryContent>
+      </CardPrimaryContent>
     </Card>
   );
 }

@@ -11,32 +11,32 @@ import Card, {
 function InventoryCard(props) {
   return (
     <Card>
-       <CardPrimaryContent>
-    <View style={[styles.container, props.style]}>
-      <View style={styles.cardBody}>
-        <View style={styles.bodyContent}>
-          <Text style={styles.titleStyle}>
-            {props.text1 || "Title goes here"}
-          </Text>
-          <Text style={styles.subtitleStyle}>
-            {props.text2 || "Subtitle here"}
-          </Text>
+      <CardPrimaryContent>
+        <View style={[styles.container, props.style]}>
+          <View style={styles.cardBody}>
+            <View style={styles.bodyContent}>
+              <Text style={styles.titleStyle}>
+                {props.text1 || "Title goes here"}
+              </Text>
+              <Text style={styles.subtitleStyle}>
+                {props.text2 || "Subtitle here"}
+              </Text>
+            </View>
+            <Image
+              source={props.cardItemimage}
+              style={styles.cardItemImage}
+            ></Image>
+          </View>
+          <CardActions>
+            <View style={styles.actionBody}>
+              <CardActionButtons>
+                <button onClick={props.onPressAction1}>{props.text3 || "ACTION 1"} </button>
+                <button onClick={props.onPressAction2}>{props.text4 || "ACTION 2"}</button>
+              </CardActionButtons>
+            </View>
+          </CardActions>
         </View>
-        <Image
-          source={props.cardItemimage}
-          style={styles.cardItemImage}
-        ></Image>
-      </View>
-      <CardActions>
-        <View style={styles.actionBody}>
-        <CardActionButtons>
-        <button onClick={props.onPressAction1}>{props.text3 || "ACTION 1"} </button>
-        <button onClick={props.onPressAction2}>{props.text4 || "ACTION 2"}</button>
-        </CardActionButtons>
-        </View>
-        </CardActions>
-    </View>
-    </CardPrimaryContent>
+      </CardPrimaryContent>
     </Card>
   );
 }

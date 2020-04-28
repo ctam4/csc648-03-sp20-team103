@@ -14,43 +14,42 @@ import Card, {
 function RecipesCardFull(props) {
   return (
     <Card>
-       <CardPrimaryContent>
+      <CardPrimaryContent>
+        <View style={[styles.container, props.style]}>
+          <Image
+            source={props.cardItemimage}
+            style={styles.cardItemImage}
+          ></Image>
+          <View style={styles.bodyContent}>
+            <Text style={styles.titleStyle}>
+              {props.text1 || "Title goes here"}
+            </Text>
+            <Text style={styles.subtitleStyle}>
+              {props.text2 || "Subtitle here"}
+            </Text>
+          </View>
+          <CardActions>
+            <View style={styles.actionBody}>
+              <CardActionButtons>
+                <button onClick={props.onPressAction1}>{props.text3 || "ACTION 1"} </button>
+                <button onClick={props.onPressAction2}>{props.text4 || "ACTION 2"}</button>
+              </CardActionButtons>
+              <CardActionIcons>
+                {/*<i onClick={props.onPressAction3}>iconStyles.iconStyle</i>*/}
+              </CardActionIcons>
+              <IconContext.Provider value={{ style: iconStyles.iconStyle }} onPress={props.onPressAction3}>
+                <MdExpandLess />
+              </IconContext.Provider>
 
-    <View style={[styles.container, props.style]}>
-      <Image
-        source={props.cardItemimage}
-        style={styles.cardItemImage}
-      ></Image>
-      <View style={styles.bodyContent}>
-        <Text style={styles.titleStyle}>
-          {props.text1 || "Title goes here"}
-        </Text>
-        <Text style={styles.subtitleStyle}>
-          {props.text2 || "Subtitle here"}
-        </Text>
-      </View>
-      <CardActions>
-        <View style={styles.actionBody}>
-        <CardActionButtons>
-        <button onClick={props.onPressAction1}>{props.text3 || "ACTION 1"} </button>
-        <button onClick={props.onPressAction2}>{props.text4 || "ACTION 2"}</button>
-        </CardActionButtons>
-        <CardActionIcons>
-  {/*<i onClick={props.onPressAction3}>iconStyles.iconStyle</i>*/}
-        </CardActionIcons>
-          <IconContext.Provider value={{ style: iconStyles.iconStyle }} onPress={props.onPressAction3}>
-            <MdExpandLess />
-          </IconContext.Provider>
-          
+            </View>
+          </CardActions>
         </View>
-        </CardActions>
-      </View>
-      <View style={styles.body2}>
-        <Text style={styles.bodyHead1}>{strings.log}</Text>
-        <Text style={styles.bodyText}>{props.bodyText1}</Text>
-      </View>
-    </CardPrimaryContent>
-       </Card>
+        <View style={styles.body2}>
+          <Text style={styles.bodyHead1}>{strings.log}</Text>
+          <Text style={styles.bodyText}>{props.bodyText1}</Text>
+        </View>
+      </CardPrimaryContent>
+    </Card>
   );
 }
 
