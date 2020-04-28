@@ -7,6 +7,7 @@ import Card, {
   CardActionButtons,
   CardActionIcons
 } from "@material/react-card";
+import "@material/react-card/dist/card.css";
 
 function ConsumptionCard(props) {
   return (
