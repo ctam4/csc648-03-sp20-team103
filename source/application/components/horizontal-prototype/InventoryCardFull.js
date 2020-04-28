@@ -3,9 +3,19 @@ import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
 import LocalizedStrings from "react-localization";
 import { IconContext } from "react-icons";
 import { MdExpandLess } from "react-icons/md";
+import Card, {
+  CardPrimaryContent,
+  CardMedia,
+  CardActions,
+  CardActionButtons,
+  CardActionIcons
+} from "@material/react-card";
 
 function InventoryCardFull(props) {
   return (
+    <Card>
+       <CardPrimaryContent>
+
     <View style={[styles.container, props.style]}>
       <Image
         source={props.cardItemimage}
@@ -19,24 +29,28 @@ function InventoryCardFull(props) {
           {props.text2 || "Subtitle here"}
         </Text>
       </View>
-      <View style={styles.actionBody}>
-        <TouchableOpacity style={styles.actionButton1} onPress={props.onPressAction1}>
-          <Text style={styles.actionText1}>{props.text3 || "ACTION 1"}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton2} onPress={props.onPressAction2}>
-          <Text style={styles.actionText2}>{props.text4 || "ACTION 2"}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton3}>
+      <CardActions>
+        <View style={styles.actionBody}>
+        <CardActionButtons>
+        <button onClick={props.onPressAction1}>{props.text3 || "ACTION 1"} </button>
+        <button onClick={props.onPressAction2}>{props.text4 || "ACTION 2"}</button>
+        </CardActionButtons>
+        <CardActionIcons>
+           {/*<i onClick={props.onPressAction3}>iconStyles.iconStyle</i>*/}
+        </CardActionIcons>
           <IconContext.Provider value={{ style: iconStyles.iconStyle }} onPress={props.onPressAction3}>
             <MdExpandLess />
           </IconContext.Provider>
-        </TouchableOpacity>
+          
+        </View>
+        </CardActions>
       </View>
       <View style={styles.body2}>
         <Text style={styles.bodyHead1}>{strings.log}</Text>
         <Text style={styles.bodyText}>{props.bodyText1}</Text>
       </View>
-    </View>
+    </CardPrimaryContent>
+       </Card>
   );
 }
 

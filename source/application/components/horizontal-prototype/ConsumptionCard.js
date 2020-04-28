@@ -1,37 +1,54 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Image, Text, TouchableOpacity } from "react-native";
+import Card, {
+  CardPrimaryContent,
+  CardMedia,
+  CardActions,
+  CardActionButtons,
+  CardActionIcons
+} from "@material/react-card";
 
 function ConsumptionCard(props) {
   return (
+    <Card>
+    <CardPrimaryContent>
     <View style={[styles.container, props.style]}>
       <View style={styles.cardItem1Style}>
         <View style={styles.headerStyle}>
-          <Image
+        <CardMedia square imageUrl={props.leftImage}>
+        <span></span>
+        </CardMedia>
+          {/*<Image
             source={props.leftImage}
             style={styles.leftImage}
-          ></Image>
+          ></Image>*/}
           <View style={styles.headerContent}>
             <Text style={styles.textStyle}>{props.text1 || "Title"}</Text>
             <Text style={styles.noteTextStyle}>{props.text2 || "Subhead"}</Text>
           </View>
         </View>
       </View>
-      <Image
+      <CardMedia wide imageUrl={props.cardItemimage}>
+        <span></span>
+        </CardMedia>
+      {/* <Image
         source={props.cardItemimage}
         style={styles.cardItemImage}
-      ></Image>
+      ></Image>*/}
       <View style={styles.body}>
         <Text style={styles.bodyText}>{props.text3}</Text>
       </View>
-      <View style={styles.actionBody}>
-        <TouchableOpacity style={styles.actionButton1} onPress={props.onPressAction1}>
-          <Text style={styles.actionText1}>{props.text4 || "ACTION 1"}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton2} onPress={props.onPressAction2}>
-          <Text style={styles.actionText2}>{props.text5 || "ACTION 2"}</Text>
-        </TouchableOpacity>
-      </View>
+        <CardActions>
+        <View style={styles.actionBody}>
+        <CardActionButtons>
+        <button onClick={props.onPressAction1}>{props.text4 || "ACTION 1"} </button>
+        <button onClick={props.onPressAction2}>{props.text5 || "ACTION 2"}</button>
+        </CardActionButtons>
+        </View>
+        </CardActions>
     </View>
+    </CardPrimaryContent>
+    </Card>
   );
 }
 

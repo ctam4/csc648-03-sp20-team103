@@ -1,8 +1,17 @@
 import React, { Component } from "react";
 import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
+import Card, {
+  CardPrimaryContent,
+  CardMedia,
+  CardActions,
+  CardActionButtons,
+  CardActionIcons
+} from "@material/react-card";
 
 function InventoryCard(props) {
   return (
+    <Card>
+       <CardPrimaryContent>
     <View style={[styles.container, props.style]}>
       <View style={styles.cardBody}>
         <View style={styles.bodyContent}>
@@ -18,15 +27,17 @@ function InventoryCard(props) {
           style={styles.cardItemImage}
         ></Image>
       </View>
-      <View style={styles.actionBody}>
-        <TouchableOpacity style={styles.actionButton1} onPress={props.onPressAction1}>
-          <Text style={styles.actionText1}>{props.text3 || "ACTION 1"}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton2} onPress={props.onPressAction2}>
-          <Text style={styles.actionText2}>{props.text4 || "ACTION 2"}</Text>
-        </TouchableOpacity>
-      </View>
+      <CardActions>
+        <View style={styles.actionBody}>
+        <CardActionButtons>
+        <button onClick={props.onPressAction1}>{props.text3 || "ACTION 1"} </button>
+        <button onClick={props.onPressAction2}>{props.text4 || "ACTION 2"}</button>
+        </CardActionButtons>
+        </View>
+        </CardActions>
     </View>
+    </CardPrimaryContent>
+    </Card>
   );
 }
 

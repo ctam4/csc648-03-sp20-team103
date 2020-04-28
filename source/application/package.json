@@ -16,6 +16,7 @@
   "description": "",
   "dependencies": {
     "@material/react-button": "^0.15.0",
+    "@material/react-card": "^0.15.0",
     "@material/react-drawer": "^0.15.0",
     "@material/react-fab": "^0.15.0",
     "@material/react-list": "^0.15.0",
