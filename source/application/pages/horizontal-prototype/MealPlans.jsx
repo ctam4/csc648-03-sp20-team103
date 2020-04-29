@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { DrawerAppContent } from '@material/react-drawer';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
@@ -15,21 +17,6 @@ let strings = new LocalizedStrings({
     meal_plans: 'Meal Plans',
     calories: ' calories',
     view: 'View',
-  },
-});
-const styles = StyleSheet.create({
-  scrollArea: {
-    minWidth: 360,
-    width: '100%',
-    minHeight: 684,
-    maxHeight: '100%',
-    backgroundColor: 'rgba(230, 230, 230,1)',
-    marginTop: 1
-  },
-  scrollArea_contentContainerStyle: {
-    minWidth: 360,
-    width: '100%',
-    flexDirection: 'column'
   },
 });
 
@@ -105,11 +92,10 @@ export default () => {
           onClose={toggleDrawer}
         ></MaterialDrawer>
         <DrawerAppContent className='drawer-app-content'>
-          <View style={styles.scrollArea}>
-            <ScrollView
-              contentContainerStyle={styles.scrollArea_contentContainerStyle}
-            >
+          <Grid>
+            <Row>
               {mealPlans.map((item) => (
+              <Cell desktopColumns={4} phoneColumns={4} tabletColumns={4}>
                 <MealPlansCard
                   mainText1={item.date}
                   mainText2={item.cal_per_day + strings.calories}
@@ -118,9 +104,10 @@ export default () => {
                   onClickMain={() => { window.location.href = './meal-plans/view?id=' }}
                   onClickAction1={() => { window.location.href = './meal-plans/view?id=' }}
                 ></MealPlansCard>
+              </Cell>
               ))}
-            </ScrollView>
-          </View>
+            </Row>
+          </Grid>
         </DrawerAppContent>
       </TopAppBarFixedAdjust>
     </View>

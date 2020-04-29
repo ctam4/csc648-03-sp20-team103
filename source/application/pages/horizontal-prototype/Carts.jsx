@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { DrawerAppContent } from '@material/react-drawer';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
@@ -22,19 +24,6 @@ let strings = new LocalizedStrings({
   },
 });
 const styles = StyleSheet.create({
-  scrollArea1: {
-    minWidth: 360,
-    width: '100%',
-    height: '100%',
-    minHeight: 628,
-    maxHeight: '100%',
-    backgroundColor: 'rgba(230, 230, 230,1)',
-  },
-  scrollArea1_contentContainerStyle: {
-    minWidth: 360,
-    width: '100%',
-    flexDirection: 'column',
-  },
   materialBasicFooter1: {
     minWidth: 360,
     width: '100%',
@@ -75,22 +64,22 @@ export default () => {
           onClose={toggleDrawer}
         ></MaterialDrawer>
         <DrawerAppContent className='drawer-app-content'>
-          <View style={styles.scrollArea1}>
-            <ScrollView
-              contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-            >
-              <CartsCard
-                mainText1={strings.user_cart}
-                mainText2={strings.last_updated}
-                bodyText={strings.preview_cart}
-                actionText1={strings.edit}
-                actionText2={strings.clear_cart}
-                onClickAction1={() => { window.location.href = './carts/view?id=' }}
-                onClickAction2={handleClearCart}
-              ></CartsCard>
-            </ScrollView>
-            <AppFooter style={styles.materialBasicFooter1}></AppFooter>
-          </View>
+          <Grid>
+            <Row>
+              <Cell desktopColumns={4} phoneColumns={4} tabletColumns={4}>
+                <CartsCard
+                  mainText1={strings.user_cart}
+                  mainText2={strings.last_updated}
+                  bodyText={strings.preview_cart}
+                  actionText1={strings.edit}
+                  actionText2={strings.clear_cart}
+                  onClickAction1={() => { window.location.href = './carts/view?id=' }}
+                  onClickAction2={handleClearCart}
+                ></CartsCard>
+              </Cell>
+            </Row>
+          </Grid>
+          <AppFooter style={styles.materialBasicFooter1}></AppFooter>
         </DrawerAppContent>
       </TopAppBarFixedAdjust>
     </View>
