@@ -8,7 +8,7 @@ import MaterialButton from './MaterialButton';
 function InventoryCard(props) {
   return (
     <MaterialCard className='mdc-card'>
-      <CardPrimaryContent onClick={props.onClickMain} style={{padding: 16}}>
+      <CardPrimaryContent onClick={props.onClickMain}>
         <CardMedia wide imageUrl={props.mainImage}></CardMedia>
         <View style={{padding: 16}}>
           <Headline6 style={{margin: 0}}>{props.mainText1}</Headline6>
