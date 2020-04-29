@@ -1,29 +1,29 @@
-import React, { useEffect, useReducer } from "react";
-import { useCookies } from "react-cookie";
+import React, { useEffect, useReducer } from 'react';
+import { useCookies } from 'react-cookie';
 
-import { recipesSearchReducer, initialState } from "../../reducers/horizontal-prototype/RecipesSearch";
-import { setKeywords } from "../../actions/horizontal-prototype/RecipesSearch";
+import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
+import { setKeywords } from '../../actions/horizontal-prototype/RecipesSearch';
 
-import { StyleSheet, View, ScrollView, Text } from "react-native";
-import LocalizedStrings from "react-localization";
+import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import LocalizedStrings from 'react-localization';
 
-import Search from "../../components/horizontal-prototype/Search";
-import ChipActive from "../../components/horizontal-prototype/ChipActive";
-import Chip from "../../components/horizontal-prototype/Chip";
+import Search from '../../components/horizontal-prototype/Search';
+import ChipActive from '../../components/horizontal-prototype/ChipActive';
+import Chip from '../../components/horizontal-prototype/Chip';
 
 let strings = new LocalizedStrings({
   en: {
-    choose_calories: "Choose calories per serving",
-    choose_servings: "Choose servings",
-    choose_fat: "Choose fat per serving",
-    choose_protein: "Choose protein per serving",
-    choose_carbonhydrates: "Choose carbonhydrates per serving",
-    calories_500_less: "500 calories or less",
-    calories_500_1000: "500-1000 calories",
-    servings_3_4: "3-4 servings",
-    servings_1_2: "1-2 servings",
-    grams_10_less: "10 grams or less",
-    grams_10_20: "10-20 grams",
+    choose_calories: 'Choose calories per serving',
+    choose_servings: 'Choose servings',
+    choose_fat: 'Choose fat per serving',
+    choose_protein: 'Choose protein per serving',
+    choose_carbonhydrates: 'Choose carbonhydrates per serving',
+    calories_500_less: '500 calories or less',
+    calories_500_1000: '500-1000 calories',
+    servings_3_4: '3-4 servings',
+    servings_1_2: '1-2 servings',
+    grams_10_less: '10 grams or less',
+    grams_10_20: '10-20 grams',
   },
 });
 const styles = StyleSheet.create({
@@ -32,24 +32,24 @@ const styles = StyleSheet.create({
   },
   materialSearchBarWithBackground: {
     minWidth: 360,
-    width: "100%",
+    width: '100%',
     height: 56,
   },
   scrollArea1: {
     minWidth: 360,
-    width: "100%",
+    width: '100%',
     minHeight: 684,
-    maxHeight: "100%",
-    alignSelf: "center",
+    maxHeight: '100%',
+    alignSelf: 'center',
   },
   scrollArea1_contentContainerStyle: {
     minWidth: 360,
-    width: "100%",
-    flexDirection: "column",
+    width: '100%',
+    flexDirection: 'column',
   },
   chooseCalories: {
-    color: "#121212",
-    fontFamily: "Roboto",
+    color: '#121212',
+    fontFamily: 'Roboto',
     marginTop: 15,
     marginLeft: 15,
   },
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
   materialChipWithCloseButtonFiller: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   materialChipBasic1: {
     width: 130,
@@ -67,14 +67,14 @@ const styles = StyleSheet.create({
   },
   materialChipWithCloseButtonRow: {
     height: 32,
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 10,
     marginLeft: 15,
     marginRight: 45,
   },
   chooseServingSize: {
-    color: "#121212",
-    fontFamily: "Roboto",
+    color: '#121212',
+    fontFamily: 'Roboto',
     marginTop: 20,
     marginLeft: 15,
   },
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   },
   materialChipWithCloseButton1Filler: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   materialChipBasic: {
     width: 100,
@@ -92,14 +92,14 @@ const styles = StyleSheet.create({
   },
   materialChipWithCloseButton1Row: {
     height: 32,
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 10,
     marginLeft: 15,
     marginRight: 115,
   },
   chooseFatSize: {
-    color: "#121212",
-    fontFamily: "Roboto",
+    color: '#121212',
+    fontFamily: 'Roboto',
     marginTop: 20,
     marginLeft: 15,
   },
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   },
   materialChipBasic2Filler: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   materialChipBasic3: {
     width: 100,
@@ -117,14 +117,14 @@ const styles = StyleSheet.create({
   },
   materialChipBasic2Row: {
     height: 32,
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 10,
     marginLeft: 15,
     marginRight: 110,
   },
   chooseProteinSize: {
-    color: "#121212",
-    fontFamily: "Roboto",
+    color: '#121212',
+    fontFamily: 'Roboto',
     marginTop: 20,
     marginLeft: 15,
   },
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   materialChipBasic4Filler: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   materialChipBasic5: {
     width: 100,
@@ -142,14 +142,14 @@ const styles = StyleSheet.create({
   },
   materialChipBasic4Row: {
     height: 32,
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 11,
     marginLeft: 15,
     marginRight: 110,
   },
   chooseProtein2: {
-    color: "#121212",
-    fontFamily: "Roboto",
+    color: '#121212',
+    fontFamily: 'Roboto',
     marginTop: 20,
     marginLeft: 15,
   },
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   materialChipBasic6Filler: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
   },
   materialChipBasic7: {
     width: 100,
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
   },
   materialChipBasic6Row: {
     height: 32,
-    flexDirection: "row",
+    flexDirection: 'row',
     marginTop: 11,
     marginLeft: 15,
     marginRight: 110,
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
 });
 
 export default () => {
-  const [cookies, setCookie] = useCookies(["session"]);
+  const [cookies, setCookie] = useCookies(['session']);
   const [state, dispatch] = useReducer(recipesSearchReducer, initialState);
 
   useEffect(() => {
