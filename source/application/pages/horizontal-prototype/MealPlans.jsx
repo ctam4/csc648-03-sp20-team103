@@ -31,16 +31,6 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column"
   },
-  cartsCard1: {
-    alignSelf: "stretch",
-    margin: 15,
-    shadowOffset: {
-      height: 5,
-      width: 5
-    },
-    shadowColor: "rgba(74,74,74,1)",
-    shadowOpacity: 0.19
-  }
 });
 
 export default () => {
@@ -121,11 +111,11 @@ export default () => {
             >
               {mealPlans.map((item) => (
                 <MealPlansCard
-                  text1={item.date}
-                  text2={item.cal_per_day + strings.calories}
-                  text3={item.description}
-                  text4={strings.view}
-                  style={styles.cartsCard1}
+                  mainText1={item.date}
+                  mainText2={item.cal_per_day + strings.calories}
+                  bodyText={item.description}
+                  actionText1={strings.view}
+                  onClickMain={() => { window.location.href = './meal-plans/view?id=' }}
                   onClickAction1={() => { window.location.href = './meal-plans/view?id=' }}
                 ></MealPlansCard>
               ))}

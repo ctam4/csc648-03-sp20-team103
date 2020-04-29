@@ -35,10 +35,6 @@ const styles = StyleSheet.create({
     width: "100%",
     flexDirection: "column",
   },
-  materialCardWithoutImage: {
-    alignSelf: "stretch",
-    margin: 15,
-  },
   materialBasicFooter1: {
     minWidth: 360,
     width: "100%",
@@ -84,12 +80,11 @@ export default () => {
               contentContainerStyle={styles.scrollArea1_contentContainerStyle}
             >
               <CartsCard
-                text1={strings.user_cart}
-                text2={strings.last_updated}
-                text3={strings.preview_cart}
-                text4={strings.edit}
-                text5={strings.clear_cart}
-                style={styles.materialCardWithoutImage}
+                mainText1={strings.user_cart}
+                mainText2={strings.last_updated}
+                bodyText={strings.preview_cart}
+                actionText1={strings.edit}
+                actionText2={strings.clear_cart}
                 onClickAction1={() => { window.location.href = './carts/view?id=' }}
                 onClickAction2={handleClearCart}
               ></CartsCard>

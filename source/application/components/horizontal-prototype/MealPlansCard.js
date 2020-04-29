@@ -8,13 +8,13 @@ function MealPlansCard(props) {
   return (
     <MaterialCard className='mdc-card'>
       <CardPrimaryContent onClick={props.onClickMain} style={{padding: 16}}>
-        <Headline6 style={{margin: 0}}>{props.text1}</Headline6>
-        <Subtitle2 style={{margin: 0}}>{props.text2}</Subtitle2>
-        <Body2 style={{paddingTop: 16, paddingLeft: 16, paddingRight: 16, paddingBottom: 8}}>{props.text3}</Body2>
+        <Headline6 style={{margin: 0}}>{props.mainText1}</Headline6>
+        <Subtitle2 style={{margin: 0}}>{props.mainText2}</Subtitle2>
+        <Body2>{props.bodyText}</Body2>
       </CardPrimaryContent>
       <CardActions>
         <CardActionButtons>
-          <MaterialButton onClick={props.onClickAction1}>{props.text4}</MaterialButton>
+          <MaterialButton onClick={props.onClickAction1}>{props.actionText1}</MaterialButton>
         </CardActionButtons>
       </CardActions>
     </MaterialCard>
