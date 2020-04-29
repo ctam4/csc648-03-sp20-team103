@@ -90,8 +90,8 @@ export default () => {
                 text4={strings.edit}
                 text5={strings.clear_cart}
                 style={styles.materialCardWithoutImage}
-                onPressAction1={() => { window.location.href = './carts/view?id=' }}
-                onPressAction2={handleClearCart}
+                onClickAction1={() => { window.location.href = './carts/view?id=' }}
+                onClickAction2={handleClearCart}
               ></CartsCard>
             </ScrollView>
             <AppFooter style={styles.materialBasicFooter1}></AppFooter>

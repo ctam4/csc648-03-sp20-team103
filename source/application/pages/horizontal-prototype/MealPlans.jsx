@@ -126,7 +126,7 @@ export default () => {
                   text3={item.description}
                   text4={strings.view}
                   style={styles.cartsCard1}
-                  onPressAction1={() => { window.location.href = './meal-plans/view?id=' }}
+                  onClickAction1={() => { window.location.href = './meal-plans/view?id=' }}
                 ></MealPlansCard>
               ))}
             </ScrollView>
