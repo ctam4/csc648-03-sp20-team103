@@ -54,7 +54,7 @@ export default () => {
   };
 
   return (
-    <View style={styles.drawerContainer}>
+    <View className='drawer-container'>
       <MaterialTopAppBar
         title={strings.consumption}
         onClick1={toggleDrawer}
