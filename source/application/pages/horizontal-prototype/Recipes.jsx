@@ -60,6 +60,7 @@ export default () => {
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <MaterialDrawer
           open={drawerOpen}
+          selectedIndex={1}
           onClose={toggleDrawer}
         ></MaterialDrawer>
         <DrawerAppContent className='drawer-app-content'>

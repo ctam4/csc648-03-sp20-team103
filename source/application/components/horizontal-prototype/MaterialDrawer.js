@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component } from 'react';
 import Drawer, { DrawerContent, DrawerHeader, DrawerTitle } from '@material/react-drawer';
 import List, { ListDivider, ListItem, ListItemGraphic, ListItemText } from '@material/react-list';
 import MaterialIcon from '@material/react-material-icon';
@@ -19,8 +19,6 @@ let strings = new LocalizedStrings({
 });
 
 function MaterialDrawer(props) {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-
   return (
     <Drawer modal open={props.open} onClose={props.onClose}>
       <DrawerHeader>
@@ -29,7 +27,7 @@ function MaterialDrawer(props) {
         </DrawerTitle>
       </DrawerHeader>
       <DrawerContent>
-        <List singleSelection selectedIndex={selectedIndex}>
+        <List singleSelection selectedIndex={props.selectedIndex}>
           <ListItem onClick={() => window.location.href = './inventory'}>
             <ListItemGraphic graphic={<MaterialIcon icon='kitchen'/>} />
             <ListItemText primaryText={strings.inventory} />
