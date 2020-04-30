@@ -5,6 +5,8 @@ import { splashReducer, initialState } from '../../reducers/horizontal-prototype
 import { setSerialNumber, setPIN } from '../../actions/horizontal-prototype/Splash';
 
 import { StyleSheet, View, Text } from 'react-native';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
 
 import MaterialTextField from '../../components/horizontal-prototype/MaterialTextField';
