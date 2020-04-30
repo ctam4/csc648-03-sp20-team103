@@ -4,8 +4,7 @@ import LocalizedStrings from 'react-localization';
 
 import { Headline6, Subtitle1, Subtitle2, Body2 } from './MaterialTypography';
 import MaterialIcon from '@material/react-material-icon';
-import MaterialCard, { CardMedia, CardActions, CardActionButtons, CardActionIcons } from './MaterialCard';
-import MaterialButton from './MaterialButton';
+import MaterialCard, { CardMedia, CardActions, CardActionIcons } from './MaterialCard';
 import '@material/react-material-icon/dist/material-icon.css';
 
 function RecipesCardFull(props) {
@@ -23,11 +22,25 @@ function RecipesCardFull(props) {
         <Subtitle2 style={{margin: 0}}>{props.mainText2}</Subtitle2>
       </View>
       <CardActions>
-        <CardActionButtons>
-          <MaterialButton onClick={props.onClickAction1}>{props.actionText1}</MaterialButton>
-          <MaterialButton onClick={props.onClickAction2}>{props.actionText2}</MaterialButton>
-        </CardActionButtons>
         <CardActionIcons>
+          <MaterialIcon
+            aria-label='favorite'
+            hasRipple
+            icon='favorite'
+            onClickAction1={props.onClickAction1}
+          />
+          <MaterialIcon
+            aria-label='history'
+            hasRipple
+            icon='history'
+            onClickAction1={props.onClickAction2}
+          />
+          <MaterialIcon
+            aria-label='add_shopping_cart'
+            hasRipple
+            icon='add_shopping_cart'
+            onClickAction1={props.onClickAction3}
+          />
           <MaterialIcon
             aria-label={cardOpen && 'expand_less' || 'expand_more'}
             hasRipple
