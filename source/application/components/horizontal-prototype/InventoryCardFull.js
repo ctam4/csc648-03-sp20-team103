@@ -17,12 +17,11 @@ function InventoryCardFull(props) {
 
   return (
     <MaterialCard className='mdc-card'>
-      <CardMedia wide imageUrl={props.mainImage} style={{display: 'flex', alignItems: 'flex-end'}}>
-        <View style={{padding: 16, position: 'absolute', bottom: 0}}>
-          <Headline6 style={{margin: 0}}>{props.mainText1}</Headline6>
-          <Subtitle2 style={{margin: 0}}>{props.mainText2}</Subtitle2>
-        </View>
-      </CardMedia>
+      <CardMedia wide imageUrl={props.mainImage}></CardMedia>
+      <View style={{padding: 16}}>
+        <Headline6 style={{margin: 0}}>{props.mainText1}</Headline6>
+        <Subtitle2 style={{margin: 0}}>{props.mainText2}</Subtitle2>
+      </View>
       <CardActions>
         <CardActionButtons>
           <MaterialButton onClick={props.onClickAction1}>{props.actionText1}</MaterialButton>
