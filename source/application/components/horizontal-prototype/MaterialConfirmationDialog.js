@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Dialog, { DialogTitle, DialogContent, DialogFooter, DialogButton } from '@material/react-dialog';
-import List, { ListItem, ListItemGraphic, ListItemText } from '@material/react-list';
+import List, { ListItem, ListItemText } from '@material/react-list';
+import MaterialCheckbox from './MaterialCheckbox';
 import '@material/react-dialog/dist/dialog.css';
 import LocalizedStrings from 'react-localization';
 
@@ -19,7 +20,7 @@ function MaterialConfirmationDialog(props) {
         <List checkboxList handleSelect={props.handleSelect}>
           {props.choices.map((choice, i) => (
           <ListItem key={i} data-mdc-dialog-action={choice.text}>
-            <Checkbox />
+            <MaterialCheckbox />
             <ListItemText primaryText={choice.text} />
           </ListItem>
           ))}
