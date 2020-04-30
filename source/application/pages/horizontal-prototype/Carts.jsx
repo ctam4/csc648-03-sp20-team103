@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { DrawerAppContent } from '@material/react-drawer';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
@@ -11,7 +11,6 @@ import LocalizedStrings from 'react-localization';
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import CartsCard from '../../components/horizontal-prototype/CartsCard';
-import AppFooter from '../../components/horizontal-prototype/AppFooter';
 
 let strings = new LocalizedStrings({
   en: {
@@ -21,13 +20,6 @@ let strings = new LocalizedStrings({
     preview_cart: 'This is the preview of the cart. It may shows up to 10 lines of items with quantity.',
     edit: 'Edit',
     clear_cart: 'Clear cart',
-  },
-});
-const styles = StyleSheet.create({
-  materialBasicFooter1: {
-    minWidth: 360,
-    width: '100%',
-    height: 56,
   },
 });
 
@@ -80,7 +72,6 @@ export default () => {
               </Cell>
             </Row>
           </Grid>
-          <AppFooter style={styles.materialBasicFooter1}></AppFooter>
         </DrawerAppContent>
       </TopAppBarFixedAdjust>
     </View>

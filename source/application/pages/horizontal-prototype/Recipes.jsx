@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { DrawerAppContent } from '@material/react-drawer';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
@@ -15,7 +15,6 @@ import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import RecipesCard from '../../components/horizontal-prototype/RecipesCard';
-import AppFooter from '../../components/horizontal-prototype/AppFooter';
 
 let strings = new LocalizedStrings({
   en: {
@@ -24,13 +23,6 @@ let strings = new LocalizedStrings({
     toast_created: 'Recipe created.',
     toast_edited: 'Recipe edited.',
     toast_favorited: 'Recipe favorited.',
-  },
-});
-const styles = StyleSheet.create({
-  materialBasicFooter1: {
-    minWidth: 360,
-    width: '100%',
-    height: 56,
   },
 });
 
@@ -92,7 +84,6 @@ export default () => {
             style={{ position: 'absolute', right: 16, bottom: 74 }}
             onClick={() => window.location.href = './recipes/create' }
           ></MaterialFab>
-          <AppFooter style={styles.materialBasicFooter1}></AppFooter>
         </DrawerAppContent>
       </TopAppBarFixedAdjust>
     </View>

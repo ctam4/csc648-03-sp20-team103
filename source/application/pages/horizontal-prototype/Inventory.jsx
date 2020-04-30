@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { DrawerAppContent } from '@material/react-drawer';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
@@ -16,7 +16,6 @@ import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
-import AppFooter from '../../components/horizontal-prototype/AppFooter';
 
 let strings = new LocalizedStrings({
   en: {
@@ -28,8 +27,6 @@ let strings = new LocalizedStrings({
     toast_consumed: 'Item consumed from inventory.',
     toast_discarded: 'Item discarded from inventory.',
   },
-});
-const styles = StyleSheet.create({
 });
 
 export default () => {
