@@ -52,7 +52,7 @@ export default () => {
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
-              <Cell desktopColumns={4} phoneColumns={4} tabletColumns={4}>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
                 <ConsumptionCard
                   userText1='user'
                   userText2='role'

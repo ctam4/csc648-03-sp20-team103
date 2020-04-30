@@ -96,7 +96,7 @@ export default () => {
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
               {mealPlans.map((item) => (
-              <Cell desktopColumns={4} phoneColumns={4} tabletColumns={4}>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
                 <MealPlansCard
                   mainText1={item.date}
                   mainText2={item.cal_per_day + strings.calories}
