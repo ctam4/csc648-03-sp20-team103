@@ -61,8 +61,8 @@ export default () => {
           selectedIndex={0}
           onClose={toggleDrawer}
         ></MaterialDrawer>
-        <DrawerAppContent className='drawer-app-content' style={{ height: useWindowDimensions().height - 56, overflow: 'scroll' }}>
-          <Grid>
+        <DrawerAppContent className='drawer-app-content'>
+          <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
               <Cell desktopColumns={4} phoneColumns={4} tabletColumns={4}>
                 <InventoryCard
@@ -132,8 +132,8 @@ export default () => {
               </Cell>
             </Row>
           </Grid>
-          <MaterialSnackbar message={strings.toast_added} />
         </DrawerAppContent>
+        <MaterialSnackbar message={strings.toast_added} />
         <MaterialFab
           icon={<MaterialIcon icon='library_add' />}
           style={{ position: 'absolute', right: 16, bottom: 16 }}

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
-import { View } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { DrawerAppContent } from '@material/react-drawer';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
@@ -56,7 +56,7 @@ export default () => {
           onClose={toggleDrawer}
         ></MaterialDrawer>
         <DrawerAppContent className='drawer-app-content'>
-          <Grid>
+          <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
               <Cell desktopColumns={4} phoneColumns={4} tabletColumns={4}>
                 <RecipesCard
@@ -78,13 +78,13 @@ export default () => {
               </Cell>
             </Row>
           </Grid>
-          <MaterialSnackbar message={strings.toast_created} />
-          <MaterialFab
-            icon={<MaterialIcon icon='note_add'/>}
-            style={{ position: 'absolute', right: 16, bottom: 74 }}
-            onClick={() => window.location.href = './recipes/create' }
-          ></MaterialFab>
         </DrawerAppContent>
+        <MaterialSnackbar message={strings.toast_created} />
+        <MaterialFab
+          icon={<MaterialIcon icon='note_add'/>}
+          style={{ position: 'absolute', right: 16, bottom: 16 }}
+          onClick={() => window.location.href = './recipes/create' }
+        ></MaterialFab>
       </TopAppBarFixedAdjust>
     </View>
   );
