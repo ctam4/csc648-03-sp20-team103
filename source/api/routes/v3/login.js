@@ -6,7 +6,7 @@ const pool = require('../../database.js');
 let connection;
 
 /**
- * POST /v2/login
+ * POST /v3/login
  * @description
  * @param {string} serialNumber
  * @param {string} pin
@@ -18,14 +18,14 @@ login.post('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    connection.query('SELECT fridge_id FROM v2_fridges WHERE serial_number=? AND pin=?', [req.body.serialNumber, req.body.pin])
+    connection.query('SELECT fridge_id FROM v3_fridges WHERE serial_number=? AND pin=?', [req.body.serialNumber, req.body.pin])
       .then(async rows => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           const session = uuid.v4();
           const results = (await connection.query('SELECT CURRENT_TIMESTAMP as logged_in_ts, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 MONTH) as expires_ts'))[0];
-          await connection.query('INSERT INTO v2_sessions(session, fridge_id, logged_in_ts, expires_ts) VALUES (?, ?, ?, ?)', [session, fridgeID, results.logged_in_ts, results.expires_ts]);
+          await connection.query('INSERT INTO v3_sessions(session, fridge_id, logged_in_ts, expires_ts) VALUES (?, ?, ?, ?)', [session, fridgeID, results.logged_in_ts, results.expires_ts]);
           res.send({ ...results, session: session }).end();
         } else {
           res.sendStatus(404).end();
@@ -48,7 +48,7 @@ login.post('/', async (req, res) => {
 login.get('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    let sql = 'SELECT * FROM v2_sessions';
+    let sql = 'SELECT * FROM v3_sessions';
     await connection.query(sql)
       .then((results) => {
         res.send(JSON.stringify(results)).end();
@@ -68,7 +68,7 @@ login.get('/', async (req, res) => {
 login.delete('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    let sql = 'DELETE FROM v2_sessions';
+    let sql = 'DELETE FROM v3_sessions';
     await connection.query(sql)
       .then((results) => {
         res.send(JSON.stringify(results)).end();

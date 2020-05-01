@@ -18,7 +18,7 @@ exports.setup = function (options, seedLink) {
 exports.up = (db, callback) => {
   async.series(
     [
-      db.createTable.bind(db, 'v2_fridges', {
+      db.createTable.bind(db, 'v3_fridges', {
         columns: {
           fridge_id: {
             type: 'int',
@@ -44,7 +44,7 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
       // todo: index for fridge_id
-      db.createTable.bind(db, 'v2_sessions', {
+      db.createTable.bind(db, 'v3_sessions', {
         columns: {
           session: {
             type: 'string',
@@ -55,8 +55,8 @@ exports.up = (db, callback) => {
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: 'fridge_id_sessions',
-              table: 'v2_fridges',
+              name: 'v3_fridge_id_sessions',
+              table: 'v3_fridges',
               notNull: true,
               rules: {
                 onDelete: 'CASCADE',
@@ -78,7 +78,7 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, 'v2_users', {
+      db.createTable.bind(db, 'v3_users', {
         columns: {
           user_id: {
             type: 'int',
@@ -91,8 +91,8 @@ exports.up = (db, callback) => {
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: 'fridge_id_users',
-              table: 'v2_fridges',
+              name: 'v3_fridge_id_users',
+              table: 'v3_fridges',
               rules: {
                 onDelete: 'CASCADE',
                 onUpdate: 'RESTRICT',
@@ -110,7 +110,7 @@ exports.up = (db, callback) => {
             length: 64,
             notNull: true,
           },
-          intolerances:{
+          intolerances: {
             type: 'text',
             notNull: true,
             default: ""
@@ -124,7 +124,7 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, 'v2_nutrition', {
+      db.createTable.bind(db, 'v3_nutrition', {
         columns: {
           nutrition_id: {
             type: 'int',
@@ -176,7 +176,7 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, 'v2_ingredients', {
+      db.createTable.bind(db, 'v3_ingredients', {
         columns: {
           ingredient_id: {
             type: 'int',
@@ -196,7 +196,7 @@ exports.up = (db, callback) => {
         },
       }),
 
-      db.createTable.bind(db, 'v2_recipes', {
+      db.createTable.bind(db, 'v3_recipes', {
         columns: {
           recipe_id: {
             type: 'int',
@@ -236,15 +236,15 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, 'v2_recipe_ingredients', {
+      db.createTable.bind(db, 'v3_recipe_ingredients', {
         columns: {
           recipe_id: {
             type: 'int',
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: 'recipe_id_recipe_ingredients',
-              table: 'v2_recipes',
+              name: 'v3_recipe_id_recipe_ingredients',
+              table: 'v3_recipes',
               rules: {
                 onDelete: 'CASCADE',
                 onUpdate: 'RESTRICT',
@@ -266,7 +266,7 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
-      db.createTable.bind(db, 'v2_inventory', {
+      db.createTable.bind(db, 'v3_inventory', {
         columns: {
           inventory_id: {
             type: 'int',
@@ -279,8 +279,8 @@ exports.up = (db, callback) => {
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: 'fridge_id_inventory',
-              table: 'v2_fridges',
+              name: 'v3_fridge_id_inventory',
+              table: 'v3_fridges',
               rules: {
                 onDelete: 'CASCADE',
                 onUpdate: 'RESTRICT',
@@ -293,8 +293,8 @@ exports.up = (db, callback) => {
             unsigned: true,
             notNull: true,
             foreignKey: {
-              name: 'ingredient_id_inventory',
-              table: 'v2_ingredients',
+              name: 'v3_ingredient_id_inventory',
+              table: 'v3_ingredients',
               rules: {
                 onDelete: 'CASCADE',
                 onUpdate: 'RESTRICT',
@@ -336,19 +336,19 @@ exports.up = (db, callback) => {
 exports.down = (db, callback) => {
   async.series(
     [
-      db.dropTable('v2_fridges', callback),
-      db.dropTable('v2_sessions', callback),
-      db.dropTable('v2_users', callback),
-      db.dropTable('v2_nutrition', callback),
-      db.dropTable('v2_ingredients', callback),
-      db.dropTable('v2_recipes', callback),
-      db.dropTable('v2_recipe_ingredients', callback),
-      db.dropTable('v2_inventory', callback),
+      db.dropTable('v3_fridges', callback),
+      db.dropTable('v3_sessions', callback),
+      db.dropTable('v3_users', callback),
+      db.dropTable('v3_nutrition', callback),
+      db.dropTable('v3_ingredients', callback),
+      db.dropTable('v3_recipes', callback),
+      db.dropTable('v3_recipe_ingredients', callback),
+      db.dropTable('v3_inventory', callback),
     ],
     callback
   );
 };
 
 exports._meta = {
-  version: 2,
+  version: 3,
 };
