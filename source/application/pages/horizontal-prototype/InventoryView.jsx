@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
-import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import LocalizedStrings from 'react-localization';
 
 import { DrawerAppContent } from '@material/react-drawer';
@@ -20,21 +20,6 @@ if (process.env.API_PORT) {
 let strings = new LocalizedStrings({
   en: {
     discard: 'Discard',
-  },
-});
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  materialHeader1: {
-    minWidth: 360,
-    width: '100%',
-    height: 56,
-  },
-  materialCard6: {
-    alignSelf: 'stretch',
-    margin: 15,
   },
 });
 
