@@ -4,8 +4,13 @@ import { useCookies } from 'react-cookie';
 import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
 import { setKeywords } from '../../actions/horizontal-prototype/RecipesSearch';
 
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, useWindowDimensions, Text } from 'react-native';
 import LocalizedStrings from 'react-localization';
+
+import { DrawerAppContent } from '@material/react-drawer';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import '@material/react-layout-grid/dist/layout-grid.css';
 
 import Search from '../../components/horizontal-prototype/Search';
 import ChipActive from '../../components/horizontal-prototype/ChipActive';
@@ -34,18 +39,6 @@ const styles = StyleSheet.create({
     minWidth: 360,
     width: '100%',
     height: 56,
-  },
-  scrollArea1: {
-    minWidth: 360,
-    width: '100%',
-    minHeight: 684,
-    maxHeight: '100%',
-    alignSelf: 'center',
-  },
-  scrollArea1_contentContainerStyle: {
-    minWidth: 360,
-    width: '100%',
-    flexDirection: 'column',
   },
   chooseCalories: {
     color: '#121212',
@@ -187,78 +180,91 @@ export default () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View className='drawer-container'>
       <Search
         textInput1={state.keywords}
         style={styles.materialSearchBarWithBackground}
         onChange={(e) => dispatch(setKeywords(e.target.value))}
       ></Search>
-      <View style={styles.scrollArea1}>
-        <ScrollView
-          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-        >
-          <Text style={styles.chooseCalories}>{strings.choose_calories}</Text>
-          <View style={styles.materialChipWithCloseButtonRow}>
-            <ChipActive
-              text1={strings.calories_500_less}
-              style={styles.materialChipWithCloseButton}
-            ></ChipActive>
-            <View style={styles.materialChipWithCloseButtonFiller}></View>
-            <Chip
-              text1={strings.calories_500_1000}
-              style={styles.materialChipBasic1}
-            ></Chip>
-          </View>
-          <Text style={styles.chooseServingSize}>{strings.choose_servings}</Text>
-          <View style={styles.materialChipWithCloseButton1Row}>
-            <ChipActive
-              text1={strings.servings_3_4}
-              style={styles.materialChipWithCloseButton1}
-            ></ChipActive>
-            <View style={styles.materialChipWithCloseButton1Filler}></View>
-            <Chip
-              text1={strings.servings_1_2}
-              style={styles.materialChipBasic}
-            ></Chip>
-          </View>
-          <Text style={styles.chooseFatSize}>{strings.choose_fat}</Text>
-          <View style={styles.materialChipBasic2Row}>
-            <Chip
-              text1={strings.grams_10_less}
-              style={styles.materialChipBasic2}
-            ></Chip>
-            <View style={styles.materialChipBasic2Filler}></View>
-            <Chip
-              text1={strings.grams_10_20}
-              style={styles.materialChipBasic3}
-            ></Chip>
-          </View>
-          <Text style={styles.chooseProteinSize}>{strings.choose_protein}</Text>
-          <View style={styles.materialChipBasic4Row}>
-            <Chip
-              text1={strings.grams_10_less}
-              style={styles.materialChipBasic4}
-            ></Chip>
-            <View style={styles.materialChipBasic4Filler}></View>
-            <Chip
-              text1={strings.grams_10_20}
-              style={styles.materialChipBasic5}
-            ></Chip>
-          </View>
-          <Text style={styles.chooseProtein2}>{strings.choose_carbonhydrates}</Text>
-          <View style={styles.materialChipBasic6Row}>
-            <Chip
-              text1={strings.grams_10_less}
-              style={styles.materialChipBasic6}
-            ></Chip>
-            <View style={styles.materialChipBasic6Filler}></View>
-            <Chip
-              text1={strings.grams_10_20}
-              style={styles.materialChipBasic7}
-            ></Chip>
-          </View>
-        </ScrollView>
-      </View>
+
+      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+        <DrawerAppContent className='drawer-app-content'>
+          <Grid style={{ height: useWindowDimensions().height - 64 }}>
+            <Row>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                <Text style={styles.chooseCalories}>{strings.choose_calories}</Text>
+                <View style={styles.materialChipWithCloseButtonRow}>
+                  <ChipActive
+                    text1={strings.calories_500_less}
+                    style={styles.materialChipWithCloseButton}
+                  ></ChipActive>
+                  <View style={styles.materialChipWithCloseButtonFiller}></View>
+                  <Chip
+                    text1={strings.calories_500_1000}
+                    style={styles.materialChipBasic1}
+                  ></Chip>
+                </View>
+              </Cell>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                <Text style={styles.chooseServingSize}>{strings.choose_servings}</Text>
+                <View style={styles.materialChipWithCloseButton1Row}>
+                  <ChipActive
+                    text1={strings.servings_3_4}
+                    style={styles.materialChipWithCloseButton1}
+                  ></ChipActive>
+                  <View style={styles.materialChipWithCloseButton1Filler}></View>
+                  <Chip
+                    text1={strings.servings_1_2}
+                    style={styles.materialChipBasic}
+                  ></Chip>
+                </View>
+              </Cell>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                <Text style={styles.chooseFatSize}>{strings.choose_fat}</Text>
+                <View style={styles.materialChipBasic2Row}>
+                  <Chip
+                    text1={strings.grams_10_less}
+                    style={styles.materialChipBasic2}
+                  ></Chip>
+                  <View style={styles.materialChipBasic2Filler}></View>
+                  <Chip
+                    text1={strings.grams_10_20}
+                    style={styles.materialChipBasic3}
+                  ></Chip>
+                </View>
+              </Cell>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                <Text style={styles.chooseProteinSize}>{strings.choose_protein}</Text>
+                <View style={styles.materialChipBasic4Row}>
+                  <Chip
+                    text1={strings.grams_10_less}
+                    style={styles.materialChipBasic4}
+                  ></Chip>
+                  <View style={styles.materialChipBasic4Filler}></View>
+                  <Chip
+                    text1={strings.grams_10_20}
+                    style={styles.materialChipBasic5}
+                  ></Chip>
+                </View>
+              </Cell>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                <Text style={styles.chooseProtein2}>{strings.choose_carbonhydrates}</Text>
+                <View style={styles.materialChipBasic6Row}>
+                  <Chip
+                    text1={strings.grams_10_less}
+                    style={styles.materialChipBasic6}
+                  ></Chip>
+                  <View style={styles.materialChipBasic6Filler}></View>
+                  <Chip
+                    text1={strings.grams_10_20}
+                    style={styles.materialChipBasic7}
+                  ></Chip>
+                </View>
+              </Cell>
+            </Row>
+          </Grid>
+        </DrawerAppContent>
+      </TopAppBarFixedAdjust>
     </View>
   );
 };

@@ -8,7 +8,10 @@ import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import LocalizedStrings from 'react-localization';
 
 import { Cell, Grid, Row } from '@material/react-layout-grid';
+import { DrawerAppContent } from '@material/react-drawer';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import '@material/react-layout-grid/dist/layout-grid.css';
+import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
 
 import Search from '../../components/horizontal-prototype/Search';
 
@@ -19,17 +22,6 @@ let strings = new LocalizedStrings({
 const styles = StyleSheet.create({
   container: {
     flex: 1
-  },
-  scrollArea1: {
-    minWidth: 360,
-    width: '100%',
-    minHeight: 684,
-    maxHeight: '100%',
-    alignSelf: 'center',
-  },
-  scrollArea1_contentContainerStyle: {
-    minWidth: 360,
-    width: '100%',
   },
   materialSearchBarWithBackground1: {
     minWidth: 360,
@@ -51,17 +43,21 @@ export default () => {
   };
 
   return (
-    <View style={styles.container}>
+    <View className='drawer-container'>
       <Search
         textInput1={state.keywords}
         style={styles.materialSearchBarWithBackground1}
         onChange={(e) => dispatch(setKeywords(e.target.value))}
       ></Search>
-      <Grid style={{ height: useWindowDimensions().height - 64, overflow: 'scroll' }}>
-        <Row>
-
-        </Row>
-      </Grid>
+      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+        <DrawerAppContent className='drawer-app-content'>
+          <Grid style={{ height: useWindowDimensions().height - 64}}>
+            <Row>
+              
+            </Row>
+          </Grid>
+        </DrawerAppContent>
+      </TopAppBarFixedAdjust>
     </View>
   );
 };

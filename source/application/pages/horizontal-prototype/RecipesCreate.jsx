@@ -4,10 +4,15 @@ import { useCookies } from 'react-cookie';
 import { recipesCreateReducer, initialState } from '../../reducers/horizontal-prototype/RecipesCreate';
 import { setName, setServings, setCookingTime } from '../../actions/horizontal-prototype/RecipesCreate';
 
-import { StyleSheet, View, ScrollView, Text } from 'react-native';
+import { StyleSheet, View, useWindowDimensions, Text } from 'react-native';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-material-icon/dist/material-icon.css';
 import LocalizedStrings from 'react-localization';
+
+import { DrawerAppContent } from '@material/react-drawer';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import '@material/react-layout-grid/dist/layout-grid.css';
 
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import FixedLabelTextbox from '../../components/horizontal-prototype/FixedLabelTextbox';
@@ -89,39 +94,52 @@ export default () => {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={styles.scrollArea1}>
-        <DialogHeader style={styles.materialHeader1}></DialogHeader>
-        <ScrollView
-          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-        >
-          <Text style={styles.recipeInfo}>{strings.recipe_info}</Text>
-          <FixedLabelTextbox
-            text1={strings.name}
-            textInput1={state.name}
-            style={styles.materialFixedLabelTextbox}
-            onChange={(e) => dispatch(setName(e.target.value))}
-          ></FixedLabelTextbox>
-          <FixedLabelTextbox
-            text1={strings.servings}
-            textInput1={state.servings}
-            style={styles.materialFixedLabelTextbox1}
-            onChange={(e) => dispatch(setServings(e.target.value))}
-          ></FixedLabelTextbox>
-          <FixedLabelTextbox
-            text1={strings.cooking_time}
-            textInput1={state.cooking_time}
-            style={styles.materialFixedLabelTextbox2}
-            onChange={(e) => dispatch(setCookingTime(e.target.value))}
-          ></FixedLabelTextbox>
-          <Text style={styles.ingredients3}>{strings.ingredients}</Text>
-        </ScrollView>
-      </View>
-      <MaterialFab
-        icon={<MaterialIcon icon='check'/>}
-        style={{ position: 'absolute', right: 16, bottom: 16 }}
-        onClick={handleSave}
-      ></MaterialFab>
+    <View className='drawer-container'>
+      <DialogHeader style={styles.materialHeader1}></DialogHeader>
+      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+        <DrawerAppContent className='drawer-app-content'>
+          <Grid style={{ height: useWindowDimensions().height - 64 }}>
+            <Row>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+              <Text style={styles.recipeInfo}>{strings.recipe_info}</Text>
+              </Cell>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+              <FixedLabelTextbox
+                text1={strings.name}
+                textInput1={state.name}
+                style={styles.materialFixedLabelTextbox}
+                onChange={(e) => dispatch(setName(e.target.value))}
+              ></FixedLabelTextbox>
+              </Cell>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+              <FixedLabelTextbox
+                text1={strings.servings}
+                textInput1={state.servings}
+                style={styles.materialFixedLabelTextbox1}
+                onChange={(e) => dispatch(setServings(e.target.value))}
+              ></FixedLabelTextbox>
+              </Cell>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+              <FixedLabelTextbox
+                text1={strings.cooking_time}
+                textInput1={state.cooking_time}
+                style={styles.materialFixedLabelTextbox2}
+                onChange={(e) => dispatch(setCookingTime(e.target.value))}
+              ></FixedLabelTextbox>
+              </Cell>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+              <Text style={styles.ingredients3}>{strings.ingredients}</Text>
+              </Cell>
+            </Row>
+          </Grid>
+        </DrawerAppContent>
+    
+        <MaterialFab
+          icon={<MaterialIcon icon='check'/>}
+          style={{ position: 'absolute', right: 16, bottom: 16 }}
+          onClick={handleSave}
+        ></MaterialFab>
+      </TopAppBarFixedAdjust>
     </View>
   );
 };
