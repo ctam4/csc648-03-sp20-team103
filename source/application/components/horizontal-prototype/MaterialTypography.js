@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
   Body1,
   Body2,
@@ -13,8 +13,8 @@ import {
   Overline,
   Subtitle1,
   Subtitle2,
-} from "@material/react-typography";
-import "@material/react-typography/dist/typography.css";
+} from '@material/react-typography';
+import '@material/react-typography/dist/typography.css';
 
 export {
   Body1,

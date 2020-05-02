@@ -48,7 +48,7 @@ function MaterialDrawer(props) {
             <ListItemGraphic graphic={<MaterialIcon icon='menu_book'/>} />
             <ListItemText primaryText={strings.meal_plans} />
           </ListItem>
-          <ListDivider tag="div" />
+          <ListDivider tag='div' />
           <ListItem onClick={() => window.location.href = './users'}>
             <ListItemGraphic graphic={<MaterialIcon icon='people'/>} />
             <ListItemText primaryText={strings.users} />
