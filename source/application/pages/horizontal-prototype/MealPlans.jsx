@@ -8,7 +8,7 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
 
-import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MealPlansCard from '../../components/horizontal-prototype/MealPlansCard';
 
@@ -81,11 +81,11 @@ export default () => {
 
   return (
     <View className='drawer-container'>
-      <MaterialTopAppBar
+      <MaterialTopAppBarDialog
         title={strings.meal_plans}
         onClick1={toggleDrawer}
         //onClick2={() => window.location.href = './' }
-      ></MaterialTopAppBar>
+      ></MaterialTopAppBarDialog>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <MaterialDrawer
           open={drawerOpen}

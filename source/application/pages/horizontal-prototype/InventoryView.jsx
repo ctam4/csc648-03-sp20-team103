@@ -4,7 +4,8 @@ import { useCookies } from 'react-cookie';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import LocalizedStrings from 'react-localization';
 
-import DialogHeader from '../../components/horizontal-prototype/DialogHeader';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import InventoryCardFull from '../../components/horizontal-prototype/InventoryCardFull';
 
 let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
@@ -17,6 +18,7 @@ let strings = new LocalizedStrings({
     discard: 'Discard',
   },
 });
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -56,6 +58,12 @@ export default () => {
     load();
   }, []);
 
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
+  }
+
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(apiUrl + '/v2/inventory?inventory_id=' + urlParams.get('id'), {
@@ -87,7 +95,13 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <DialogHeader style={styles.materialHeader1}></DialogHeader>
+      <MaterialTopAppBarDialog 
+      onClick1={handleGoBack} 
+      icon2={'more_vert'}
+      icon1={'close'}
+      >
+      </MaterialTopAppBarDialog>
+      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
       <View style={styles.scrollArea1}>
         <ScrollView
           contentContainerStyle={styles.scrollArea1_contentContainerStyle}
@@ -101,6 +115,7 @@ export default () => {
           ></InventoryCardFull>
         </ScrollView>
       </View>
+      </TopAppBarFixedAdjust>
     </View>
   );
 };

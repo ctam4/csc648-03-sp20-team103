@@ -10,7 +10,7 @@ import '@material/react-layout-grid/dist/layout-grid.css';
 import '@material/react-material-icon/dist/material-icon.css';
 import LocalizedStrings from 'react-localization';
 
-import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
@@ -56,11 +56,11 @@ export default () => {
 
   return (
     <View className='drawer-container'>
-      <MaterialTopAppBar
+      <MaterialTopAppBarDialog
         title={strings.recipes}
         onClick1={toggleDrawer}
         onClick2={() => window.location.href = './recipes/search' }
-      ></MaterialTopAppBar>
+      ></MaterialTopAppBarDialog>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <MaterialDrawer
           open={drawerOpen}

@@ -4,7 +4,8 @@ import { useCookies } from 'react-cookie';
 import { StyleSheet, View, ScrollView } from 'react-native';
 import LocalizedStrings from 'react-localization';
 
-import DialogHeader from '../../components/horizontal-prototype/DialogHeader';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import RecipesCardFull from '../../components/horizontal-prototype/RecipesCardFull';
 
 let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
@@ -86,6 +87,12 @@ export default () => {
     // TODO: fetch
   };
 
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
+  }
+
   const handleHistory = async () => {
     // TODO: fetch
   };
@@ -96,7 +103,13 @@ export default () => {
 
   return (
     <View style={styles.container}>
-      <DialogHeader style={styles.materialHeader1}></DialogHeader>
+            <MaterialTopAppBarDialog 
+      onClick1={handleGoBack} 
+      icon2={'more_vert'}
+      icon1={'close'}
+      >
+      </MaterialTopAppBarDialog>
+      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
       <View style={styles.scrollArea}>
         <ScrollView contentContainerStyle={styles.scrollArea_contentContainerStyle}>
           <RecipesCardFull
@@ -110,6 +123,7 @@ export default () => {
           ></RecipesCardFull>
         </ScrollView>
       </View>
+      </TopAppBarFixedAdjust >
     </View>
   );
 };
