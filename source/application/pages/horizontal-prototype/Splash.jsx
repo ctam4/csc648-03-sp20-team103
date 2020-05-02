@@ -9,7 +9,7 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
 
-import MaterialTextField from '../../components/horizontal-prototype/MaterialTextField';
+import MaterialOutlinedTextField from '../../components/horizontal-prototype/MaterialOutlinedTextField';
 import MaterialButton from '../../components/horizontal-prototype/MaterialButton';
 
 let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
@@ -104,20 +104,20 @@ export default () => {
   return (
     <View style={styles.container}>
       <Text style={styles.stockUp}>STOCK UP</Text>
-      <MaterialTextField
+      <MaterialOutlinedTextField
         label={strings.serial_number}
         helperText={strings.serial_number_helper}
         value={state.serial_number}
         onChange={(e) => dispatch(setSerialNumber(e.target.value))}
         onTrailingIconSelect={() => dispatch(setSerialNumber(''))}
-      ></MaterialTextField>
-      <MaterialTextField
+      ></MaterialOutlinedTextField>
+      <MaterialOutlinedTextField
         label={strings.pin}
         helperText={strings.pin_helper}
         value={state.pin}
         onChange={(e) => dispatch(setPIN(e.target.value))}
         onTrailingIconSelect={() => dispatch(setPIN(''))}
-      ></MaterialTextField>
+      ></MaterialOutlinedTextField>
       <MaterialButton onClick={handleAuth} raised>{strings.continue}</MaterialButton>
     </View>
   );
