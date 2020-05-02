@@ -4,13 +4,12 @@ import { useCookies } from 'react-cookie';
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import LocalizedStrings from 'react-localization';
 
-
-import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import InventoryCardFull from '../../components/horizontal-prototype/InventoryCardFull';
 
 let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
@@ -87,14 +86,10 @@ export default () => {
   };
 
   return (
-
     <View className='drawer-container'>
-            <MaterialTopAppBarDialog 
-      onClick1={handleGoBack} 
-      icon2={'more_vert'}
-      icon1={'close'}
-      >
-      </MaterialTopAppBarDialog>
+      <MaterialTopAppBarDialog
+        onClick1={handleGoBack}
+      ></MaterialTopAppBarDialog>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{height: useWindowDimensions().height - 64}}>

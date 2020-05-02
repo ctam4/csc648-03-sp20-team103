@@ -186,7 +186,6 @@ export default () => {
         style={styles.materialSearchBarWithBackground}
         onChange={(e) => dispatch(setKeywords(e.target.value))}
       ></Search>
-
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
