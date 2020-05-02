@@ -4,8 +4,11 @@ import { useCookies } from 'react-cookie';
 import { inventorySearchReducer, initialState } from '../../reducers/horizontal-prototype/InventorySearch';
 import { setKeywords } from '../../actions/horizontal-prototype/InventorySearch';
 
-import { StyleSheet, View, ScrollView } from 'react-native';
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import LocalizedStrings from 'react-localization';
+
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import '@material/react-layout-grid/dist/layout-grid.css';
 
 import Search from '../../components/horizontal-prototype/Search';
 
@@ -54,11 +57,11 @@ export default () => {
         style={styles.materialSearchBarWithBackground1}
         onChange={(e) => dispatch(setKeywords(e.target.value))}
       ></Search>
-      <View style={styles.scrollArea1}>
-        <ScrollView
-          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-        ></ScrollView>
-      </View>
+      <Grid style={{ height: useWindowDimensions().height - 64, overflow: 'scroll' }}>
+        <Row>
+
+        </Row>
+      </Grid>
     </View>
   );
 };
