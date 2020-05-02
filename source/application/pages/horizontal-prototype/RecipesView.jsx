@@ -88,7 +88,7 @@ export default () => {
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
                 <RecipesCardFull
                   mainText1='Pasta Alfredo'
                   mainText2='2 servings / 500 calories per serving'

@@ -77,9 +77,9 @@ export default () => {
       ></MaterialTopAppBarDialog>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <DrawerAppContent className='drawer-app-content'>
-          <Grid style={{height: useWindowDimensions().height - 64}}>
-            <Row >
-              <Cell desktopColumns={6} phoneColumns={6} tabletColumns={6}>
+          <Grid style={{ height: useWindowDimensions().height - 64 }}>
+            <Row>
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
                 <InventoryCardFull
                   mainText1='Apple'
                   mainText2='whatever'
