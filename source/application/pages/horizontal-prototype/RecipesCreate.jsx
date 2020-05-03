@@ -14,9 +14,9 @@ import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import FixedLabelTextbox from '../../components/horizontal-prototype/FixedLabelTextbox';
-import DialogHeader from '../../components/horizontal-prototype/DialogHeader';
 
 let strings = new LocalizedStrings({
   en: {
@@ -71,6 +71,12 @@ export default () => {
   const [cookies, setCookie] = useCookies(['session']);
   const [state, dispatch] = useReducer(recipesCreateReducer, initialState);
 
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
+  };
+
   const handleSave = async () => {
     // TODO: fetch to post
     if (history.length > 0) {
@@ -80,7 +86,9 @@ export default () => {
 
   return (
     <View className='drawer-container'>
-      <DialogHeader style={styles.materialHeader1}></DialogHeader>
+      <MaterialTopAppBarDialog
+        onClick1={handleGoBack}
+      ></MaterialTopAppBarDialog>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
