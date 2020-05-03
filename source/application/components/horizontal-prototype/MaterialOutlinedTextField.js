@@ -12,8 +12,13 @@ function MaterialOutlinedTextField(props) {
       helperText={<HelperText>{props.helperText}</HelperText>}
       onTrailingIconSelect={props.onTrailingIconSelect}
       trailingIcon={<MaterialIcon role='button' icon={props.trailingIcon || 'clear'} />}
+      style={{ width: '100%' }}
     >
-      <Input inputType={props.inputType} value={props.value} onChange={props.onChange} />
+      <Input
+        inputType={props.inputType}
+        value={props.value}
+        onChange={props.onChange}
+      />
     </TextField>
   );
 }

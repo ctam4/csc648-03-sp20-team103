@@ -34,7 +34,11 @@ function MaterialTopAppBarSearchDialog(props) {
             trailingIcon={<MaterialIcon role='button' icon='clear' style={{color: '#fff'}}/>}
             fullWidth
           >
-            <Input value={props.value} onChange={props.onChange} style={{color: '#fff', borderBottomColor: '#fff'}} />
+            <Input
+              value={props.value}
+              onChange={props.onChange}
+              style={{color: '#fff', borderBottomColor: '#fff'}}
+            />
           </TextField>
         </TopAppBarSection>
       </TopAppBarRow>
