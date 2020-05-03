@@ -28,21 +28,6 @@ let strings = new LocalizedStrings({
   },
 });
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  scrollArea1: {
-    minWidth: 360,
-    width: '100%',
-    minHeight: 684,
-    maxHeight: '100%',
-    alignSelf: 'center',
-  },
-  scrollArea1_contentContainerStyle: {
-    minWidth: 360,
-    width: '100%',
-    flexDirection: 'column',
-  },
   recipeInfo: {
     height: 14,
     color: '#121212',
@@ -133,7 +118,7 @@ export default () => {
             </Row>
           </Grid>
         </DrawerAppContent>
-    
+
         <MaterialFab
           icon={<MaterialIcon icon='check'/>}
           style={{ position: 'absolute', right: 16, bottom: 16 }}

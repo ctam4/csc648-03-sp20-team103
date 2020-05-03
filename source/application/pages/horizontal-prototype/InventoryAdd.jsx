@@ -4,7 +4,7 @@ import { useCookies } from 'react-cookie';
 import { inventoryAddReducer, initialState } from '../../reducers/horizontal-prototype/InventoryAdd';
 import { setSearchOpen, setKeywords } from '../../actions/horizontal-prototype/InventoryAdd';
 
-import { StyleSheet, View, useWindowDimensions} from 'react-native';
+import { View, useWindowDimensions } from 'react-native';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-material-icon/dist/material-icon.css';
 import LocalizedStrings from 'react-localization';
@@ -23,16 +23,6 @@ let strings = new LocalizedStrings({
     select: 'Select',
     remove: 'Remove',
   },
-});
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  materialSearchBarWithBackground1: {
-    minWidth: 360,
-    width: '100%',
-    height: 56,
-  }
 });
 
 export default () => {
