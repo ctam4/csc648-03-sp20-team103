@@ -9,6 +9,7 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
 
+import { Headline1 } from '../../components/horizontal-prototype/MaterialTypography';
 import MaterialOutlinedTextField from '../../components/horizontal-prototype/MaterialOutlinedTextField';
 import MaterialButton from '../../components/horizontal-prototype/MaterialButton';
 
@@ -28,16 +29,8 @@ let strings = new LocalizedStrings({
 });
 const styles = StyleSheet.create({
   container: {
-    width: 320,
+    width: 480,
     margin: 'auto',
-  },
-  stockUp: {
-    color: 'rgba(65,117,5,1)',
-    fontSize: 60,
-    fontWeight: '100',
-    fontFamily: 'Roboto',
-    marginBottom: 50,
-    alignSelf: 'center',
   },
 });
 
@@ -102,23 +95,37 @@ export default () => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.stockUp}>STOCK UP</Text>
-      <MaterialOutlinedTextField
-        label={strings.serial_number}
-        helperText={strings.serial_number_helper}
-        value={state.serial_number}
-        onChange={(e) => dispatch(setSerialNumber(e.target.value))}
-        onTrailingIconSelect={() => dispatch(setSerialNumber(''))}
-      ></MaterialOutlinedTextField>
-      <MaterialOutlinedTextField
-        label={strings.pin}
-        helperText={strings.pin_helper}
-        value={state.pin}
-        onChange={(e) => dispatch(setPIN(e.target.value))}
-        onTrailingIconSelect={() => dispatch(setPIN(''))}
-      ></MaterialOutlinedTextField>
-      <MaterialButton onClick={handleAuth} raised>{strings.continue}</MaterialButton>
-    </View>
+    <Grid>
+      <Row>
+        <Cell columns={12}>
+          <Headline1 style={{ color: 'rgba(65,117,5,1)' }}>STOCKUP</Headline1>
+        </Cell>
+      </Row>
+      <Row>
+        <Cell columns={12}>
+          <MaterialOutlinedTextField
+            label={strings.serial_number}
+            helperText={strings.serial_number_helper}
+            value={state.serial_number}
+            onChange={(e) => dispatch(setSerialNumber(e.target.value))}
+            onTrailingIconSelect={() => dispatch(setSerialNumber(''))}
+          ></MaterialOutlinedTextField>
+        </Cell>
+        <Cell columns={12}>
+          <MaterialOutlinedTextField
+            label={strings.pin}
+            helperText={strings.pin_helper}
+            value={state.pin}
+            onChange={(e) => dispatch(setPIN(e.target.value))}
+            onTrailingIconSelect={() => dispatch(setPIN(''))}
+          ></MaterialOutlinedTextField>
+        </Cell>
+      </Row>
+      <Row>
+        <Cell columns={12}>
+          <MaterialButton onClick={handleAuth} raised style={{ width: '100%' }}>{strings.continue}</MaterialButton>
+        </Cell>
+      </Row>
+    </Grid>
   );
 };
