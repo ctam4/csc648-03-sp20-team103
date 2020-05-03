@@ -61,7 +61,7 @@ export default () => {
       )}
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <DrawerAppContent className='drawer-app-content'>
-          <Grid style={{ height: useWindowDimensions().height - 64}}>
+          <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
 
             </Row>

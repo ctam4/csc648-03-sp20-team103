@@ -61,15 +61,15 @@ export default () => {
     .catch(console.log);
   };
 
-  const handleFavorite = async () => {
-    // TODO: fetch
-  };
-
   const handleGoBack = () => {
     if (history.length > 0) {
       history.back();
     }
-  }
+  };
+
+  const handleFavorite = async () => {
+    // TODO: fetch
+  };
 
   const handleHistory = async () => {
     // TODO: fetch

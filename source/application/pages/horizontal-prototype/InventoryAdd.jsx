@@ -49,14 +49,14 @@ export default () => {
 
   const handleRemove = async () => {
     // TODO: fetch
-  }
+  };
 
   const handleSave = async () => {
     // TODO: fetch to post
     if (history.length > 0) {
       history.go(-2);
     }
-  }
+  };
 
   return (
     <View className='drawer-container'>

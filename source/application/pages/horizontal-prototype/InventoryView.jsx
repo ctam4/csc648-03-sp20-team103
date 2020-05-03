@@ -35,12 +35,6 @@ export default () => {
     load();
   }, []);
 
-  const handleGoBack = () => {
-    if (history.length > 0) {
-      history.back();
-    }
-  }
-
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(apiUrl + '/v2/inventory?inventory_id=' + urlParams.get('id'), {
@@ -64,6 +58,12 @@ export default () => {
       setState(data.state);
     })
     .catch(console.log);
+  };
+
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
   };
 
   const handleDiscard = async () => {
