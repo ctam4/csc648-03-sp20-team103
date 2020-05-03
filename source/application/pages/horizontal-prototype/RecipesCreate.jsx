@@ -4,15 +4,14 @@ import { useCookies } from 'react-cookie';
 import { recipesCreateReducer, initialState } from '../../reducers/horizontal-prototype/RecipesCreate';
 import { setName, setServings, setCookingTime } from '../../actions/horizontal-prototype/RecipesCreate';
 
-import MaterialIcon from '@material/react-material-icon';
-import '@material/react-material-icon/dist/material-icon.css';
-import LocalizedStrings from 'react-localization';
-
 import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
+import MaterialIcon from '@material/react-material-icon';
 import '@material/react-layout-grid/dist/layout-grid.css';
+import '@material/react-material-icon/dist/material-icon.css';
+import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';

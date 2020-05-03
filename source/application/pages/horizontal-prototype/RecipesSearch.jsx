@@ -2,8 +2,6 @@ import React, { useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
-
-import LocalizedStrings from 'react-localization';
 import {
   setSearchOpen,
   setKeywords,
@@ -15,14 +13,16 @@ import {
 } from '../../actions/horizontal-prototype/RecipesSearch';
 
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
-import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
+import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
 import { Body1 } from '../../components/horizontal-prototype/MaterialTypography';
+import MaterialChoiceChips from '../../components/horizontal-prototype/MaterialChoiceChips';
 import MaterialFilterChips from '../../components/horizontal-prototype/MaterialFilterChips';
 
 let strings = new LocalizedStrings({

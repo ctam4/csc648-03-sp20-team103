@@ -5,12 +5,11 @@ import { inventorySearchReducer, initialState } from '../../reducers/horizontal-
 import { setSearchOpen, setKeywords } from '../../actions/horizontal-prototype/InventorySearch';
 
 import { View, useWindowDimensions } from 'react-native';
-import LocalizedStrings from 'react-localization';
-
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import '@material/react-layout-grid/dist/layout-grid.css';
+import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
