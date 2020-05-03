@@ -17,12 +17,14 @@ let strings = new LocalizedStrings({
     meal_plans: 'Meal Plans',
     calories: ' calories',
     view: 'View',
+    toast_edited: 'Meal plan edited.',
   },
 });
 
 export default () => {
   const [cookies, setCookie] = useCookies(['session']);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [toast, setToast] = useState('');
   const [mealPlans, setMealPlans] = useState([]);
 
   useEffect(() => {
@@ -110,6 +112,9 @@ export default () => {
             </Row>
           </Grid>
         </DrawerAppContent>
+        {toast && (
+        <MaterialSnackbar message={toast} onClose={() => setToast('')}/>
+        )}
       </TopAppBarFixedAdjust>
     </View>
   );

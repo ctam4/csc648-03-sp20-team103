@@ -32,6 +32,7 @@ let strings = new LocalizedStrings({
 export default () => {
   const [cookies, setCookie] = useCookies(['session']);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [toast, setToast] = useState('');
 
   useEffect(() => {
     load();
@@ -134,7 +135,9 @@ export default () => {
             </Row>
           </Grid>
         </DrawerAppContent>
-        <MaterialSnackbar message={strings.toast_added} />
+        {toast && (
+        <MaterialSnackbar message={toast} onClose={() => setToast('')}/>
+        )}
         <MaterialFab
           icon={<MaterialIcon icon='library_add' />}
           style={{ position: 'absolute', right: 16, bottom: 16 }}

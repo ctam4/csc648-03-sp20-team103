@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
 
 export default () => {
   const [cookies, setCookie] = useCookies(['session']);
+  const [toast, setToast] = useState(strings.center_receipt);
 
   return (
     <View style={styles.container}>
@@ -118,7 +119,9 @@ export default () => {
         </View>
         */}
       </View>
-      <MaterialSnackbar message={strings.center_receipt} />
+      {toast && (
+      <MaterialSnackbar message={toast} onClose={() => setToast('')}/>
+      )}
     </View>
   );
 };

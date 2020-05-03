@@ -20,12 +20,15 @@ let strings = new LocalizedStrings({
     preview_cart: 'This is the preview of the cart. It may shows up to 10 lines of items with quantity.',
     edit: 'Edit',
     clear_cart: 'Clear cart',
+    toast_edited: 'Cart edited.',
+    toast_cleared: 'Cart cleared.',
   },
 });
 
 export default () => {
   const [cookies, setCookie] = useCookies(['session']);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [toast, setToast] = useState('');
 
   useEffect(() => {
     load();
@@ -73,6 +76,9 @@ export default () => {
             </Row>
           </Grid>
         </DrawerAppContent>
+        {toast && (
+        <MaterialSnackbar message={toast} onClose={() => setToast('')}/>
+        )}
       </TopAppBarFixedAdjust>
     </View>
   );

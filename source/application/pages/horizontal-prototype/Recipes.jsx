@@ -23,12 +23,14 @@ let strings = new LocalizedStrings({
     toast_created: 'Recipe created.',
     toast_edited: 'Recipe edited.',
     toast_favorited: 'Recipe favorited.',
+    toast_added_to_cart: 'Recipe added to cart.',
   },
 });
 
 export default () => {
   const [cookies, setCookie] = useCookies(['session']);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [toast, setToast] = useState('');
 
   useEffect(() => {
     load();
@@ -95,7 +97,9 @@ export default () => {
             </Row>
           </Grid>
         </DrawerAppContent>
-        <MaterialSnackbar message={strings.toast_created} />
+        {toast && (
+        <MaterialSnackbar message={toast} onClose={() => setToast('')}/>
+        )}
         <MaterialFab
           icon={<MaterialIcon icon='note_add'/>}
           style={{ position: 'absolute', right: 16, bottom: 16 }}
