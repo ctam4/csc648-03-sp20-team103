@@ -17,13 +17,12 @@ function MaterialTopAppBarDialog(props) {
               onClick={props.onClick1}
             />
           </TopAppBarIcon>
-          <TopAppBarTitle>{props.title}</TopAppBarTitle>
         </TopAppBarSection>
         {(props.icon2 || props.onClick2) && (
         <TopAppBarSection align='end' role='toolbar'>
           <TopAppBarIcon actionItem tabIndex={0}>
             <MaterialIcon
-              aria-label={props.icon2}
+              aria-label={props.icon2 || 'search'}
               hasRipple
               icon={props.icon2 || 'search'}
               onClick={props.onClick2}
