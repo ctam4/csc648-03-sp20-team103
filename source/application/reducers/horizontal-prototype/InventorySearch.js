@@ -1,5 +1,5 @@
 export const initialState = {
-  searchOpen: false,
+  searchOpen: true,
   keywords: '',
 };
 
