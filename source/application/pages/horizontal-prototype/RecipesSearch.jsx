@@ -2,10 +2,18 @@ import React, { useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
-import { setSearchOpen, setKeywords } from '../../actions/horizontal-prototype/RecipesSearch';
 
 import { StyleSheet, View, useWindowDimensions, Text } from 'react-native';
 import LocalizedStrings from 'react-localization';
+import {
+  setSearchOpen,
+  setKeywords,
+  setCaloriesFilter,
+  setServingsFilter,
+  setFatFilter,
+  setProteinFilter,
+  setCarbonhydratesFilter,
+} from '../../actions/horizontal-prototype/RecipesSearch';
 
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
@@ -14,8 +22,8 @@ import '@material/react-layout-grid/dist/layout-grid.css';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
-import ChipActive from '../../components/horizontal-prototype/ChipActive';
-import Chip from '../../components/horizontal-prototype/Chip';
+import { Body1 } from '../../components/horizontal-prototype/MaterialTypography';
+import MaterialFilterChips from '../../components/horizontal-prototype/MaterialFilterChips';
 
 let strings = new LocalizedStrings({
   en: {
@@ -26,8 +34,8 @@ let strings = new LocalizedStrings({
     choose_carbonhydrates: 'Choose carbonhydrates per serving',
     calories_500_less: '500 calories or less',
     calories_500_1000: '500-1000 calories',
-    servings_3_4: '3-4 servings',
     servings_1_2: '1-2 servings',
+    servings_3_4: '3-4 servings',
     grams_10_less: '10 grams or less',
     grams_10_20: '10-20 grams',
   },
@@ -164,6 +172,27 @@ export default () => {
   const [cookies, setCookie] = useCookies(['session']);
   const [state, dispatch] = useReducer(recipesSearchReducer, initialState);
 
+  const caloriesFilterChoices = [
+    { id: '500_less', label: strings.calories_500_less },
+    { id: '500_1000', label: strings.calories_500_1000 },
+  ];
+  const servingsFilterChoices = [
+    { id: '1_2', label: strings.servings_1_2 },
+    { id: '3_4', label: strings.servings_3_4 },
+  ];
+  const fatFilterChoices = [
+    { id: '10_less', label: strings.grams_10_less },
+    { id: '10_20', label: strings.grams_10_20 },
+  ];
+  const proteinFilterChoices = [
+    { id: '10_less', label: strings.grams_10_less },
+    { id: '10_20', label: strings.grams_10_20 },
+  ];
+  const carbonhydratesFilterChoices = [
+    { id: '10_less', label: strings.grams_10_less },
+    { id: '10_20', label: strings.grams_10_20 },
+  ];
+
   useEffect(() => {
     load();
   });
@@ -203,75 +232,45 @@ export default () => {
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <Text style={styles.chooseCalories}>{strings.choose_calories}</Text>
-                <View style={styles.materialChipWithCloseButtonRow}>
-                  <ChipActive
-                    text1={strings.calories_500_less}
-                    style={styles.materialChipWithCloseButton}
-                  ></ChipActive>
-                  <View style={styles.materialChipWithCloseButtonFiller}></View>
-                  <Chip
-                    text1={strings.calories_500_1000}
-                    style={styles.materialChipBasic1}
-                  ></Chip>
-                </View>
+              <Cell columns={12}>
+                <Body1>{strings.choose_calories}</Body1>
+                <MaterialFilterChips
+                  selectedChipIds={state.caloriesFilter}
+                  handleSelect={(value) => dispatch(setCaloriesFilter(value))}
+                  choices={caloriesFilterChoices}
+                ></MaterialFilterChips>
               </Cell>
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <Text style={styles.chooseServingSize}>{strings.choose_servings}</Text>
-                <View style={styles.materialChipWithCloseButton1Row}>
-                  <ChipActive
-                    text1={strings.servings_3_4}
-                    style={styles.materialChipWithCloseButton1}
-                  ></ChipActive>
-                  <View style={styles.materialChipWithCloseButton1Filler}></View>
-                  <Chip
-                    text1={strings.servings_1_2}
-                    style={styles.materialChipBasic}
-                  ></Chip>
-                </View>
+              <Cell columns={12}>
+                <Body1>{strings.choose_servings}</Body1>
+                <MaterialFilterChips
+                  selectedChipIds={state.servingsFilter}
+                  handleSelect={(value) => dispatch(setServingsFilter(value))}
+                  choices={servingsFilterChoices}
+                ></MaterialFilterChips>
               </Cell>
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <Text style={styles.chooseFatSize}>{strings.choose_fat}</Text>
-                <View style={styles.materialChipBasic2Row}>
-                  <Chip
-                    text1={strings.grams_10_less}
-                    style={styles.materialChipBasic2}
-                  ></Chip>
-                  <View style={styles.materialChipBasic2Filler}></View>
-                  <Chip
-                    text1={strings.grams_10_20}
-                    style={styles.materialChipBasic3}
-                  ></Chip>
-                </View>
+              <Cell columns={12}>
+                <Body1>{strings.choose_fat}</Body1>
+                <MaterialFilterChips
+                  selectedChipIds={state.fatFilter}
+                  handleSelect={(value) => dispatch(setFatFilter(value))}
+                  choices={fatFilterChoices}
+                ></MaterialFilterChips>
               </Cell>
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <Text style={styles.chooseProteinSize}>{strings.choose_protein}</Text>
-                <View style={styles.materialChipBasic4Row}>
-                  <Chip
-                    text1={strings.grams_10_less}
-                    style={styles.materialChipBasic4}
-                  ></Chip>
-                  <View style={styles.materialChipBasic4Filler}></View>
-                  <Chip
-                    text1={strings.grams_10_20}
-                    style={styles.materialChipBasic5}
-                  ></Chip>
-                </View>
+              <Cell columns={12}>
+                <Body1>{strings.choose_protein}</Body1>
+                <MaterialFilterChips
+                  selectedChipIds={state.proteinFilter}
+                  handleSelect={(value) => dispatch(setProteinFilter(value))}
+                  choices={proteinFilterChoices}
+                ></MaterialFilterChips>
               </Cell>
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <Text style={styles.chooseProtein2}>{strings.choose_carbonhydrates}</Text>
-                <View style={styles.materialChipBasic6Row}>
-                  <Chip
-                    text1={strings.grams_10_less}
-                    style={styles.materialChipBasic6}
-                  ></Chip>
-                  <View style={styles.materialChipBasic6Filler}></View>
-                  <Chip
-                    text1={strings.grams_10_20}
-                    style={styles.materialChipBasic7}
-                  ></Chip>
-                </View>
+              <Cell columns={12}>
+                <Body1>{strings.choose_carbonhydrates}</Body1>
+                <MaterialFilterChips
+                  selectedChipIds={state.carbonhydratesFilter}
+                  handleSelect={(value) => dispatch(setCarbonhydratesFilter(value))}
+                  choices={carbonhydratesFilterChoices}
+                ></MaterialFilterChips>
               </Cell>
             </Row>
           </Grid>

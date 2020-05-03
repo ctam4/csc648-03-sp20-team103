@@ -1,6 +1,11 @@
 export const initialState = {
   searchOpen: true,
   keywords: '',
+  caloriesFilter: [],
+  servingsFilter: [],
+  fatFilter: [],
+  proteinFilter: [],
+  carbonhydrates: [],
 };
 
 export const recipesSearchReducer = (state = initialState, action) => {
@@ -15,6 +20,36 @@ export const recipesSearchReducer = (state = initialState, action) => {
       return {
         ...state,
         keywords: action.keywords,
+      };
+    }
+    case 'RECIPESSEARCH_SET_CALORIESFILTER': {
+      return {
+        ...state,
+        caloriesFilter: action.caloriesFilter,
+      };
+    }
+    case 'RECIPESSEARCH_SET_SERVINGSFILTER': {
+      return {
+        ...state,
+        servingsFilter: action.servingsFilter,
+      };
+    }
+    case 'RECIPESSEARCH_SET_FATFILTER': {
+      return {
+        ...state,
+        fatFilter: action.fatFilter,
+      };
+    }
+    case 'RECIPESSEARCH_SET_PROTEINFILTER': {
+      return {
+        ...state,
+        proteinFilter: action.proteinFilter,
+      };
+    }
+    case 'RECIPESSEARCH_SET_CARBONHYDRATESFILTER': {
+      return {
+        ...state,
+        carbonhydratesFilter: action.carbonhydratesFilter,
       };
     }
     default: {
