@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
-import { setKeywords } from '../../actions/horizontal-prototype/RecipesSearch';
+import { setSearchOpen, setKeywords } from '../../actions/horizontal-prototype/RecipesSearch';
 
 import { StyleSheet, View, useWindowDimensions, Text } from 'react-native';
 import LocalizedStrings from 'react-localization';
@@ -12,7 +12,8 @@ import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 
-import Search from '../../components/horizontal-prototype/Search';
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
 import ChipActive from '../../components/horizontal-prototype/ChipActive';
 import Chip from '../../components/horizontal-prototype/Chip';
 
@@ -179,13 +180,33 @@ export default () => {
     // TODO: fetch
   };
 
+  const toggleSearch = () => {
+    dispatch(setSearchOpen(!state.searchOpen));
+  };
+
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
+  };
+
   return (
     <View className='drawer-container'>
-      <Search
-        textInput1={state.keywords}
-        style={styles.materialSearchBarWithBackground}
+      {!state.searchOpen && (
+      <MaterialTopAppBarDialog
+        icon1={'arrow_back'}
+        onClick1={handleGoBack}
+        onClick2={toggleSearch}
+      ></MaterialTopAppBarDialog>
+      )}
+      {state.searchOpen && (
+      <MaterialTopAppBarSearchDialog
+        value={state.keywords}
+        onClick1={toggleSearch}
         onChange={(e) => dispatch(setKeywords(e.target.value))}
-      ></Search>
+        onTrailingIconSelect={() => dispatch(setKeywords(''))}
+      ></MaterialTopAppBarSearchDialog>
+      )}
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>

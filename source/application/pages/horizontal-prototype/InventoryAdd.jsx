@@ -2,7 +2,7 @@ import React, { useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { inventoryAddReducer, initialState } from '../../reducers/horizontal-prototype/InventoryAdd';
-import { setKeywords } from '../../actions/horizontal-prototype/InventoryAdd';
+import { setSearchOpen, setKeywords } from '../../actions/horizontal-prototype/InventoryAdd';
 
 import { StyleSheet, View, useWindowDimensions} from 'react-native';
 import MaterialIcon from '@material/react-material-icon';
@@ -13,8 +13,9 @@ import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
-import Search from '../../components/horizontal-prototype/Search';
 import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
 
 let strings = new LocalizedStrings({
@@ -46,6 +47,16 @@ export default () => {
     // TODO: fetch
   };
 
+  const toggleSearch = () => {
+    dispatch(setSearchOpen(!state.searchOpen));
+  };
+
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
+  };
+
   const handleRemove = async () => {
     // TODO: fetch
   }
@@ -59,11 +70,21 @@ export default () => {
 
   return (
     <View className='drawer-container'>
-      <Search
-        textInput1={state.keywords}
-        style={styles.materialSearchBarWithBackground1}
+      {!state.searchOpen && (
+      <MaterialTopAppBarDialog
+        icon1={'arrow_back'}
+        onClick1={handleGoBack}
+        onClick2={toggleSearch}
+      ></MaterialTopAppBarDialog>
+      )}
+      {state.searchOpen && (
+      <MaterialTopAppBarSearchDialog
+        value={state.keywords}
+        onClick1={toggleSearch}
         onChange={(e) => dispatch(setKeywords(e.target.value))}
-      ></Search>
+        onTrailingIconSelect={() => dispatch(setKeywords(''))}
+      ></MaterialTopAppBarSearchDialog>
+      )}
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64}}>

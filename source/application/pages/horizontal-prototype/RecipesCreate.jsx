@@ -91,7 +91,7 @@ export default () => {
     if (history.length > 0) {
       history.back();
     }
-  }
+  };
 
   return (
     <View className='drawer-container'>
