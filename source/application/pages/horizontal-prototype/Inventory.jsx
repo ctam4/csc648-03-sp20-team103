@@ -41,12 +41,12 @@ export default () => {
     // TODO: fetch
   };
 
-  const handleDiscard = async () => {
-    // TODO: fetch
-  };
-
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
+  };
+
+  const handleDiscard = async () => {
+    // TODO: fetch
   };
 
   return (
