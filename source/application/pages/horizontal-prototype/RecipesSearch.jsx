@@ -3,7 +3,6 @@ import { useCookies } from 'react-cookie';
 
 import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
 
-import { StyleSheet, View, useWindowDimensions, Text } from 'react-native';
 import LocalizedStrings from 'react-localization';
 import {
   setSearchOpen,
@@ -15,6 +14,7 @@ import {
   setCarbonhydratesFilter,
 } from '../../actions/horizontal-prototype/RecipesSearch';
 
+import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';

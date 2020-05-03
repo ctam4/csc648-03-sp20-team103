@@ -4,11 +4,11 @@ import { useCookies } from 'react-cookie';
 import { recipesCreateReducer, initialState } from '../../reducers/horizontal-prototype/RecipesCreate';
 import { setName, setServings, setCookingTime } from '../../actions/horizontal-prototype/RecipesCreate';
 
-import { StyleSheet, View, useWindowDimensions, Text } from 'react-native';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-material-icon/dist/material-icon.css';
 import LocalizedStrings from 'react-localization';
 
+import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
@@ -26,45 +26,6 @@ let strings = new LocalizedStrings({
     servings_helper: 'This is the servings of this recipe.',
     cooking_time: 'Cooking time',
     cooking_time_helper: 'This is the cooking time of this recipe in minutes.',
-  },
-});
-const styles = StyleSheet.create({
-  recipeInfo: {
-    height: 14,
-    color: '#121212',
-    alignSelf: 'stretch',
-    margin: 15,
-    fontFamily: 'Roboto',
-  },
-  materialFixedLabelTextbox: {
-    height: 43,
-    backgroundColor: 'rgba(230, 230, 230,1)',
-    alignSelf: 'stretch',
-    margin: 15,
-  },
-  materialFixedLabelTextbox1: {
-    height: 43,
-    backgroundColor: 'rgba(230, 230, 230,1)',
-    alignSelf: 'stretch',
-    margin: 15,
-  },
-  materialFixedLabelTextbox2: {
-    height: 43,
-    backgroundColor: 'rgba(230, 230, 230,1)',
-    alignSelf: 'stretch',
-    margin: 15,
-  },
-  ingredients3: {
-    height: 14,
-    color: '#121212',
-    alignSelf: 'stretch',
-    margin: 15,
-    fontFamily: 'Roboto',
-  },
-  materialHeader1: {
-    minWidth: 360,
-    width: '100%',
-    height: 56,
   },
 });
 

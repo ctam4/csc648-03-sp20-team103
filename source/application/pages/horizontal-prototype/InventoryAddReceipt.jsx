@@ -20,14 +20,6 @@ let strings = new LocalizedStrings({
   },
 });
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  dialogHeader1: {
-    minWidth: 360,
-    width: '100%',
-    height: 56,
-  },
   rect1: {
     minWidth: 360,
     width: '100%',
