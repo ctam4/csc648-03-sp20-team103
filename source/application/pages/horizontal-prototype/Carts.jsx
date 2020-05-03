@@ -15,9 +15,8 @@ import CartsCard from '../../components/horizontal-prototype/CartsCard';
 let strings = new LocalizedStrings({
   en: {
     carts: 'Carts',
-    last_updated: 'last updated',
+    last_updated: 'last updated ',
     user_cart: ' \'s cart',
-    preview_cart: 'This is the preview of the cart. It may shows up to 10 lines of items with quantity.',
     edit: 'Edit',
     clear_cart: 'Clear cart',
     toast_edited: 'Cart edited.',
@@ -29,10 +28,23 @@ export default () => {
   const [cookies, setCookie] = useCookies(['session']);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [toast, setToast] = useState('');
+  const [carts, setCarts] = useState([]);
 
   useEffect(() => {
+    dummySetup();
     load();
   }, []);
+
+  const dummySetup = () => {
+    // TODO: hard code carts array
+    setCarts([
+      {
+        title: 'user 1',
+        subtitle: '21 days ago',
+        content: 'This is the preview of the cart. It may shows up to 10 lines of items with quantity.',
+      },
+    ]);
+  };
 
   const load = async () => {
     // TODO: fetch
@@ -62,17 +74,19 @@ export default () => {
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
+              {carts.map((item) => (
               <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
                 <CartsCard
-                  mainText1={strings.user_cart}
-                  mainText2={strings.last_updated}
-                  bodyText={strings.preview_cart}
+                  mainText1={item.title + strings.user_cart}
+                  mainText2={strings.last_updated + item.subtitle}
+                  bodyText={item.content}
                   actionText1={strings.edit}
                   actionText2={strings.clear_cart}
                   onClickAction1={() => { window.location.href = './carts/view?id=' }}
                   onClickAction2={handleClearCart}
                 ></CartsCard>
               </Cell>
+              ))}
             </Row>
           </Grid>
         </DrawerAppContent>

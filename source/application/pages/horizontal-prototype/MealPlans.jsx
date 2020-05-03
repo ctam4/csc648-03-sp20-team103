@@ -38,37 +38,37 @@ export default () => {
       {
         date: '2020-04-20',
         cal_per_day: 2000,
-        description : 'Per day weight loss meal plan structured towards a healthy balanced diet. All Meals are designed to serve 1. Recipes create delicious meals with half the amount of calories you would expect. Shopping List included. 3 Meals per day.',
+        description: 'Per day weight loss meal plan structured towards a healthy balanced diet. All Meals are designed to serve 1. Recipes create delicious meals with half the amount of calories you would expect. Shopping List included. 3 Meals per day.',
       },
       {
         date: '2020-04-21',
         cal_per_day: 1900,
-        description : 'Per day meal plan created for children as per their needs. All Meals are designed to serve 1. Recipes create delicious meals with children\'s favourite meal options. 3 Meals per day.',
+        description: 'Per day meal plan created for children as per their needs. All Meals are designed to serve 1. Recipes create delicious meals with children\'s favourite meal options. 3 Meals per day.',
       },
       {
         date: '2020-04-22',
         cal_per_day: 2000,
-        description : 'Meal plan designed for students structured towards healthy and nutritious meals. All Meals are designed to serve 1. This plan provides for breakfast, lunch, and dinner.',
+        description: 'Meal plan designed for students structured towards healthy and nutritious meals. All Meals are designed to serve 1. This plan provides for breakfast, lunch, and dinner.',
       },
       {
         date: '2020-04-23',
         cal_per_day: 2200,
-        description : 'Meal plan structured for a family towards healthy and nutritious meal. Considering the needs and dietary habits of all the family members Recipes create delicious meals with the required amount of calories. 3 Meals for a day.',
+        description: 'Meal plan structured for a family towards healthy and nutritious meal. Considering the needs and dietary habits of all the family members Recipes create delicious meals with the required amount of calories. 3 Meals for a day.',
       },
       {
         date: '2020-04-24',
         cal_per_day: 2300,
-        description : 'Meal plan E',
+        description: 'Meal plan E',
       },
       {
         date: '2020-04-25',
         cal_per_day: 1500,
-        description : 'Meal plan F',
+        description: 'Meal plan F',
       },
       {
         date: '2020-04-26',
         cal_per_day: 2000,
-        description : 'Meal plan G',
+        description: 'Meal plan G',
       },
     ]);
   };
