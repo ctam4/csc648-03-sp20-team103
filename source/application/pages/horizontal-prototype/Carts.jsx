@@ -8,7 +8,6 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
 
-import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import CartsCard from '../../components/horizontal-prototype/CartsCard';
@@ -46,11 +45,11 @@ export default () => {
 
   return (
     <View className='drawer-container'>
-      <MaterialTopAppBarDialog
+      <MaterialTopAppBar
         title={strings.carts}
         onClick1={toggleDrawer}
         //onClick2={() => window.location.href = './' }
-      ></MaterialTopAppBarDialog>
+      ></MaterialTopAppBar>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <MaterialDrawer
           open={drawerOpen}
