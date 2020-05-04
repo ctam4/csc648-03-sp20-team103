@@ -4,26 +4,46 @@ const logout = express.Router();
 const pool = require('../../database.js');
 let connection;
 
+/**
+ * POST /v3/logout
+ * @description
+ * @param {string} session
+ */
 logout.post('/', async (req, res) => {
+  // check correct params
+  if (Object.keys(req.body).length == 1 && !('session' in req.body)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let session;
+  try {
+    session = req.body.session;
+  } catch (error) {
+    res.sendStatus(400).end();
+    throw error;
+  }
+  // check params data range
+  if (!session) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // run query to mariadb
   try {
     connection = await pool.getConnection();
-    let sql = 'SELECT count(*) FROM v3_fridges WHERE pin=' + [req.body.pin] + ' AND serial_number=' + [req.body.serial_number];
-    let sql2 = 'DELETE FROM v3_sessions WHERE pin=' + [req.body.pin] + ' AND serial_number=' + [req.body.serial_number];
-    // let sql = 'INSERT INTO v3_sessions (session, fridge_id) VALUES(3131, 1)';
-    // console.log(sql)
-    await connection.query(sql)
-      .then(connection.query(sql2))
-      .then((results) => res.send(JSON.stringify(results)).end())
-      // res.json(results).end();
-      .catch((error) => {
-        console.log(error)
-        res.sendStatus(400).end();
+    await connection.query('SELECT * FROM v3_sessions WHERE session=?', [session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+          await connection.query('DELETE FROM v3_sessions WHERE session=?', [session]);
+          res.sendStatus(200).end();
+        } else {
+          res.sendStatus(406).end();
+        }
       });
   } catch (error) {
-    console.log(error)
-    res.sendStatus(401).end();
-  }
-  finally {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
     if (connection) {
       connection.release();
     }
