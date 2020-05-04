@@ -17,7 +17,6 @@ function CartsCardFull(props) {
 
   return (
     <MaterialCard className='mdc-card'>
-      <CardMedia wide imageUrl={props.mainImage}></CardMedia>
       <View style={{padding: 16}}>
         <Headline6 style={{margin: 0}}>{props.mainText1}</Headline6>
         <Subtitle2 style={{margin: 0}}>{props.mainText2}</Subtitle2>
@@ -35,10 +34,6 @@ function CartsCardFull(props) {
           />
         </CardActionIcons>
       </CardActions>
-      <View style={{padding: 16}}>
-        <Subtitle1 style={{margin: 0}}>{strings.log}</Subtitle1>
-        <Body2 style={{marginBottom: 0}}>{props.bodyText}</Body2>
-      </View>
     </MaterialCard>
   );
 }
