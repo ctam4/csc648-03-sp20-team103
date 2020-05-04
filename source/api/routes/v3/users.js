@@ -33,7 +33,7 @@ users.get('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
@@ -100,7 +100,7 @@ users.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
@@ -158,7 +158,7 @@ users.delete('/:userID', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions

@@ -18,7 +18,7 @@ login.post('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    connection.query('SELECT fridge_id FROM v2_fridges WHERE serial_number=? AND pin=?', [req.body.serialNumber, req.body.pin])
+    await connection.query('SELECT fridge_id FROM v2_fridges WHERE serial_number=? AND pin=?', [req.body.serialNumber, req.body.pin])
       .then(async rows => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions

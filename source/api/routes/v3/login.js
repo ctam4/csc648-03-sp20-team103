@@ -35,7 +35,7 @@ login.post('/', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    connection.query('SELECT fridge_id FROM v3_fridges WHERE serial_number=? AND pin=?', [serialNumber, pin])
+    await connection.query('SELECT fridge_id FROM v3_fridges WHERE serial_number=? AND pin=?', [serialNumber, pin])
       .then(async (rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
