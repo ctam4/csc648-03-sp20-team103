@@ -33,7 +33,7 @@ function IngredientsListCard(props) {
         </>
         )}
         {props.list1 && props.list2 && (
-        <ListDivider tag="div" />
+        <ListDivider tag='div' />
         )}
         {props.list2 && (
         <>
