@@ -4,6 +4,16 @@ const inventory = express.Router();
 const pool = require('../../database.js');
 let connection;
 
+/**
+ * GET /v3/inventory/list:state
+ * @description Retrieve inventory list of current fridges with session.
+ * @param {string} session
+ * @param {integer} page (optional)
+ * @param {integer} limit (optional)
+ * @param {string} sort (optional)
+ * @param {boolean} descending (optional)
+ * @returns {object[]} inventory
+ */
 inventory.get('/list/:state', async (req, res) => {
   // check correct ':state'
   const state = req.params.state;
