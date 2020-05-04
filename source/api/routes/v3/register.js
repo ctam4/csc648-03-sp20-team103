@@ -6,7 +6,7 @@ let connection;
 
 /**
  * POST /v3/register
- * @description Creates a new fridge and yields its serial number and pin.
+ * @description Register a new fridge and yields its serial number and pin.
  * @returns {string} serialNumber
  * @returns {integer} pin
  */

@@ -6,7 +6,7 @@ let connection;
 
 /**
  * POST /v3/logout
- * @description
+ * @description Delete session to logout.
  * @param {string} session
  */
 logout.post('/', async (req, res) => {

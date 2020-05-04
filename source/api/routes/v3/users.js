@@ -131,7 +131,7 @@ users.post('/', async (req, res) => {
 
 /**
  * DELETE /v3/users/:userID
- * @description Insert users for current fridges with session.
+ * @description Delete user for current fridges with session.
  * @param {string} session
  */
 users.delete('/:userID', async (req, res) => {

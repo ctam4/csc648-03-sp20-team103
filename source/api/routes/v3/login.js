@@ -7,7 +7,7 @@ let connection;
 
 /**
  * POST /v3/login
- * @description
+ * @description Create session after finding corresponding fridgeID using serialNumber and PIN.
  * @param {string} serialNumber
  * @param {string} pin
  * @return {string} session

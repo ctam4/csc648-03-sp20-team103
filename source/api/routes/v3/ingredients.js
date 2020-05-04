@@ -91,7 +91,7 @@ ingredients.get('/search', async (req, res) => {
 
 /**
  * POST /v3/ingredients
- * @description Retrieve inventory list of current fridges with session.
+ * @description Insert inventory list of current fridges with session.
  * @param {string} session
  * @param {integer} ingredientID
  * @param {string} name
