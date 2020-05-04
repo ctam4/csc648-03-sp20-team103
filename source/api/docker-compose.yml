@@ -25,6 +25,8 @@ services:
     user: "node"
     environment:
       NODE_ENV: "development"
+      API_HOST: "node-nodemon"
+      API_PORT: "8080"
     working_dir: /home/node/app/
     volumes:
       - .:/home/node/app/
