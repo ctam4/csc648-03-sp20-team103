@@ -110,11 +110,6 @@ exports.up = (db, callback) => {
             length: 64,
             notNull: true,
           },
-          intolerances:{
-            type: 'text',
-            notNull: true,
-            default: ""
-          },
           //to do: default current timestamp
           created_ts: {
             type: 'timestamp',
