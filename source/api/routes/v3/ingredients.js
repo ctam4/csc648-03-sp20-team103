@@ -89,16 +89,61 @@ ingredients.get('/search', async (req, res) => {
   }
 });
 
+/**
+ * POST /v3/ingredients
+ * @description Retrieve inventory list of current fridges with session.
+ * @param {string} session
+ * @param {integer} ingredientID
+ * @param {string} name
+ * @param {string} image
+ * @returns {integer} ingredientID
+ */
 ingredients.post('/', async (req, res) => {
+  // check correct params
+  if (Object.keys(req.body).length == 4 && !('session' in req.body && 'ingredientID' in req.body && 'name' in req.body && 'image' in req.body)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let session, ingredientID, name, image;
+  try {
+    session = req.body.session;
+    ingredientID = parseInt(ingredientID);
+    name = req.body.name;
+    image = req.body.image;
+  } catch (error) {
+    res.sendStatus(400).end();
+    throw error;
+  }
+  // check params data range
+  // @todo validate image is url
+  if (!session || ingredientID <= 0 || !name) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('INSERT INTO v3_ingredients (ingredient_id, name, image) VALUES(?, ?, ?)', [req.body.ingredient_id, req.body.name, req.body.image])
-      .then((results) => {
-        // res.send(JSON.stringify(results)).end()
-        res.json(results).end();
+    // retrieve fridge_id
+    connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+          // insert for endpoint
+          await connection.query('INSERT INTO v3_ingredients (ingredients_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image])
+            .then((rows) => {
+              if (rows.length > 0) {
+                // res.send(JSON.stringify(rows)).end();
+                res.json(rows).end();
+              } else {
+                res.sendStatus(406).end();
+              }
+            });
+        } else {
+          res.sendStatus(401).end();
+        }
       });
   } catch (error) {
-    res.sendStatus(401).end();
+    res.sendStatus(500).end();
     throw error;
   } finally {
     if (connection) {
