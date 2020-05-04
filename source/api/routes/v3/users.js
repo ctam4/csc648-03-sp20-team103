@@ -24,6 +24,11 @@ users.get('/', async (req, res) => {
     res.sendStatus(400).end();
     throw error;
   }
+  // check params data range
+  if (!session) {
+    res.sendStatus(400).end();
+    return;
+  }
   // run query to mariadb
   try {
     connection = await pool.getConnection();
@@ -87,7 +92,7 @@ users.post('/', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (!['dairy', 'egg', 'gluten', 'grain', 'peanut', 'seafood', 'sesame', 'shellfish', 'soy', 'sulfite', 'tree nut', 'wheat'].includes(intolerances)) {
+  if (!session || !name || name.length > 64 || !role || role.length > 64 || !['dairy', 'egg', 'gluten', 'grain', 'peanut', 'seafood', 'sesame', 'shellfish', 'soy', 'sulfite', 'tree nut', 'wheat'].includes(intolerances)) {
     res.sendStatus(400).end();
     return;
   }
@@ -143,6 +148,11 @@ users.delete('/:userID', async (req, res) => {
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
+  }
+  // check params data range
+  if (userID <= 0 || !session) {
+    res.sendStatus(400).end();
+    return;
   }
   // run query to mariadb
   try {

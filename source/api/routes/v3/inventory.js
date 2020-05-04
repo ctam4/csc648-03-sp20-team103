@@ -42,7 +42,7 @@ inventory.get('/list/:state', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (page <= 0 || limit <= 0 || (sort != null && !['expiration_date'].includes(sort))) {
+  if (!session || page <= 0 || limit <= 0 || (sort != null && !['expiration_date'].includes(sort))) {
     res.sendStatus(400).end();
     return;
   }
@@ -155,7 +155,7 @@ inventory.post('/add/manual', async (req, res) => {
   }
   // check params data range
   // @todo unit valid values
-  if (ingredientID <= 0 || quantity <= 0.0 || price <= 0 || !['consumed', 'stored', 'discarded'].includes(state)) {
+  if (!session || ingredientID <= 0 || quantity <= 0.0 || !unit || unit.length > 8 || price <= 0 || !['consumed', 'stored', 'discarded'].includes(state)) {
     res.sendStatus(400).end();
     return;
   }

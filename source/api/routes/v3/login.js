@@ -28,7 +28,7 @@ login.post('/', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (serialNumber.length > 16 || pin.length > 16) {
+  if (!serialNumber || serialNumber.length > 16 || !pin || pin.length > 16) {
     res.sendStatus(400).end();
     return;
   }

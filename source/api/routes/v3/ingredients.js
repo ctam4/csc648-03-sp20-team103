@@ -33,7 +33,7 @@ ingredients.get('/search', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (page <= 0 || limit <= 0) {
+  if (!session || page <= 0 || limit <= 0) {
     res.sendStatus(400).end();
     return;
   }
@@ -117,7 +117,7 @@ ingredients.post('/', async (req, res) => {
   }
   // check params data range
   // @todo validate image is url
-  if (!session || ingredientID <= 0 || !name) {
+  if (!session || ingredientID <= 0 || !name || name.length > 128) {
     res.sendStatus(400).end();
     return;
   }
