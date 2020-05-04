@@ -57,20 +57,65 @@ users.get('/', async (req, res) => {
   }
 });
 
-users.post('/:name', async (req, res) => {
+/**
+ * POST /v3/users
+ * @description Insert users for current fridges with session.
+ * @param {string} session
+ * @param {string} name
+ * @param {string} role
+ * @param {string[]} intolerances
+ * @returns {interger} userID
+ */
+users.post('/', async (req, res) => {
+  // check correct params
+  if (Object.keys(req.body).length == 4 && !('session' in req.body && 'name' in req.body && 'role' in req.body && 'intolerances' in req.body)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let session, name, role, intolerances;
+  try {
+    session = req.body.session;
+    name = req.body.name;
+    role = req.body.role;
+    if (!req.body.intolerances.isArray()) {
+      throw new TypeError();
+    }
+    intolerances = req.body.intolerances;
+  } catch (error) {
+    res.sendStatus(400).end();
+    throw error;
+  }
+  // check params data range
+  if (!['dairy', 'egg', 'gluten', 'grain', 'peanut', 'seafood', 'sesame', 'shellfish', 'soy', 'sulfite', 'tree nut', 'wheat'].includes(intolerances)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // run query to mariadb
   try {
     connection = await pool.getConnection();
-    // sql = 'UPDATE v3_users (name) VALUES (?) WHERE fridge_id=' + req.params.fridge_id;
-    // sql = 'UPDATE v3_users SET name=' + req.params.name + ' WHERE fridge_id=' + req.params.fridge_id;
-    sql = 'INSERT INTO v3_users (name, fridge_id, role, intolerances) VALUES(?, ?, ?, ?)';
-    console.log(req.params)
-    await connection.query(sql, [req.params.name, req.body.fridge_id, req.body.role, req.body.intolerances])
-      .then((results) => {
-        res.send(JSON.stringify(results)).end();
-        // res.json(results).end();
+    // retrieve fridge_id
+    connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+          // @todo handle possible duplicate sessions
+          const fridgeID = rows[0].fridge_id;
+          // insert for endpoint
+          await connection.query('INSERT INTO v3_users (fridge_id, name, role, intolerances) VALUES (?, ?, ?, ?)', [fridgeID, name, role, intolerances.join(',')])
+            .then((rows) => {
+              if (rows.length > 0) {
+                // res.send(JSON.stringify(rows)).end();
+                res.json(rows).end();
+              } else {
+                res.sendStatus(406).end();
+              }
+            });
+        } else {
+          res.sendStatus(401).end();
+        }
       });
   } catch (error) {
-    res.sendStatus(401).end();
+    res.sendStatus(500).end();
     throw error;
   } finally {
     if (connection) {
