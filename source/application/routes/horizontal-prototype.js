@@ -113,6 +113,15 @@ router.get('/carts', async (req, res) => {
   res.send(render);
 });
 
+router.get('/carts/view', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_carts-view.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: 'Carts - View - Horizontal Prototype',
+  });
+  res.send(render);
+});
+
 router.get('/consumption', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_consumption.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
@@ -121,6 +130,16 @@ router.get('/consumption', async (req, res) => {
   });
   res.send(render);
 });
+
+router.get('/consumption/view', async (req, res) => {
+  const raw = fs.readFileSync('./build/horizontal-prototype_consumption-view.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: 'Consumption - View - Horizontal Prototype',
+  });
+  res.send(render);
+});
+
 
 router.get('/meal-plans', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_meal-plans.html').toString();
