@@ -5,42 +5,83 @@ const pool = require('../../database.js');
 let connection;
 
 inventory.get('/list/:state', async (req, res) => {
+  // check correct ':state'
+  const state = req.params.state;
+  if (!['all', 'consumed', 'stored', 'discarded', 'expired'].includes(state)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check correct params
+  if ((Object.keys(req.query).length == 1 ||
+  (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
+  (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
+  !('session' in req.query)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let session, page, limit, sort, descending;
   try {
-    connection = await pool.getConnection();
-    let state = req.params.state;
-    let limit = 1;
-    let page = 1;
-    let offset = 2;
-    if (req.query.limit !== undefined) {
-      limit = req.query.limit;
-    }
-    if (req.query.page !== undefined) {
-      page = req.query.page;
-      offset = page * limit;
-    }
-
-    if(state === 'all'){
-      console.log(offset, 'off');
-      let sql = 'SELECT * FROM v3_inventory  LIMIT ?, ?';
-      console.log(sql);
-      await connection.query('SELECT * FROM v3_inventory LIMIT ?, ?', [parseInt(limit), parseInt(offset)])
-        .then((results) => {
-          res.send(JSON.stringify(results)).end();
-          // res.json(results).end();
-        });
-    }
-    else{
-      let sql = 'SELECT * FROM v3_inventory WHERE state=? LIMIT ?, ?';
-      console.log(sql, "here");
-      await connection.query('SELECT * FROM v3_inventory WHERE state=? LIMIT ?, ?', [state, parseInt(limit), parseInt(offset)])
-        .then((results) => {
-          res.send(JSON.stringify(results)).end();
-          // res.json(results).end();
-        });
-    }
-
+    session = req.query.session;
+    page = (req.query.page && parseInt(req.query.page)) || 1;
+    limit = (req.query.limit && parseInt(req.query.limit)) || 100;
+    sort = req.query.sort || null;
+    descending = (req.query.descending && (req.query.descending == true || (req.query.descending == false && false))) || null;
   } catch (error) {
     res.sendStatus(400).end();
+    throw error;
+  }
+  // check params data range
+  if (page <= 0 || limit <= 0 || (sort != null && !['expiration_date'].includes(sort))) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // run query to mariadb
+  try {
+    connection = await pool.getConnection();
+    // retrieve fridge_id
+    connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+          // @todo handle possible duplicate sessions
+          const fridgeID = rows[0].fridge_id;
+          // retrieve for endpoint
+          let sql = 'SELECT * FROM v3_inventory WHERE fridge_id=?';
+          switch (state) {
+            case 'stored':
+            case 'consumed':
+            case 'discarded':
+              sql += ' AND state=\'' + state + '\'';
+              break;
+            case 'expired':
+              sql += ' AND expiration_date IS NOT NULL AND expiration_date < CURRENT_TIMESTAMP';
+              break;
+          }
+          switch (sort) {
+            case 'expiration_date':
+              sql += ' ORDER BY ' + sort;
+              if (descending) {
+                sql += ' ASC';
+              } else {
+                sql += ' DESC';
+              }
+              break;
+          }
+          await connection.query(sql + ' LIMIT ?, ?', [fridgeID, limit, (page - 1) * limit])
+            .then((rows) => {
+              if (rows.length > 0) {
+                // res.send(JSON.stringify(rows)).end();
+                res.json(rows).end();
+              } else {
+                res.sendStatus(406).end();
+              }
+            });
+        } else {
+          res.sendStatus(401).end();
+        }
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
     throw error;
   } finally {
     if (connection) {
