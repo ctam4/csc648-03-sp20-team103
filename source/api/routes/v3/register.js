@@ -1,16 +1,16 @@
 const express = require('express');
-const fridges = express.Router();
+const register = express.Router();
 
 const pool = require('../../database.js');
 let connection;
 
 /**
- * POST /v3/fridges
+ * POST /v3/register
  * @description Creates a new fridge and yields its serial number and pin.
  * @returns {string} serialNumber
  * @returns {integer} pin
  */
-fridges.post('/', async (req, res) => {
+register.post('/', async (req, res) => {
   const generate = (n) => Array(n).fill().map(() => Math.floor(10 * Math.random())).join(''); // @todo is there a better way?
   let serialNumber, results;
   const pin = generate(4);
@@ -32,4 +32,4 @@ fridges.post('/', async (req, res) => {
   }
 });
 
-module.exports = fridges;
+module.exports = register;
