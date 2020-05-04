@@ -124,19 +124,54 @@ users.post('/', async (req, res) => {
   }
 });
 
-users.delete('/:name', async (req, res) => {
+/**
+ * DELETE /v3/users/:userID
+ * @description Insert users for current fridges with session.
+ * @param {string} session
+ */
+users.delete('/:userID', async (req, res) => {
+  // check correct params
+  if (Object.keys(req.query).length == 1 && !('session' in req.query)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let userID, session;
+  try {
+    userID = parseInt(req.params.userID);
+    session = req.body.session;
+  } catch (error) {
+    res.sendStatus(400).end();
+    throw error;
+  }
+  // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('DELETE FROM v3_users WHERE name=(?)', [req.params.name])
-      .then((results) => {
-        res.sendStatus(200).end()
+    // retrieve fridge_id
+    connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+          // @todo handle possible duplicate sessions
+          const fridgeID = rows[0].fridge_id;
+          // insert for endpoint
+          await connection.query('DELETE FROM v3_users WHERE fridge_id=? AND user_id=?', [fridgeID, userID])
+            .then((rows) => {
+              if (rows.length > 0) {
+                res.sendStatus(200).end();
+              } else {
+                res.sendStatus(406).end();
+              }
+            });
+        } else {
+          res.sendStatus(401).end();
+        }
       });
   } catch (error) {
-    res.sendStatus(404).end();
+    res.sendStatus(500).end();
     throw error;
   } finally {
     if (connection) {
-      connection.release();
+      connection.release(); // release to pool
     }
   }
 });
