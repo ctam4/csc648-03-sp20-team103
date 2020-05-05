@@ -3,6 +3,7 @@ import Dialog, { DialogTitle, DialogContent, DialogFooter, DialogButton } from '
 import List, { ListItem, ListItemText } from '@material/react-list';
 import MaterialCheckbox from './MaterialCheckbox';
 import '@material/react-dialog/dist/dialog.css';
+import '@material/react-list/dist/list.css';
 import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings({
