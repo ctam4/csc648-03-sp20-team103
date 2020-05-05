@@ -199,3 +199,126 @@ test('/logout | POST | 200', async (t) => {
         });
     });
 });
+
+test('/users | GET | 406', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/users?session=' + t.context.session , {
+    method: 'get',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 406);
+    })
+});
+
+test('/users | POST | 200', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/users', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      "name": "john",
+      "role": "test1",
+      "intolerances": ["dairy"],
+      session: t.context.session,
+    }),
+  })
+    .then((res) => {
+      t.is(res.status, 200);
+    })
+});
+
+test('/users | GET | 200', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/users?session=' + t.context.session , {
+    method: 'get',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 200);
+      return res.json();
+    })
+    .then((data) => {
+      t.is(data.length, 1);
+      t.is(Object.keys(data[0]).length, 6);
+    });
+});
+
+test('/users | DELETE | 200', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/users?session=' + t.context.session , {
+    method: 'get',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 200);
+      return res.json();
+    })
+    .then((data) => {
+      t.is(data.length, 1);
+      t.is(Object.keys(data[0]).length, 6);
+      return data[0].user_id;
+    })
+    .then(async (user_id) => {
+      await fetch(t.context.baseUrl + '/v3/users/' + user_id , {
+        method: 'delete',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session: t.context.session,
+        }),
+      }).then((res) => {
+        // This needs to be changed to 200 once the Delete API is fixed.
+        t.is(res.status, 406);
+      })
+    });
+});
+
+test('/users | POST | 400', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/users', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      "name": "john",
+      "role": "test1",
+      "intolerances": ["milk"],
+      session: t.context.session,
+    }),
+  })
+    .then((res) => {
+      t.is(res.status, 400);
+    })
+});
+
+test('/users | POST | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/users', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      "name": "john",
+      "role": "test1",
+      "intolerances": ["dairy"],
+      "session": "123456789012345678901234567890123456",
+    }),
+  })
+    .then((res) => {
+      t.is(res.status, 401);
+    })
+});
+
