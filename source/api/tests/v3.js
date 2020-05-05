@@ -95,6 +95,23 @@ test('/login | POST | 400', async (t) => {
     });
 });
 
+test('/login | POST | 406', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/login', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      serialNumber: '1234',
+      pin: '    ',
+    }),
+  })
+    .then((res) => {
+      t.is(res.status, 406);
+    });
+});
+
 test('/login | POST | 200', async (t) => {
   await fetch(t.context.baseUrl + '/v3/login', {
     method: 'post',
@@ -118,5 +135,56 @@ test('/login | POST | 200', async (t) => {
       t.true('expires_ts' in data);
       t.is(typeof data.session, 'string');
       t.is(data.session.length, 36);
+    });
+});
+
+test('/logout | POST | 400', async (t) => {
+  // @todo generate a session using /register and /login
+  await fetch(t.context.baseUrl + '/v3/logout', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      session: 'abcd',
+    }),
+  })
+    .then((res) => {
+      t.is(res.status, 400);
+    });
+});
+
+test('/logout | POST | 406', async (t) => {
+  // @todo generate a session using /register and /login
+  await fetch(t.context.baseUrl + '/v3/logout', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      session: '123456789012345678901234567890123456',
+    }),
+  })
+    .then((res) => {
+      t.is(res.status, 406);
+    });
+});
+
+test('/logout | POST | 200', async (t) => {
+  // @todo generate a session using /register and /login
+  await fetch(t.context.baseUrl + '/v3/logout', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      session: t.context.session,
+    }),
+  })
+    .then((res) => {
+      t.is(res.status, 200);
     });
 });
