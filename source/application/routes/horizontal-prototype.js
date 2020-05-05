@@ -160,4 +160,14 @@ router.get('/meal-plans/view', async (req, res) => {
   res.send(render);
 });
 
+router.get('/users', async (req, res) => {
+  // TODO: check for id exits using fetch, return 404 if not found
+  const raw = fs.readFileSync('./build/horizontal-prototype_users.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: 'Users - Horizontal Prototype',
+  });
+  res.send(render);
+});
+
 module.exports = router;

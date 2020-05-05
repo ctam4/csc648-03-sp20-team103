@@ -21,6 +21,7 @@ function ConsumptionCard(props) {
       <CardActions>
         <CardActionButtons>
           <MaterialButton onClick={props.onClickAction1}>{props.actionText1}</MaterialButton>
+          <MaterialButton onClick={props.onClickAction2}>{props.actionText2}</MaterialButton>
         </CardActionButtons>
       </CardActions>
     </MaterialCard>
