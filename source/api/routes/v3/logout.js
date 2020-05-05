@@ -11,20 +11,19 @@ let connection;
  */
 logout.post('/', async (req, res) => {
   // check correct params
-  if (Object.keys(req.body).length == 1 && !('session' in req.body)) {
+  if (Object.keys(req.body).length !== 1 || !('session' in req.body)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
   let session;
-  try {
-    session = req.body.session;
-  } catch (error) {
+  if (typeof req.body.session !== 'string') {
     res.sendStatus(400).end();
-    throw error;
+    throw new TypeError();
   }
+  session = req.body.session;
   // check params data range
-  if (!session) {
+  if (session.length !== 36) {
     res.sendStatus(400).end();
     return;
   }
@@ -34,8 +33,14 @@ logout.post('/', async (req, res) => {
     await connection.query('SELECT * FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await connection.query('DELETE FROM v3_sessions WHERE session=?', [session]);
-          res.sendStatus(200).end();
+          await connection.query('DELETE FROM v3_sessions WHERE session=?', [session])
+            .then((results) => {
+              if (results.affectedRows > 0) {
+                res.sendStatus(200).end();
+              } else {
+                res.sendStatus(406).end();
+              }
+            });
         } else {
           res.sendStatus(406).end();
         }
