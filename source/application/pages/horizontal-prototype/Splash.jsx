@@ -2,7 +2,12 @@ import React, { useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { splashReducer, initialState } from '../../reducers/horizontal-prototype/Splash';
-import { setSerialNumber, setPIN } from '../../actions/horizontal-prototype/Splash';
+import {
+  setSerialNumber,
+  setPIN,
+  setDialogOpen,
+  setUsers,
+} from '../../actions/horizontal-prototype/Splash';
 
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
@@ -11,6 +16,7 @@ import LocalizedStrings from 'react-localization';
 import { Headline1 } from '../../components/horizontal-prototype/MaterialTypography';
 import MaterialOutlinedTextField from '../../components/horizontal-prototype/MaterialOutlinedTextField';
 import MaterialButton from '../../components/horizontal-prototype/MaterialButton';
+import MaterialSimpleDialog from '../../components/horizontal-prototype/MaterialSimpleDialog';
 
 let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
 if (process.env.API_PORT) {
@@ -24,6 +30,8 @@ let strings = new LocalizedStrings({
     serial_number_helper: 'This is located in the front of interior or exterior of your fridge.',
     pin: 'PIN',
     pin_helper: 'This is the PIN number to log-in to your fridge.',
+    select_user: 'Select an user:',
+    new_user: 'I\'m new!',
   },
 });
 
@@ -35,9 +43,13 @@ export default () => {
     dummySetup();
   }, []);
 
+  const toggleDialog = () => {
+    dispatch(setDialogOpen(!state.dialogOpen));
+  };
+
   const dummySetup = async () => {
     // for dummy fridge
-    return await fetch(apiUrl + '/v2/fridges', {
+    await fetch(apiUrl + '/v2/fridges', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -65,7 +77,7 @@ export default () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        serialNumber: state.serial_number,
+        serialNumber: state.serialNumber,
         pin: state.pin,
       }),
     })
@@ -80,14 +92,23 @@ export default () => {
         //httpOnly: true,
         expires: new Date(data.expires_ts),
       });
-      console.log('Login successful.');
-      window.location.href = './inventory';
-      //window.location.href = './auth';
+      dispatch(setUsers([{ text: 'hello@world.local' }, { text: strings.new_user }]));
+      toggleDialog();
     })
     .catch(console.log);
-  }
+  };
+
+  const handleUserID = (value) => {
+    if (value < state.users.length - 1) {
+      // setCookie('userID', );
+      window.location.href = './inventory';
+    } else {
+      window.location.href = './users'
+    }
+  };
 
   return (
+    <>
     <Grid>
       <Row>
         <Cell columns={12}>
@@ -99,7 +120,7 @@ export default () => {
           <MaterialOutlinedTextField
             label={strings.serial_number}
             helperText={strings.serial_number_helper}
-            value={state.serial_number}
+            value={state.serialNumber}
             onChange={(e) => dispatch(setSerialNumber(e.target.value))}
             onTrailingIconSelect={() => dispatch(setSerialNumber(''))}
           ></MaterialOutlinedTextField>
@@ -120,5 +141,13 @@ export default () => {
         </Cell>
       </Row>
     </Grid>
+    <MaterialSimpleDialog
+      open={state.dialogOpen}
+      title={strings.select_user}
+      choices={state.users}
+      handleSelect={handleUserID}
+      onClose={toggleDialog}
+    ></MaterialSimpleDialog>
+    </>
   );
 };
