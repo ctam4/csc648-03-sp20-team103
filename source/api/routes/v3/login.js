@@ -14,21 +14,20 @@ let connection;
  */
 login.post('/', async (req, res) => {
   // check correct params
-  if (Object.keys(req.body).length == 2 && !('serialNumber' in req.body && 'pin' in req.body)) {
+  if (Object.keys(req.body).length !== 2 || !('serialNumber' in req.body && 'pin' in req.body)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
   let serialNumber, pin;
-  try {
-    serialNumber = req.body.serialNumber;
-    pin = req.body.pin;
-  } catch (error) {
+  if (typeof req.body.serialNumber !== 'string' || typeof req.body.pin !== 'string') {
     res.sendStatus(400).end();
-    throw error;
+    throw new TypeError();
   }
+  serialNumber = req.body.serialNumber;
+  pin = req.body.pin;
   // check params data range
-  if (!serialNumber || serialNumber.length > 16 || !pin || pin.length > 16) {
+  if (serialNumber.length === 0 || serialNumber.length > 16 || pin.length === 0 || pin.length > 16) {
     res.sendStatus(400).end();
     return;
   }
