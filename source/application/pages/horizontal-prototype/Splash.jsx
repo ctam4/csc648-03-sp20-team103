@@ -4,7 +4,6 @@ import { useCookies } from 'react-cookie';
 import { splashReducer, initialState } from '../../reducers/horizontal-prototype/Splash';
 import { setSerialNumber, setPIN } from '../../actions/horizontal-prototype/Splash';
 
-import { StyleSheet, View, Text } from 'react-native';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
@@ -25,12 +24,6 @@ let strings = new LocalizedStrings({
     serial_number_helper: 'This is located in the front of interior or exterior of your fridge.',
     pin: 'PIN',
     pin_helper: 'This is the PIN number to log-in to your fridge.',
-  },
-});
-const styles = StyleSheet.create({
-  container: {
-    width: 480,
-    margin: 'auto',
   },
 });
 
