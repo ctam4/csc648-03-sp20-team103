@@ -73,26 +73,27 @@ users.get('/', async (req, res) => {
  */
 users.post('/', async (req, res) => {
   // check correct params
-  if (Object.keys(req.body).length == 4 && !('session' in req.body && 'name' in req.body && 'role' in req.body && 'intolerances' in req.body)) {
+  if (Object.keys(req.body).length !== 4 || !('session' in req.body && 'name' in req.body && 'role' in req.body && 'intolerances' in req.body)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
   let session, name, role, intolerances;
-  try {
-    session = req.body.session;
-    name = req.body.name;
-    role = req.body.role;
-    if (!req.body.intolerances.isArray()) {
-      throw new TypeError();
-    }
-    intolerances = req.body.intolerances;
-  } catch (error) {
+  if (typeof session !== 'string' || typeof name !== 'string' || typeof role !== 'string' || !Array.isArray(req.body.intolerances)) {
     res.sendStatus(400).end();
-    throw error;
+    throw new TypeError();
   }
+  session = req.body.session;
+  name = req.body.name;
+  role = req.body.role;
+  intolerances = req.body.intolerances;
   // check params data range
-  if (!session || !name || name.length > 64 || !role || role.length > 64 || !['dairy', 'egg', 'gluten', 'grain', 'peanut', 'seafood', 'sesame', 'shellfish', 'soy', 'sulfite', 'tree nut', 'wheat'].includes(intolerances)) {
+  const knownIntolerances = ['dairy', 'egg', 'gluten', 'grain', 'peanut', 'seafood', 'sesame', 'shellfish', 'soy', 'sulfite', 'tree nut', 'wheat'];
+  if (!intolerances.every((intolerance) => knownIntolerances.includes(intolerance))) {
+    res.sendStatus(400).end();
+    return;
+  }
+  if (session.length !== 36 || name.length < 3 || name.length > 64 || role.length === 0 || role.length > 64) {
     res.sendStatus(400).end();
     return;
   }
@@ -104,13 +105,13 @@ users.post('/', async (req, res) => {
       .then(async (rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
+          // @todo handle duplicate names
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
           await connection.query('INSERT INTO v3_users (fridge_id, name, role, intolerances) VALUES (?, ?, ?, ?)', [fridgeID, name, role, intolerances.join(',')])
-            .then((rows) => {
-              if (rows.length > 0) {
-                // res.send(JSON.stringify(rows)).end();
-                res.json(rows).end();
+            .then((results) => {
+              if (results.affectedRows > 0) {
+                res.sendStatus(200).end();
               } else {
                 res.sendStatus(406).end();
               }
