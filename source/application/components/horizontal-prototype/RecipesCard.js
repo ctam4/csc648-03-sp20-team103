@@ -3,7 +3,8 @@ import { View } from 'react-native';
 
 import { Headline6, Subtitle2 } from './MaterialTypography';
 import MaterialIcon from '@material/react-material-icon';
-import MaterialCard, { CardPrimaryContent, CardMedia, CardActions, CardActionIcons } from './MaterialCard';
+import MaterialCard, { CardPrimaryContent, CardMedia, CardActions, CardActionButtons, CardActionIcons } from './MaterialCard';
+import MaterialButton from './MaterialButton';
 import '@material/react-material-icon/dist/material-icon.css';
 
 function RecipesCard(props) {
@@ -17,6 +18,13 @@ function RecipesCard(props) {
         </View>
       </CardPrimaryContent>
       <CardActions>
+        {(props.actionText1 || props.actionText2) && (
+        <CardActionButtons>
+          <MaterialButton onClick={props.onClickAction1}>{props.actionText1}</MaterialButton>
+          <MaterialButton onClick={props.onClickAction2}>{props.actionText2}</MaterialButton>
+        </CardActionButtons>
+        )}
+        {!(props.actionText1 || props.actionText2) && (
         <CardActionIcons>
           <MaterialIcon
             aria-label='favorite'
@@ -37,6 +45,7 @@ function RecipesCard(props) {
             onClickAction1={props.onClickAction3}
           />
         </CardActionIcons>
+        )}
       </CardActions>
     </MaterialCard>
   );
