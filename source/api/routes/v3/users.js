@@ -12,20 +12,19 @@ let connection;
  */
 users.get('/', async (req, res) => {
   // check correct params
-  if (Object.keys(req.body).length == 1 && !('session' in req.query)) {
+  if (Object.keys(req.query).length !== 1 || !('session' in req.query)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
   let session;
-  try {
-    session = req.query.session;
-  } catch (error) {
+  if (typeof req.query.session !== 'string') {
     res.sendStatus(400).end();
-    throw error;
+    throw new TypeError();
   }
+  session = req.query.session;
   // check params data range
-  if (!session) {
+  if (session.length !== 36) {
     res.sendStatus(400).end();
     return;
   }
@@ -40,10 +39,10 @@ users.get('/', async (req, res) => {
           const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
           await connection.query('SELECT * FROM v3_users WHERE fridge_id=?', [fridgeID])
-            .then((rows) => {
-              if (rows.length > 0) {
+            .then((rows2) => {
+              if (rows2.length > 0) {
                 // res.send(JSON.stringify(rows)).end();
-                res.json(rows).end();
+                res.json(rows2).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -79,7 +78,7 @@ users.post('/', async (req, res) => {
   }
   // check params data type
   let session, name, role, intolerances;
-  if (typeof session !== 'string' || typeof name !== 'string' || typeof role !== 'string' || !Array.isArray(req.body.intolerances)) {
+  if (typeof req.body.session !== 'string' || typeof req.body.name !== 'string' || typeof req.body.role !== 'string' || !Array.isArray(req.body.intolerances)) {
     res.sendStatus(400).end();
     throw new TypeError();
   }
@@ -89,11 +88,7 @@ users.post('/', async (req, res) => {
   intolerances = req.body.intolerances;
   // check params data range
   const knownIntolerances = ['dairy', 'egg', 'gluten', 'grain', 'peanut', 'seafood', 'sesame', 'shellfish', 'soy', 'sulfite', 'tree nut', 'wheat'];
-  if (!intolerances.every((intolerance) => knownIntolerances.includes(intolerance))) {
-    res.sendStatus(400).end();
-    return;
-  }
-  if (session.length !== 36 || name.length < 3 || name.length > 64 || role.length === 0 || role.length > 64) {
+  if (session.length !== 36 || name.length < 3 || name.length > 64 || role.length === 0 || role.length > 64 || !intolerances.every((intolerance) => knownIntolerances.includes(intolerance))) {
     res.sendStatus(400).end();
     return;
   }
