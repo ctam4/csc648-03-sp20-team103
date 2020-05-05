@@ -236,6 +236,46 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
+      
+
+      db.createTable.bind(db, 'v3_recipe_favorites', {
+        columns: {
+          user_id: {
+            type: 'int',
+            unsigned: true,
+            foreignKey: {
+              name: 'v3_user_id_recipe_favorites',
+              table: 'v3_users',
+              rules: {
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
+              },
+              mapping: 'user_id',
+            },
+          },
+          recipe_id: {
+            type: 'int',
+            unsigned: true,
+            foreignKey: {
+              name: 'v3_recipe_id_recipe_favorites',
+              table: 'v3_recipes',
+              rules: {
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
+              },
+              mapping: 'recipe_id',
+            },
+          },
+          favorited_ts: {
+            notNull: true,
+            defaultValue: new String('CURRENT_TIMESTAMP'),
+            type: 'timestamp',
+            notNull: true,
+          },
+        },
+        ifNotExists: true,
+      }),
+
       db.createTable.bind(db, 'v3_recipe_ingredients', {
         columns: {
           recipe_id: {
@@ -306,6 +346,10 @@ exports.up = (db, callback) => {
             type: 'timestamp',
             default: null,
           },
+          total_quantity: {
+            type: 'real',
+            notNull: true,
+          },
           quantity: {
             type: 'real',
             notNull: true,
@@ -328,6 +372,39 @@ exports.up = (db, callback) => {
         },
         ifNotExists: true,
       }),
+
+      db.createTable.bind(db, 'v3_inventory_log', {
+        columns: {
+          inventory_log_id: {
+            type: 'int',
+            unsigned: true,
+            primaryKey: true,
+            autoIncrement: true,
+          },
+          inventory_id: {
+            type: 'int',
+            unsigned: true,
+            foreignKey: {
+              name: 'v3_inventory_id_inventory_log',
+              table: 'v3_inventory',
+              rules: {
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
+              },
+              mapping: 'inventory_id',
+            },
+          },
+          action: {
+            type: 'string',
+            notNull: true,
+          },
+          action_ts: {
+            type: 'timestamp',
+            notNull: true,
+          },
+        },
+        ifNotExists: true,
+      }),
     ],
     callback
   );
@@ -344,6 +421,9 @@ exports.down = (db, callback) => {
       db.dropTable('v3_recipes', callback),
       db.dropTable('v3_recipe_ingredients', callback),
       db.dropTable('v3_inventory', callback),
+      db.dropTable('v3_inventory_log', callback),
+      db.dropTable('v3_recipe_favorites', callback),
+
     ],
     callback
   );
