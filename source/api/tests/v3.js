@@ -139,7 +139,6 @@ test('/login | POST | 200', async (t) => {
 });
 
 test('/logout | POST | 400', async (t) => {
-  // @todo generate a session using /register and /login
   await fetch(t.context.baseUrl + '/v3/logout', {
     method: 'post',
     headers: {
@@ -156,7 +155,6 @@ test('/logout | POST | 400', async (t) => {
 });
 
 test('/logout | POST | 406', async (t) => {
-  // @todo generate a session using /register and /login
   await fetch(t.context.baseUrl + '/v3/logout', {
     method: 'post',
     headers: {
@@ -173,18 +171,31 @@ test('/logout | POST | 406', async (t) => {
 });
 
 test('/logout | POST | 200', async (t) => {
-  // @todo generate a session using /register and /login
-  await fetch(t.context.baseUrl + '/v3/logout', {
+  await fetch(t.context.baseUrl + '/v3/login', {
     method: 'post',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      session: t.context.session,
+      serialNumber: t.context.serialNumber,
+      pin: t.context.pin,
     }),
   })
-    .then((res) => {
-      t.is(res.status, 200);
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/logout', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session: data.session,
+        }),
+      })
+        .then((res2) => {
+          t.is(res2.status, 200);
+        });
     });
 });
