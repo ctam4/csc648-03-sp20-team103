@@ -106,8 +106,7 @@ users.post('/', async (req, res) => {
           await connection.query('INSERT INTO v3_users (fridge_id, name, role, intolerances) VALUES (?, ?, ?, ?)', [fridgeID, name, role, intolerances.join(',')])
             .then(async (results) => {
               if (results.affectedRows > 0) {
-                const userID = (await connection.query('SELECT LAST_INSERT_ID() AS user_id'))[0].user_id;
-                res.json({ userID: userID }).end();
+                res.json({ userID: results.insertId }).end();
               } else {
                 res.sendStatus(406).end();
               }
