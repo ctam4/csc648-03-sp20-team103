@@ -17,7 +17,7 @@ let connection;
 inventory.get('/list/:state', async (req, res) => {
   // check correct ':state'
   const state = req.params.state;
-  if (!['all', 'consumed', 'stored', 'discarded', 'expired'].includes(state)) {
+  if (!['all', 'stored', 'expired'].includes(state)) {
     res.sendStatus(400).end();
     return;
   }
@@ -32,6 +32,9 @@ inventory.get('/list/:state', async (req, res) => {
   // check params data type
   let session, page, limit, sort, descending;
   try {
+    if (typeof req.query.session !== 'string' || (req.query.sort && typeof req.query.sort !== 'string')) {
+      throw new TypeError();
+    }
     session = req.query.session;
     page = (req.query.page && parseInt(req.query.page)) || 1;
     limit = (req.query.limit && parseInt(req.query.limit)) || 100;
@@ -42,7 +45,7 @@ inventory.get('/list/:state', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (!session || page <= 0 || limit <= 0 || (sort != null && !['expiration_date'].includes(sort))) {
+  if (session.length !== 36 || page <= 0 || limit <= 0 || (sort != null && !['expiration_date'].includes(sort))) {
     res.sendStatus(400).end();
     return;
   }
@@ -56,21 +59,19 @@ inventory.get('/list/:state', async (req, res) => {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
-          let sql = 'SELECT * FROM v3_inventory WHERE fridge_id=?';
+          let sql = 'SELECT inventory_id AS inventoryID, ingredient_id AS ingredientID, expiration_date AS expirationDate, total_quantity AS totalQuantity, unit, price FROM v3_inventory WHERE fridge_id=?';
           switch (state) {
             case 'stored':
-            case 'consumed':
-            case 'discarded':
-              sql += ' AND state=\'' + state + '\'';
+              sql += ' AND total_quantity > 0';
               break;
             case 'expired':
-              sql += ' AND expiration_date IS NOT NULL AND expiration_date < CURRENT_TIMESTAMP';
+              sql += ' AND total_quantity > 0 AND expiration_date IS NOT NULL AND expiration_date <= CURRENT_TIMESTAMP';
               break;
           }
           switch (sort) {
             case 'expiration_date':
               sql += ' ORDER BY ' + sort;
-              if (descending) {
+              if (!descending) {
                 sql += ' ASC';
               } else {
                 sql += ' DESC';
@@ -125,37 +126,40 @@ inventory.get('/', async (req, res) => {
  * POST /v3/inventory/add/manual
  * @description Insert inventory for current fridges with session.
  * @param {string} session
+ * @param {integer} userID
  * @param {integer} ingredientID
  * @param {timestamp} expirationDate
- * @param {float} quantity
+ * @param {float} totalQuantity
  * @param {string} unit
  * @param {integer} price
- * @param {string} state
  * @returns {interger} inventoryID
  */
 inventory.post('/add/manual', async (req, res) => {
   // check correct params
-  if (Object.keys(req.body).length == 7 && !('session' in req.body && 'ingredientID' in req.body && 'expirationDate' in req.body && 'quantity' in req.body && 'unit' in req.body && 'price' in req.body && 'state' in req.body)) {
+  if (Object.keys(req.body).length == 7 && !('session' in req.body && 'userID' in req.body && 'ingredientID' in req.body && 'expirationDate' in req.body && 'totalQuantity' in req.body && 'unit' in req.body && 'price' in req.body)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
-  let session, ingredientID, expirationDate, quantity, unit, price, state;
+  let session, userID, ingredientID, expirationDate, totalQuantity, unit, price;
   try {
+    if (typeof req.body.session !== 'string' || typeof req.body.unit !== 'string') {
+      throw new TypeError();
+    }
     session = req.body.session;
+    userID = parseInt(req.body.userID);
     ingredientID = parseInt(req.body.ingredientID);
     expirationDate = parseInt(req.body.expirationDate);
-    quantity = parseFloat(req.body.quantity);
+    totalQuantity = parseFloat(req.body.totalQuantity);
     unit = req.body.unit;
     price = parseInt(req.body.price);
-    state = req.body.state;
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
   // check params data range
   // @todo unit valid values
-  if (!session || ingredientID <= 0 || quantity <= 0.0 || !unit || unit.length > 8 || price <= 0 || !['consumed', 'stored', 'discarded'].includes(state)) {
+  if (session.length !== 36 || userID <= 0 || ingredientID <= 0 || totalQuantity <= 0.0 || unit.length === 0 || unit.length > 8 || price <= 0) {
     res.sendStatus(400).end();
     return;
   }
@@ -169,15 +173,181 @@ inventory.post('/add/manual', async (req, res) => {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          await connection.query('INSERT INTO v3_inventory (fridge_id, ingredient_id, expiration_date, quantity, unit, expiration_date, price, state) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [fridgeID, ingredientID, expirationDate, quantity, unit, price, state])
-            .then((rows) => {
-              if (rows.length > 0) {
-                // res.send(JSON.stringify(rows)).end();
-                res.json(rows).end();
+          await connection.query('INSERT INTO v3_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, expiration_date, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price])
+            .then(async (results) => {
+              if (results.affectedRows > 0) {
+                await connection.query('INSERT INTO v3_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'added\')', [results.insertId, totalQuantity, userID])
+                  .then((results2) => {
+                    if (results2.affectedRows > 0) {
+                      res.json({ inventoryID: results.insertId }).end();
+                    } else {
+                      res.sendStatus(400).end();
+                    }
+                  });
               } else {
-                res.sendStatus(406).end();
+                res.sendStatus(400).end();
               }
             });
+        } else {
+          res.sendStatus(401).end();
+        }
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release(); // release to pool
+    }
+  }
+});
+
+/**
+ * POST /v3/inventory/consume
+ * @description Insert inventory log of consume for current fridges with session.
+ * @param {string} session
+ * @param {integer} userID
+ * @param {integer} inventoryID
+ * @param {float} quantity
+ * @param {string} unit
+ */
+inventory.post('/consume', async (req, res) => {
+  // check correct params
+  if (Object.keys(req.body).length == 5 && !('session' in req.body && 'userID' in req.body && 'inventoryID' in req.body && 'quantity' in req.body && 'unit' in req.body)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let session, userID, inventoryID, quantity, unit;
+  try {
+    if (typeof req.body.session !== 'string' || typeof req.body.unit !== 'string') {
+      throw new TypeError();
+    }
+    session = req.body.session;
+    userID = parseInt(req.body.userID);
+    inventoryID = parseInt(req.body.inventoryID);
+    quantity = parseFloat(req.body.quantity);
+    unit = req.body.unit;
+  } catch (error) {
+    res.sendStatus(400).end();
+    throw error;
+  }
+  // check params data range
+  // @todo unit valid values
+  if (session.length !== 36 || userID <= 0 || inventoryID <= 0 || quantity <= 0.0 || unit.length === 0 || unit.length > 8) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // run query to mariadb
+  try {
+    connection = await pool.getConnection();
+    // retrieve fridge_id
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+          // @todo handle possible duplicate sessions
+          // @todo unit conversion
+          // insert for endpoint
+          const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v3_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0].total_quantity;
+          if (totalQuantity >= 0) {
+            await connection.query('INSERT INTO v3_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'consumed\')', [inventoryID, quantity, userID])
+              .then(async (results) => {
+                if (results.affectedRows > 0) {
+                  await connection.query('UPDATE v3_inventory SET total_quantity=? WHERE inventory_id=?', [totalQuantity, inventoryID])
+                    .then((results2) => {
+                      if (results2.affectedRows > 0) {
+                        res.sendStatus(200).end();
+                      } else {
+                        res.sendStatus(400).end();
+                      }
+                    });
+                } else {
+                  res.sendStatus(400).end();
+                }
+              });
+          } else {
+            res.sendStatus(400).end();
+          }
+        } else {
+          res.sendStatus(401).end();
+        }
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release(); // release to pool
+    }
+  }
+});
+
+/**
+ * POST /v3/inventory/discard
+ * @description Insert inventory log of discard for current fridges with session.
+ * @param {string} session
+ * @param {integer} userID
+ * @param {integer} inventoryID
+ * @param {float} quantity
+ * @param {string} unit
+ */
+inventory.post('/discard', async (req, res) => {
+  // check correct params
+  if (Object.keys(req.body).length == 5 && !('session' in req.body && 'userID' in req.body && 'inventoryID' in req.body && 'quantity' in req.body && 'unit' in req.body)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let session, userID, inventoryID, quantity, unit;
+  try {
+    if (typeof req.body.session !== 'string' || typeof req.body.unit !== 'string') {
+      throw new TypeError();
+    }
+    session = req.body.session;
+    userID = parseInt(req.body.userID);
+    inventoryID = parseInt(req.body.inventoryID);
+    quantity = parseFloat(req.body.quantity);
+    unit = req.body.unit;
+  } catch (error) {
+    res.sendStatus(400).end();
+    throw error;
+  }
+  // check params data range
+  // @todo unit valid values
+  if (session.length !== 36 || userID <= 0 || inventoryID <= 0 || quantity <= 0.0 || unit.length === 0 || unit.length > 8) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // run query to mariadb
+  try {
+    connection = await pool.getConnection();
+    // retrieve fridge_id
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+          // @todo handle possible duplicate sessions
+          // @todo unit conversion
+          // insert for endpoint
+          const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v3_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0];
+          if (totalQuantity >= 0) {
+            await connection.query('INSERT INTO v3_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'discarded\')', [inventoryID, quantity, userID])
+              .then(async (results) => {
+                if (results.affectedRows > 0) {
+                  await connection.query('UPDATE v3_inventory SET total_quantity=? WHERE inventory_id=?', [totalQuantity, inventoryID])
+                    .then((results2) => {
+                      if (results2.affectedRows > 0) {
+                        res.sendStatus(200).end();
+                      } else {
+                        res.sendStatus(400).end();
+                      }
+                    });
+                } else {
+                  res.sendStatus(400).end();
+                }
+              });
+          } else {
+            res.sendStatus(400).end();
+          }
         } else {
           res.sendStatus(401).end();
         }
