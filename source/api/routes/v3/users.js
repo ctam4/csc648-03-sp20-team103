@@ -38,7 +38,7 @@ users.get('/', async (req, res) => {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
-          await connection.query('SELECT * FROM v3_users WHERE fridge_id=?', [fridgeID])
+          await connection.query('SELECT user_id AS userID, name, role, intolerances, created_ts AS createdTS FROM v3_users WHERE fridge_id=?', [fridgeID])
             .then((rows2) => {
               if (rows2.length > 0) {
                 // res.send(JSON.stringify(rows)).end();
@@ -104,9 +104,10 @@ users.post('/', async (req, res) => {
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
           await connection.query('INSERT INTO v3_users (fridge_id, name, role, intolerances) VALUES (?, ?, ?, ?)', [fridgeID, name, role, intolerances.join(',')])
-            .then((results) => {
+            .then(async (results) => {
               if (results.affectedRows > 0) {
-                res.sendStatus(200).end();
+                const userID = (await connection.query('SELECT LAST_INSERT_ID() AS user_id'))[0].user_id;
+                res.json({ userID: userID }).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -132,21 +133,24 @@ users.post('/', async (req, res) => {
  */
 users.delete('/:userID', async (req, res) => {
   // check correct params
-  if (Object.keys(req.query).length == 1 && !('session' in req.query)) {
+  if (Object.keys(req.query).length !== 1 || !('session' in req.query)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
   let userID, session;
   try {
+    if (typeof req.query.session !== 'string') {
+      throw new TypeError();
+    }
     userID = parseInt(req.params.userID);
-    session = req.body.session;
+    session = req.query.session;
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
   // check params data range
-  if (userID <= 0 || !session) {
+  if (userID <= 0 || session.length !== 36) {
     res.sendStatus(400).end();
     return;
   }
