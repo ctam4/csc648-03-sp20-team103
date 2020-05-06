@@ -84,15 +84,39 @@ test('/users | GET | 401', async (t) => {
 });
 
 test('/users | GET | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users?session=' + t.context.session, {
-    method: 'get',
+  await fetch(t.context.baseUrl + '/v3/register', {
+    method: 'post',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
   })
-    .then((res) => {
-      t.is(res.status, 406);
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/login', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          serialNumber: data.serialNumber,
+          pin: data.pin,
+        }),
+      })
+        .then((res2) => res2.json())
+        .then(async (data2) => {
+          await fetch(t.context.baseUrl + '/v3/users?session=' + data2.session, {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((res3) => {
+              t.is(res3.status, 406);
+            });
+        });
     });
 });
 
@@ -186,8 +210,8 @@ test('/users | POST | 406', async (t) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: 'Jane Doe',
-      role: 'Child',
+      name: 'John Doe',
+      role: 'Parent',
       intolerances: ['dairy'],
       session: t.context.session,
     }),
@@ -201,8 +225,8 @@ test('/users | POST | 406', async (t) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: 'Jane Doe',
-          role: 'Child',
+          name: 'John Doe',
+          role: 'Parent',
           intolerances: ['dairy'],
           session: t.context.session,
         }),
@@ -239,15 +263,58 @@ test('/users | POST | 200', async (t) => {
 });
 
 test('/users | DELETE | 400', async (t) => {
-  // @todo
+  await fetch(t.context.baseUrl + '/v3/users', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: 'Jane Doe',
+      role: 'Student',
+      intolerances: ['seafood'],
+      session: t.context.session,
+    }),
+  })
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/users/' + data.userID + '?session=abcd', {
+        method: 'delete',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res2) => {
+          t.is(res2.status, 400);
+        });
+    });
 });
 
 test('/users | DELETE | 401', async (t) => {
-  // @todo
+  await fetch(t.context.baseUrl + '/v3/users/1?session=123456789012345678901234567890123456', {
+    method: 'delete',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 401);
+    });
 });
 
 test('/users | DELETE | 406', async (t) => {
-  // @todo
+  await fetch(t.context.baseUrl + '/v3/users/10000?session=' + t.context.session, {
+    method: 'delete',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 406);
+    });
 });
 
 test('/users | DELETE | 200', async (t) => {
@@ -258,7 +325,7 @@ test('/users | DELETE | 200', async (t) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: 'Siddhita',
+      name: 'Cassidy',
       role: 'Student',
       intolerances: ['seafood'],
       session: t.context.session,
