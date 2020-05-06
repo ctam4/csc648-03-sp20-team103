@@ -1,5 +1,6 @@
 const express = require('express');
 const ingredients = express.Router();
+const fetch = require('node-fetch');
 
 const pool = require('../../database.js');
 let connection;
@@ -15,8 +16,8 @@ let connection;
  */
 ingredients.get('/search', async (req, res) => {
   // check correct params
-  if ((Object.keys(req.query).length == 2 ||
-  (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
+  if ((Object.keys(req.query).length === 2 ||
+  (Object.keys(req.query).length === 4 && !('page' in req.query && 'limit' in req.query))) &&
   !('session' in req.query && 'query' in req.query)) {
     res.sendStatus(400).end();
     return;
@@ -24,6 +25,9 @@ ingredients.get('/search', async (req, res) => {
   // check params data type
   let session, query, page, limit;
   try {
+    if (typeof req.body.session !== 'string' || typeof req.body.query !== 'string') {
+      throw new TypeError();
+    }
     session = req.query.session;
     query = req.query.query;
     page = (req.query.page && parseInt(req.query.page)) || 1;
@@ -33,7 +37,7 @@ ingredients.get('/search', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (!session || page <= 0 || limit <= 0) {
+  if (session.length !== 36 || query.length === 0 || page <= 0 || limit <= 0) {
     res.sendStatus(400).end();
     return;
   }
@@ -45,7 +49,6 @@ ingredients.get('/search', async (req, res) => {
       .then(async (rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
-          const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
           await fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&apiKey=bd1784451bab4f47ac234225bd2549ee', {
             method: 'get',
@@ -95,18 +98,21 @@ ingredients.get('/search', async (req, res) => {
  * @param {string} session
  * @param {integer} ingredientID
  * @param {string} name
- * @param {string} image
+ * @param {string|null} image
  * @returns {integer} ingredientID
  */
 ingredients.post('/', async (req, res) => {
   // check correct params
-  if (Object.keys(req.body).length == 4 && !('session' in req.body && 'ingredientID' in req.body && 'name' in req.body && 'image' in req.body)) {
+  if (Object.keys(req.body).length !== 4 || !('session' in req.body && 'ingredientID' in req.body && 'name' in req.body && 'image' in req.body)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
   let session, ingredientID, name, image;
   try {
+    if (typeof req.body.session !== 'string' || typeof req.body.name !== 'string' || (typeof req.body.image !== 'string' && req.body.image !== null)) {
+      throw new TypeError();
+    }
     session = req.body.session;
     ingredientID = parseInt(ingredientID);
     name = req.body.name;
@@ -117,7 +123,7 @@ ingredients.post('/', async (req, res) => {
   }
   // check params data range
   // @todo validate image is url
-  if (!session || ingredientID <= 0 || !name || name.length > 128) {
+  if (session.length !== 36 || ingredientID <= 0 || name.length === 0 || name.length > 128) {
     res.sendStatus(400).end();
     return;
   }
@@ -129,11 +135,10 @@ ingredients.post('/', async (req, res) => {
       .then(async (rows) => {
         if (rows.length > 0) {
           // insert for endpoint
-          await connection.query('INSERT INTO v3_ingredients (ingredients_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image])
-            .then((rows) => {
-              if (rows.length > 0) {
-                // res.send(JSON.stringify(rows)).end();
-                res.json(rows).end();
+          await connection.query('INSERT INTO v3_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image])
+            .then(async (results) => {
+              if (results.affectedRows > 0) {
+                res.json({ ingredientID: ingredientID }).end();
               } else {
                 res.sendStatus(406).end();
               }
