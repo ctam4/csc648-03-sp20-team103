@@ -163,9 +163,9 @@ users.delete('/:userID', async (req, res) => {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          await connection.query('DELETE FROM v3_users WHERE fridge_id=? AND user_id=?', [fridgeID, userID])
-            .then((rows) => {
-              if (rows.length > 0) {
+          await connection.query('DELETE FROM v3_users WHERE user_id=? AND fridge_id=?', [userID, fridgeID])
+            .then((results) => {
+              if (results.affectedRows > 0) {
                 res.sendStatus(200).end();
               } else {
                 res.sendStatus(406).end();
