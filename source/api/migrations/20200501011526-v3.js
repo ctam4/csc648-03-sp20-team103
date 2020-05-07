@@ -35,10 +35,10 @@ exports.up = (db, callback) => {
             type: 'string',
             notNull: true,
           },
-          //to do: default current timestamp
           registered_ts: {
             type: 'timestamp',
             notNull: true,
+            defaultValue: new String('CURRENT_TIMESTAMP'),
           },
         },
         ifNotExists: true,
@@ -65,10 +65,10 @@ exports.up = (db, callback) => {
               mapping: 'fridge_id',
             },
           },
-          //to do: default current timestamp
           logged_in_ts: {
             type: 'timestamp',
             notNull: true,
+            defaultValue: new String('CURRENT_TIMESTAMP'),
           },
           expires_ts: {
             type: 'timestamp',
@@ -115,10 +115,10 @@ exports.up = (db, callback) => {
             notNull: true,
             default: ""
           },
-          //to do: default current timestamp
           created_ts: {
             type: 'timestamp',
             notNull: true,
+            defaultValue: new String('CURRENT_TIMESTAMP'),
           },
         },
         ifNotExists: true,
@@ -236,8 +236,6 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
-      
-
       db.createTable.bind(db, 'v3_recipe_favorites', {
         columns: {
           user_id: {
@@ -267,10 +265,9 @@ exports.up = (db, callback) => {
             },
           },
           favorited_ts: {
-            notNull: true,
-            defaultValue: new String('CURRENT_TIMESTAMP'),
             type: 'timestamp',
             notNull: true,
+            defaultValue: new String('CURRENT_TIMESTAMP'),
           },
         },
         ifNotExists: true,
@@ -350,10 +347,6 @@ exports.up = (db, callback) => {
             type: 'real',
             notNull: true,
           },
-          quantity: {
-            type: 'real',
-            notNull: true,
-          },
           unit: {
             type: 'string',
             length: 16,
@@ -394,6 +387,23 @@ exports.up = (db, callback) => {
               mapping: 'inventory_id',
             },
           },
+          quantity: {
+            type: 'real',
+            notNull: true,
+          },
+          user_id: {
+            type: 'int',
+            unsigned: true,
+            foreignKey: {
+              name: 'v3_user_id_inventory_log',
+              table: 'v3_users',
+              rules: {
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
+              },
+              mapping: 'user_id',
+            },
+          },
           action: {
             type: 'string',
             notNull: true,
@@ -401,6 +411,7 @@ exports.up = (db, callback) => {
           action_ts: {
             type: 'timestamp',
             notNull: true,
+            defaultValue: new String('CURRENT_TIMESTAMP'),
           },
         },
         ifNotExists: true,
