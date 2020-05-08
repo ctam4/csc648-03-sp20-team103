@@ -58,8 +58,10 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-react-hooks": "^4.0.0",
+    "node-fetch": "^2.6.0",
     "nodemon": "^2.0.3",
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "wait-port": "^0.2.7"
   },
   "alias": {
     "react-native": "react-native-web"
