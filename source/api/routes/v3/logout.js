@@ -30,7 +30,7 @@ logout.post('/', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT * FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
           await connection.query('DELETE FROM v3_sessions WHERE session=?', [session])
