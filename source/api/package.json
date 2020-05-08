@@ -22,7 +22,8 @@
     "mariadb": "^2.3.1",
     "node-fetch": "^2.6.0",
     "uuid": "^8.0.0",
-    "wait-port": "^0.2.7"
+    "wait-port": "^0.2.7",
+    "async": "^3.2.0"
   },
   "devDependencies": {
     "eslint": "^6.8.0",
