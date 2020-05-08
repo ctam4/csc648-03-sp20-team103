@@ -78,7 +78,7 @@ inventory.get('/list/:state', async (req, res) => {
               }
               break;
           }
-          await connection.query(sql + ' LIMIT ?, ?', [fridgeID, limit, (page - 1) * limit])
+          await connection.query(sql + ' LIMIT ? OFFSET ?', [fridgeID, limit, (page - 1) * limit])
             .then((rows) => {
               if (rows.length > 0) {
                 // res.send(JSON.stringify(rows)).end();
@@ -173,10 +173,10 @@ inventory.post('/add/manual', async (req, res) => {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          await connection.query('INSERT INTO v3_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, expiration_date, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price])
+          await connection.query('INSERT INTO v3_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, price) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price])
             .then(async (results) => {
               if (results.affectedRows > 0) {
-                await connection.query('INSERT INTO v3_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'added\')', [results.insertId, totalQuantity, userID])
+                await connection.query('INSERT INTO v3_inventory_log (inventory_id, quantity, user_id, action, action_ts) VALUES (?, ?, ?, \'added\', FROM_UNIXTIME(?))', [results.insertId, totalQuantity, userID, expirationDate])
                   .then((results2) => {
                     if (results2.affectedRows > 0) {
                       res.json({ inventoryID: results.insertId }).end();
@@ -338,11 +338,11 @@ inventory.post('/discard', async (req, res) => {
                       if (results2.affectedRows > 0) {
                         res.sendStatus(200).end();
                       } else {
-                        res.sendStatus(400).end();
+                        res.sendStatus(406).end();
                       }
                     });
                 } else {
-                  res.sendStatus(400).end();
+                  res.sendStatus(406).end();
                 }
               });
           } else {
