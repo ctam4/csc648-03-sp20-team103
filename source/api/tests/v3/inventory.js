@@ -50,9 +50,8 @@ test.before(async (t) => {
             }),
           })
             .then((res2) => res2.json())
-            .then((data2) => {
+            .then(async (data2) => {
               t.context.session = data2.session;
-            }).then(async () => {
               await fetch(t.context.baseUrl + '/v3/users', {
                 method: 'post',
                 headers: {
@@ -60,22 +59,18 @@ test.before(async (t) => {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                  name: 'Siddhita1',
+                  name: 'Sara',
                   role: 'Student',
-                  intolerances: ['seafood'],
+                  intolerances: [],
                   session: t.context.session,
                 }),
               })
-                .then((res) => {
-                  t.is(res.status, 200);
-                  return res.json();
+                .then((res3) => {
+                  t.is(res3.status, 200);
+                  return res3.json();
                 })
-                .then((data) => {
-                  t.context.userID = data.userID;
-                  t.is(Object.keys(data).length, 1);
-                  t.true('userID' in data);
-                  t.is(typeof data.userID, 'number');
-                }).then(async () => {
+                .then(async (data3) => {
+                  t.context.userID = data3.userID;
                   await fetch(t.context.baseUrl + '/v3/ingredients', {
                     method: 'post',
                     headers: {
@@ -84,16 +79,191 @@ test.before(async (t) => {
                     },
                     body: JSON.stringify({
                       ingredientID: Math.floor(Math.random() * 10000000),
-                      name : Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+                      name: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
                       image: 'image1',
                       session: t.context.session,
                     }),
                   })
-                    .then((res3) => res3.json())
-                    .then((data3) => {
-                      t.context.ingredientID = data3.ingredientID;
+                    .then((res4) => res4.json())
+                    .then((data4) => {
+                      t.context.ingredientID = data4.ingredientID;
                     });
                 });
+            });
+        });
+    });
+});
+
+test('/inventory/list/all | GET | 400', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=123456789012345678&page=1&limit=10', {
+    method: 'get',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 400);
+    });
+});
+
+test('/inventory/list/all | GET | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=123456789012345678901234567890123456&page=1&limit=10', {
+    method: 'get',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 401);
+    });
+});
+
+test('/inventory/list/all | GET | 406', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/register', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/login', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          serialNumber: data.serialNumber,
+          pin: data.pin,
+        }),
+      })
+        .then((res2) => res2.json())
+        .then(async (data2) => {
+          await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=' + data2.session + '&page=1&limit=10', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            }
+          })
+            .then((res3) => {
+              t.is(res3.status, 406);
+            });
+        });
+    });
+});
+
+test('/inventory/list/all | GET | 200', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userID: t.context.userID,
+      ingredientID: t.context.ingredientID,
+      totalQuantity: 10,
+      unit: 'stedt',
+      expirationDate: 23455,
+      price: 12,
+      session: t.context.session,
+    }),
+  })
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=' + t.context.session + '&page=1&limit=10', {
+        method: 'get',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res2) => {
+          t.is(res2.status, 200);
+          return res2.json();
+        })
+        .then((data2) => {
+          t.true(data2.length >= 1);
+          t.is(Object.keys(data2[0]).length, 6);
+          t.true('inventoryID' in data2[0]);
+          t.true('ingredientID' in data2[0]);
+          t.true('expirationDate' in data2[0]);
+          t.true('totalQuantity' in data2[0]);
+          t.true('unit' in data2[0]);
+          t.true('price' in data2[0]);
+          t.is(typeof data2[0].inventoryID, 'number');
+          t.is(typeof data2[0].ingredientID, 'number');
+          t.is(typeof data2[0].expirationDate, 'string');
+          t.is(typeof data2[0].totalQuantity, 'number');
+          t.is(typeof data2[0].unit, 'string');
+          t.is(typeof data2[0].price, 'number');
+        });
+    });
+});
+
+test('/inventory/list/stored | GET | 400', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=123456789012345678&page=1&limit=10', {
+    method: 'get',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 400);
+    });
+});
+
+test('/inventory/list/stored | GET | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=123456789012345678901234567890123456&page=1&limit=10', {
+    method: 'get',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 401);
+    });
+});
+
+test('/inventory/list/stored | GET | 406', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/register', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/login', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          serialNumber: data.serialNumber,
+          pin: data.pin,
+        }),
+      })
+        .then((res2) => res2.json())
+        .then(async (data2) => {
+          await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=' + data2.session + '&page=1&limit=10', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            }
+          })
+            .then((res3) => {
+              t.is(res3.status, 406);
             });
         });
     });
@@ -109,125 +279,107 @@ test('/inventory/list/stored | GET | 200', async (t) => {
     body: JSON.stringify({
       userID: t.context.userID,
       ingredientID: t.context.ingredientID,
-      totalQuantity: "10",
-      unit: "stedt",
-      expirationDate: 23455,
-      price:"12",
+      totalQuantity: 10,
+      unit: 'stedt',
+      expirationDate: Math.floor(new Date('2025-01-01').getTime() / 1000),
+      price: '12',
       session: t.context.session,
     }),
   })
-    .then((res) => {
-      t.is(res.status, 200);
-      return res.json();
-    })
-    .then((data) => {
-      t.is(Object.keys(data).length, 1);
-      t.true('inventoryID' in data);
-    })
-    .then(async () => {
-      await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session='+ t.context.session+'&page=1&limit=10', {
+    .then((res) => t.log)
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=' + t.context.session + '&page=1&limit=10', {
         method: 'get',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-        }
+        },
       })
-    .then((res) => {
-      t.is(res.status, 200);
-    });
+        .then((res2) => {
+          t.is(res2.status, 200);
+          return res2.json();
+        })
+        .then((data2) => {
+          t.true(data2.length >= 1);
+          t.is(Object.keys(data2[0]).length, 6);
+          t.true('inventoryID' in data2[0]);
+          t.true('ingredientID' in data2[0]);
+          t.true('expirationDate' in data2[0]);
+          t.true('totalQuantity' in data2[0]);
+          t.true('unit' in data2[0]);
+          t.true('price' in data2[0]);
+          t.is(typeof data2[0].inventoryID, 'number');
+          t.is(typeof data2[0].ingredientID, 'number');
+          t.is(typeof data2[0].expirationDate, 'string');
+          t.is(typeof data2[0].totalQuantity, 'number');
+          t.is(typeof data2[0].unit, 'string');
+          t.is(typeof data2[0].price, 'number');
+        });
     });
 });
 
-test('/inventory/list/stored | GET | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=123456789012345678901234567890123456&page=1&limit=10', {
+test('/inventory/list/expired | GET | 400', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=123456789012345678&page=1&limit=10', {
     method: 'get',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
-    }
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 400);
+    });
+});
+
+test('/inventory/list/expired | GET | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=123456789012345678901234567890123456&page=1&limit=10', {
+    method: 'get',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
   })
     .then((res) => {
       t.is(res.status, 401);
     });
 });
 
-test('/inventory/list/stored | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=123456789012345678&page=1&limit=10', {
-    method: 'get',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }
-  })
-    .then((res) => {
-      t.is(res.status, 400);
-    });
-}); 
-
-test('/inventory/list/all | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+test('/inventory/list/expired | GET | 406', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/register', {
     method: 'post',
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      userID: t.context.userID,
-      ingredientID: t.context.ingredientID,
-      totalQuantity: "10",
-      unit: "stedt",
-      expirationDate: 23455,
-      price:"12",
-      session: t.context.session,
-    }),
   })
-    .then((res) => {
-      t.is(res.status, 200);
-      return res.json();
-    })
-    .then((data) => {
-      t.is(Object.keys(data).length, 1);
-      t.true('inventoryID' in data);
-    })
-    .then(async () => {
-      await fetch(t.context.baseUrl + '/v3/inventory/list/all?session='+ t.context.session+'&page=1&limit=10', {
-        method: 'get',
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/login', {
+        method: 'post',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-        }
+        },
+        body: JSON.stringify({
+          serialNumber: data.serialNumber,
+          pin: data.pin,
+        }),
       })
-    .then((res) => {
-      t.is(res.status, 200);
-    });
-    });
-});
-
-test('/inventory/list/all | GET | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=123456789012345678901234567890123456&page=1&limit=10', {
-    method: 'get',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }
-  })
-    .then((res) => {
-      t.is(res.status, 401);
+        .then((res2) => res2.json())
+        .then(async (data2) => {
+          await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=' + data2.session + '&page=1&limit=10', {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          })
+            .then((res3) => {
+              t.is(res3.status, 406);
+            });
+        });
     });
 });
-
-test('/inventory/list/all | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=123456789012345678&page=1&limit=10', {
-    method: 'get',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }
-  })
-    .then((res) => {
-      t.is(res.status, 400);
-    });
-}); 
 
 test('/inventory/list/expired | GET | 200', async (t) => {
   await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
@@ -239,107 +391,42 @@ test('/inventory/list/expired | GET | 200', async (t) => {
     body: JSON.stringify({
       userID: t.context.userID,
       ingredientID: t.context.ingredientID,
-      totalQuantity: "10",
-      unit: "stedt",
+      totalQuantity: '10',
+      unit: 'stedt',
       expirationDate: 23455,
-      price:"12",
+      price: '12',
       session: t.context.session,
     }),
   })
-    .then((res) => {
-      t.is(res.status, 200);
-      return res.json();
-    })
-    .then((data) => {
-      t.is(Object.keys(data).length, 1);
-      t.true('inventoryID' in data);
-    })
-    .then(async () => {
-      await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session='+ t.context.session+'&page=1&limit=10', {
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=' + t.context.session + '&page=1&limit=10', {
         method: 'get',
         headers: {
           'Accept': 'application/json',
           'Content-Type': 'application/json',
-        }
+        },
       })
-    .then((res) => {
-      t.is(res.status, 200);
-    });
-    });
-});
-
-test('/inventory/list/expired | GET | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=123456789012345678901234567890123456&page=1&limit=10', {
-    method: 'get',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }
-  })
-    .then((res) => {
-      t.is(res.status, 401);
-    });
-});
-
-test('/inventory/list/expired | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=123456789012345678&page=1&limit=10', {
-    method: 'get',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    }
-  })
-    .then((res) => {
-      t.is(res.status, 400);
-    });
-}); 
-
-test('/inventory/add/manual | POST | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
-    method: 'post',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      userID: t.context.userID,
-      ingredientID: t.context.ingredientID,
-      totalQuantity: "1",
-      unit: "stedt",
-      expirationDate: 23455,
-      price:"12",
-      session: t.context.session,
-    }),
-  })
-    .then((res) => {
-      t.is(res.status, 200);
-      return res.json();
-    })
-    .then((data) => {
-    t.is(Object.keys(data).length, 1);
-    t.true('inventoryID' in data);
-  });
-});
-
-test('/inventory/add/manual | POST | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
-    method: 'post',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      userID: t.context.userID,
-      ingredientID: t.context.ingredientID,
-      totalQuantity: "1",
-      unit: "stedt",
-      expirationDate: 23455,
-      price:"12",
-      session: '123456789012345678901234567890123456',
-    }),
-  })
-    .then((res) => {
-      t.is(res.status, 401);
+        .then((res2) => {
+          t.is(res2.status, 200);
+          return res2.json();
+        })
+        .then((data2) => {
+          t.true(data2.length >= 1);
+          t.is(Object.keys(data2[0]).length, 6);
+          t.true('inventoryID' in data2[0]);
+          t.true('ingredientID' in data2[0]);
+          t.true('expirationDate' in data2[0]);
+          t.true('totalQuantity' in data2[0]);
+          t.true('unit' in data2[0]);
+          t.true('price' in data2[0]);
+          t.is(typeof data2[0].inventoryID, 'number');
+          t.is(typeof data2[0].ingredientID, 'number');
+          t.is(typeof data2[0].expirationDate, 'string');
+          t.is(typeof data2[0].totalQuantity, 'number');
+          t.is(typeof data2[0].unit, 'string');
+          t.is(typeof data2[0].price, 'number');
+        });
     });
 });
 
@@ -353,11 +440,11 @@ test('/inventory/add/manual | POST | 400', async (t) => {
     body: JSON.stringify({
       userID: t.context.userID,
       ingredientID: t.context.ingredientID,
-      totalQuantity: "-1",
-      unit: "stedt",
+      totalQuantity: -1,
+      unit: 'stedt',
       expirationDate: 23455,
-      price:"12",
-      session: t.context.session,
+      price: 12,
+      session: 'abcd',
     }),
   })
     .then((res) => {
@@ -365,7 +452,7 @@ test('/inventory/add/manual | POST | 400', async (t) => {
     });
 });
 
-test('/inventory/consume | POST | 200', async (t) => {
+test('/inventory/add/manual | POST | 401', async (t) => {
   await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
     method: 'post',
     headers: {
@@ -375,39 +462,24 @@ test('/inventory/consume | POST | 200', async (t) => {
     body: JSON.stringify({
       userID: t.context.userID,
       ingredientID: t.context.ingredientID,
-      totalQuantity: "1",
-      unit: "stedt",
+      totalQuantity: 1,
+      unit: 'stedt',
       expirationDate: 23455,
-      price:"12",
-      session: t.context.session,
+      price: 12,
+      session: '123456789012345678901234567890123456',
     }),
   })
     .then((res) => {
-      t.is(res.status, 200);
-      return res.json();
-    }).then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/inventory/consume', {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userID: t.context.userID,
-          inventoryID: data.inventoryID,
-          quantity: "1",
-          unit: "stedt",
-          session: t.context.session,
-        }),
-      })
-      .then((res) => {
-        t.is(res.status, 200);
-      })
+      t.is(res.status, 401);
     });
 });
 
-test('/inventory/consume | POST | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/consume', {
+test('/inventory/add/manual | POST | 406', async (t) => {
+  // @todo
+});
+
+test('/inventory/add/manual | POST | 200', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
     method: 'post',
     headers: {
       'Accept': 'application/json',
@@ -415,14 +487,21 @@ test('/inventory/consume | POST | 401', async (t) => {
     },
     body: JSON.stringify({
       userID: t.context.userID,
-      inventoryID: t.context.inventoryID,
-      quantity: "1",
-      unit: "stedt",
-      session: '123456789012345678901234567890123456',
+      ingredientID: t.context.ingredientID,
+      totalQuantity: 1,
+      unit: 'stedt',
+      expirationDate: 23455,
+      price: 12,
+      session: t.context.session,
     }),
   })
     .then((res) => {
-      t.is(res.status, 401);
+      t.is(res.status, 200);
+      return res.json();
+    })
+    .then((data) => {
+      t.is(Object.keys(data).length, 1);
+      t.true('inventoryID' in data);
     });
 });
 
@@ -436,8 +515,8 @@ test('/inventory/consume | POST | 400', async (t) => {
     body: JSON.stringify({
       userID: t.context.userID,
       inventoryID: t.context.inventoryID,
-      quantity: "-1",
-      unit: "stedt",
+      quantity: -1,
+      unit: 'stedt',
       session: t.context.session,
     }),
   })
@@ -446,7 +525,31 @@ test('/inventory/consume | POST | 400', async (t) => {
     });
 });
 
-test('/inventory/discard | POST | 200', async (t) => {
+test('/inventory/consume | POST | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/consume', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userID: t.context.userID,
+      inventoryID: t.context.inventoryID,
+      quantity: 1,
+      unit: 'stedt',
+      session: '123456789012345678901234567890123456',
+    }),
+  })
+    .then((res) => {
+      t.is(res.status, 401);
+    });
+});
+
+test('/inventory/consume | POST | 406', async (t) => {
+  // @todo
+});
+
+test('/inventory/consume | POST | 200', async (t) => {
   await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
     method: 'post',
     headers: {
@@ -456,18 +559,16 @@ test('/inventory/discard | POST | 200', async (t) => {
     body: JSON.stringify({
       userID: t.context.userID,
       ingredientID: t.context.ingredientID,
-      totalQuantity: "5",
-      unit: "stedt",
+      totalQuantity: 1,
+      unit: 'stedt',
       expirationDate: 23455,
-      price:"12",
+      price: 12,
       session: t.context.session,
     }),
   })
-    .then((res) => {
-      t.is(res.status, 200);
-      return res.json();
-    }).then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/inventory/discard', {
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/inventory/consume', {
         method: 'post',
         headers: {
           'Accept': 'application/json',
@@ -476,34 +577,14 @@ test('/inventory/discard | POST | 200', async (t) => {
         body: JSON.stringify({
           userID: t.context.userID,
           inventoryID: data.inventoryID,
-          quantity: "1",
-          unit: "stedt",
+          quantity: 1,
+          unit: 'stedt',
           session: t.context.session,
         }),
       })
-      .then((res) => {
-        t.is(res.status, 200);
-      });
-  });
-});
-
-test('/inventory/discard | POST | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/discard', {
-    method: 'post',
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      userID: t.context.userID,
-      inventoryID: t.context.inventoryID,
-      quantity: "1",
-      unit: "stedt",
-      session: '123456789012345678901234567890123456',
-    }),
-  })
-    .then((res) => {
-      t.is(res.status, 401);
+        .then((res2) => {
+          t.is(res2.status, 200);
+        })
     });
 });
 
@@ -517,12 +598,75 @@ test('/inventory/discard | POST | 400', async (t) => {
     body: JSON.stringify({
       userID: t.context.userID,
       inventoryID: t.context.inventoryID,
-      quantity: "-1",
-      unit: "stedt",
+      quantity: '-1',
+      unit: 'stedt',
       session: t.context.session,
     }),
   })
     .then((res) => {
       t.is(res.status, 400);
+    });
+});
+
+test('/inventory/discard | POST | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/discard', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userID: t.context.userID,
+      inventoryID: t.context.inventoryID,
+      quantity: 1,
+      unit: 'stedt',
+      session: '123456789012345678901234567890123456',
+    }),
+  })
+    .then((res) => {
+      t.is(res.status, 401);
+    });
+});
+
+test('/inventory/discard | POST | 406', async (t) => {
+  // @todo
+});
+
+test('/inventory/discard | POST | 200', async (t) => {
+  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userID: t.context.userID,
+      ingredientID: t.context.ingredientID,
+      totalQuantity: 5,
+      unit: 'stedt',
+      expirationDate: 23455,
+      price: 12,
+      session: t.context.session,
+    }),
+  })
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/inventory/discard', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userID: t.context.userID,
+          inventoryID: data.inventoryID,
+          quantity: 1,
+          unit: 'stedt',
+          session: t.context.session,
+        }),
+      })
+        .then((res2) => {
+          t.is(res2.status, 200);
+        });
     });
 });
