@@ -17,6 +17,8 @@ import MaterialTopAppBarDialog from '../../components/horizontal-prototype/Mater
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialOutlinedTextField from '../../components/horizontal-prototype/MaterialOutlinedTextField';
 
+import { apiUrl } from '../../url';
+
 let strings = new LocalizedStrings({
   en: {
     name: 'Name',

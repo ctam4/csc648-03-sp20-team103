@@ -27,6 +27,8 @@ import MaterialChoiceChips from '../../components/horizontal-prototype/MaterialC
 import MaterialFilterChips from '../../components/horizontal-prototype/MaterialFilterChips';
 import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
 
+import { apiUrl } from '../../url';
+
 let strings = new LocalizedStrings({
   en: {
     choose_calories: 'Choose calories per serving',

@@ -16,6 +16,8 @@ import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import RecipesCard from '../../components/horizontal-prototype/RecipesCard';
 
+import { apiUrl } from '../../url';
+
 let strings = new LocalizedStrings({
   en: {
     recipes: 'Recipes',

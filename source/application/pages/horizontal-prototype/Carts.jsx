@@ -12,6 +12,8 @@ import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTop
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import CartsCard from '../../components/horizontal-prototype/CartsCard';
 
+import { apiUrl } from '../../url';
+
 let strings = new LocalizedStrings({
   en: {
     carts: 'Carts',

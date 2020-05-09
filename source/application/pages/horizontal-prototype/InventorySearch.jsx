@@ -19,6 +19,8 @@ import MaterialTopAppBarDialog from '../../components/horizontal-prototype/Mater
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
 import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
 
+import { apiUrl } from '../../url';
+
 let strings = new LocalizedStrings({
   en: {
   },

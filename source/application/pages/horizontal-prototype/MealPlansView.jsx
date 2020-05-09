@@ -12,10 +12,7 @@ import MaterialTopAppBarDialog from '../../components/horizontal-prototype/Mater
 import MealPlansCardFull from '../../components/horizontal-prototype/MealPlansCardFull';
 import RecipesCard from '../../components/horizontal-prototype/RecipesCard';
 
-let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
-if (process.env.API_PORT) {
-  apiUrl += ':' + process.env.API_PORT;
-}
+import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
   en: {

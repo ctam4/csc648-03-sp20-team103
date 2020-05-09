@@ -12,6 +12,8 @@ import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTop
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import ConsumptionCard from '../../components/horizontal-prototype/ConsumptionCard';
 
+import { apiUrl } from '../../url';
+
 let strings = new LocalizedStrings({
   en: {
     consumption: 'Consumption',

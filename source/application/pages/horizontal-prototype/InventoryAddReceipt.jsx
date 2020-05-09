@@ -14,6 +14,8 @@ import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnac
 //import Icon from 'react-icons/md';
 //import Svg { Ellipse } from 'react-native-svg';
 
+import { apiUrl } from '../../url';
+
 let strings = new LocalizedStrings({
   en: {
     center_receipt: 'Center front of receipt inside box area',

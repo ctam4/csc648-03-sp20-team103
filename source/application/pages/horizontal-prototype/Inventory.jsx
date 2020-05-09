@@ -17,10 +17,7 @@ import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
 
-let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
-if (process.env.API_PORT) {
-  apiUrl += ':' + process.env.API_PORT;
-}
+import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
   en: {

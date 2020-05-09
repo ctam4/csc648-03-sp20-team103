@@ -18,6 +18,8 @@ import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
 
+import { apiUrl } from '../../url';
+
 let strings = new LocalizedStrings({
   en: {
     select: 'Select',

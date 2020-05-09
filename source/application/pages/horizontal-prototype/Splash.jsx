@@ -18,10 +18,7 @@ import MaterialOutlinedTextField from '../../components/horizontal-prototype/Mat
 import MaterialButton from '../../components/horizontal-prototype/MaterialButton';
 import MaterialSimpleDialog from '../../components/horizontal-prototype/MaterialSimpleDialog';
 
-let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
-if (process.env.API_PORT) {
-  apiUrl += ':' + process.env.API_PORT;
-}
+import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
   en: {

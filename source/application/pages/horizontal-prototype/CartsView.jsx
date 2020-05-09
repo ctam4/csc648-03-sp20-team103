@@ -11,10 +11,7 @@ import LocalizedStrings from 'react-localization';
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import CartsCardFull from '../../components/horizontal-prototype/CartsCardFull';
 
-let apiUrl = location.protocol + '//' + (process.env.API_HOST || location.hostname);
-if (process.env.API_PORT) {
-  apiUrl += ':' + process.env.API_PORT;
-}
+import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
   en: {
