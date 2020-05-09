@@ -109,7 +109,7 @@ export default () => {
           </Grid>
         </DrawerAppContent>
         {toast && (
-        <MaterialSnackbar message={toast} onClose={() => setToast('')}/>
+        <MaterialSnackbar message={toast} onClose={() => setToast('')} />
         )}
         <MaterialFab
           icon={<MaterialIcon icon='note_add'/>}
