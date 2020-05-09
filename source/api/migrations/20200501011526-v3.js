@@ -1,6 +1,6 @@
 const async = require('async');
 
-const prefix = 'v3';
+const prefix = '${prefix}';
 let dbm;
 let type;
 let seed;
@@ -186,6 +186,7 @@ exports.up = (db, callback) => {
           ingredient_id: {
             type: 'int',
             unsigned: true,
+            primaryKey: true,
           },
           name: {
             type: 'string',
