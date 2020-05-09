@@ -13,7 +13,6 @@ let strings = new LocalizedStrings({
 });
 
 function IngredientsListCard(props) {
-  console.log(props.list1);
   return (
     <MaterialCard className='mdc-card'>
       <ListGroup>
