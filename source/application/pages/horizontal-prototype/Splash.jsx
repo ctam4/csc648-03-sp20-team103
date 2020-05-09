@@ -40,16 +40,16 @@ export default () => {
   const [state, dispatch] = useReducer(splashReducer, initialState);
 
   useEffect(() => {
-    dummySetup();
+    load();
   }, []);
 
   const toggleDialog = () => {
     dispatch(setDialogOpen(!state.dialogOpen));
   };
 
-  const dummySetup = async () => {
+  const load = async () => {
     // for dummy fridge
-    await fetch(apiUrl + '/v2/fridges', {
+    await fetch(apiUrl + '/v3/register', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -58,7 +58,7 @@ export default () => {
     })
     .then((res) => {
       if (!res.ok) {
-        throw new Error('error ' + res.status);
+        throw new Error(res.status + ' ' + res.statusText);
       }
       return res.json();
     })
@@ -70,7 +70,7 @@ export default () => {
   };
 
   const handleAuth = async () => {
-    await fetch(apiUrl + '/v2/login', {
+    await fetch(apiUrl + '/v3/login', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -83,71 +83,100 @@ export default () => {
     })
     .then((res) => {
       if (!res.ok) {
-        throw new Error('error ' + res.status);
+        throw new Error(res.status + ' ' + res.statusText);
       }
-      return res.json()
+      return res.json();
     })
-    .then((data) => {
+    .then(async (data) => {
       setCookie('session', data.session, {
-        //httpOnly: true,
+        // httpOnly: true,
         expires: new Date(data.expires_ts),
       });
-      dispatch(setUsers([{ text: 'hello@world.local' }, { text: strings.new_user }]));
-      toggleDialog();
+      await fetch(apiUrl + '/v3/users?session=' + cookies.session, {
+        method: 'get',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((res2) => {
+        if (!res2.ok) {
+          throw new Error(res2.status + ' ' + res2.statusText);
+        }
+        return res2.json();
+      })
+      .then((data2) => {
+        let users = [];
+        data2.foreach((user) => users.push({
+          key: user.userID,
+          text: user.name,
+        }));
+        dispatch(setUsers(users));
+      })
+      .finally(() => {
+        let users = state.users;
+        users.push({ text: strings.new_user });
+        dispatch(setUsers(users));
+        toggleDialog();
+      });
     })
     .catch(console.log);
+    // @todo snackbar
   };
 
   const handleUserID = (value) => {
     if (value < state.users.length - 1) {
-      // setCookie('userID', );
+      setCookie('userID', state.users[value], {
+        // httpOnly: true,
+        // expires: new Date(data.expires_ts),
+      });
       window.location.href = './inventory';
     } else {
-      window.location.href = './users'
+      window.location.href = './users';
     }
   };
 
   return (
     <>
-    <Grid>
-      <Row>
-        <Cell columns={12}>
-          <Headline1 style={{ color: 'rgba(65,117,5,1)' }}>STOCKUP</Headline1>
-        </Cell>
-      </Row>
-      <Row>
-        <Cell columns={12}>
-          <MaterialOutlinedTextField
-            label={strings.serial_number}
-            helperText={strings.serial_number_helper}
-            value={state.serialNumber}
-            onChange={(e) => dispatch(setSerialNumber(e.target.value))}
-            onTrailingIconSelect={() => dispatch(setSerialNumber(''))}
-          ></MaterialOutlinedTextField>
-        </Cell>
-        <Cell columns={12}>
-          <MaterialOutlinedTextField
-            label={strings.pin}
-            helperText={strings.pin_helper}
-            value={state.pin}
-            onChange={(e) => dispatch(setPIN(e.target.value))}
-            onTrailingIconSelect={() => dispatch(setPIN(''))}
-          ></MaterialOutlinedTextField>
-        </Cell>
-      </Row>
-      <Row>
-        <Cell columns={12}>
-          <MaterialButton onClick={handleAuth} raised style={{ width: '100%' }}>{strings.continue}</MaterialButton>
-        </Cell>
-      </Row>
-    </Grid>
-    <MaterialSimpleDialog
-      open={state.dialogOpen}
-      title={strings.select_user}
-      choices={state.users}
-      handleSelect={handleUserID}
-      onClose={toggleDialog}
-    ></MaterialSimpleDialog>
+      <Grid>
+        <Row>
+          <Cell columns={12}>
+            <Headline1 style={{ color: 'rgba(65,117,5,1)' }}>STOCKUP</Headline1>
+          </Cell>
+        </Row>
+        <Row>
+          <Cell columns={12}>
+            <MaterialOutlinedTextField
+              label={strings.serial_number}
+              helperText={strings.serial_number_helper}
+              value={state.serialNumber}
+              onChange={(e) => dispatch(setSerialNumber(e.target.value))}
+              onTrailingIconSelect={() => dispatch(setSerialNumber(''))}
+            ></MaterialOutlinedTextField>
+          </Cell>
+          <Cell columns={12}>
+            <MaterialOutlinedTextField
+              label={strings.pin}
+              helperText={strings.pin_helper}
+              value={state.pin}
+              onChange={(e) => dispatch(setPIN(e.target.value))}
+              onTrailingIconSelect={() => dispatch(setPIN(''))}
+            ></MaterialOutlinedTextField>
+          </Cell>
+        </Row>
+        <Row>
+          <Cell columns={12}>
+            <MaterialButton onClick={handleAuth} raised style={{ width: '100%' }}>{strings.continue}</MaterialButton>
+          </Cell>
+        </Row>
+      </Grid>
+      <MaterialSimpleDialog
+        open={state.dialogOpen}
+        title={strings.select_user}
+        choices={state.users}
+        handleSelect={handleUserID}
+        onClose={toggleDialog}
+      ></MaterialSimpleDialog>
     </>
   );
 };
