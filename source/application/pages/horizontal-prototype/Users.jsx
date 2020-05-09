@@ -14,6 +14,11 @@ import ConsumptionCard from '../../components/horizontal-prototype/ConsumptionCa
 
 import { apiUrl } from '../../url';
 
+let strings = new LocalizedStrings({
+  en: {
+  },
+});
+
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -58,13 +63,11 @@ export default () => {
       <MaterialTopAppBar
         title={strings.users}
         onClick1={toggleDrawer}
-        //onClick2={() => window.location.href = './' }
-        icon2='view_week'
       ></MaterialTopAppBar>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <MaterialDrawer
           open={drawerOpen}
-          selectedIndex={3}
+          selectedIndex={5}
           onClose={toggleDrawer}
         ></MaterialDrawer>
         <DrawerAppContent className='drawer-app-content'>
