@@ -474,10 +474,6 @@ test('/inventory/add/manual | POST | 401', async (t) => {
     });
 });
 
-test('/inventory/add/manual | POST | 406', async (t) => {
-  // @todo
-});
-
 test('/inventory/add/manual | POST | 200', async (t) => {
   await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
     method: 'post',
@@ -546,7 +542,42 @@ test('/inventory/consume | POST | 401', async (t) => {
 });
 
 test('/inventory/consume | POST | 406', async (t) => {
-  // @todo
+  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userID: t.context.userID,
+      ingredientID: t.context.ingredientID,
+      totalQuantity: 1,
+      unit: 'stedt',
+      expirationDate: 23455,
+      price: 12,
+      session: t.context.session,
+    }),
+  })
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/inventory/consume', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userID: 999999,
+          inventoryID: data.inventoryID,
+          quantity: 1,
+          unit: 'stedt',
+          session: t.context.session,
+        }),
+      })
+        .then((res2) => {
+          t.is(res2.status, 406);
+        })
+    });
 });
 
 test('/inventory/consume | POST | 200', async (t) => {
@@ -629,7 +660,42 @@ test('/inventory/discard | POST | 401', async (t) => {
 });
 
 test('/inventory/discard | POST | 406', async (t) => {
-  // @todo
+  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+    method: 'post',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userID: t.context.userID,
+      ingredientID: t.context.ingredientID,
+      totalQuantity: 1,
+      unit: 'stedt',
+      expirationDate: 23455,
+      price: 12,
+      session: t.context.session,
+    }),
+  })
+    .then((res) => res.json())
+    .then(async (data) => {
+      await fetch(t.context.baseUrl + '/v3/inventory/discard', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userID: 999999,
+          inventoryID: data.inventoryID,
+          quantity: 1,
+          unit: 'stedt',
+          session: t.context.session,
+        }),
+      })
+        .then((res2) => {
+          t.is(res2.status, 406);
+        })
+    });
 });
 
 test('/inventory/discard | POST | 200', async (t) => {
