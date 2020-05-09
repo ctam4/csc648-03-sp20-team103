@@ -114,7 +114,7 @@ ingredients.post('/', async (req, res) => {
       throw new TypeError();
     }
     session = req.body.session;
-    ingredientID = parseInt(ingredientID);
+    ingredientID = parseInt(req.body.ingredientID);
     name = req.body.name;
     image = req.body.image;
   } catch (error) {
