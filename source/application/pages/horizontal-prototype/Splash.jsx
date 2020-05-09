@@ -36,7 +36,7 @@ let strings = new LocalizedStrings({
 });
 
 export default () => {
-  const [cookies, setCookie] = useCookies(['Session']);
+  const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [state, dispatch] = useReducer(splashReducer, initialState);
 
   useEffect(() => {
@@ -107,9 +107,9 @@ export default () => {
       })
       .then((data2) => {
         let users = [];
-        data2.foreach((user) => users.push({
-          key: user.userID,
-          text: user.name,
+        data2.foreach((item) => users.push({
+          key: item.userID,
+          text: item.name,
         }));
         dispatch(setUsers(users));
       })
