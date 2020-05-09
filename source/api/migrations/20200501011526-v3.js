@@ -1,6 +1,6 @@
 const async = require('async');
 
-const prefix = '${prefix}';
+const prefix = 'v3';
 let dbm;
 let type;
 let seed;
