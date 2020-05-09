@@ -35,7 +35,7 @@ recipes.get('/:limit&descending', async (req, res) => {
 recipes.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
-    await connection.query('INSERT INTO fridges VALUES (?)', req.body.fridge_id)
+    await connection.query('INSERT IGNORE INTO fridges VALUES (?)', req.body.fridge_id)
       .then((results) => {
         res.json(results).end();
       });

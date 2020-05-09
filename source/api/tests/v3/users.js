@@ -210,7 +210,7 @@ test('/users | POST | 406', async (t) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      name: 'John Doe',
+      name: 'Donald',
       role: 'Parent',
       intolerances: ['dairy'],
       session: t.context.session,
@@ -225,7 +225,7 @@ test('/users | POST | 406', async (t) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: 'John Doe',
+          name: 'Donald',
           role: 'Parent',
           intolerances: ['dairy'],
           session: t.context.session,

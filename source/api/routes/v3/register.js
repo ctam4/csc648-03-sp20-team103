@@ -20,7 +20,7 @@ register.post('/', async (req, res) => {
     do {
       results = await connection.query('SELECT 1 FROM v3_fridges WHERE serial_number=?', [serialNumber = generate(10)]);
     } while (results.length > 0);
-    await connection.query('INSERT INTO v3_fridges (serial_number, pin) VALUES (?, ?)', [serialNumber, pin]);
+    await connection.query('INSERT IGNORE INTO v3_fridges (serial_number, pin) VALUES (?, ?)', [serialNumber, pin]);
     res.json({ serialNumber: serialNumber.toString(), pin: pin.toString() }).end();
   } catch (error) {
     res.sendStatus(500).end();
