@@ -1,6 +1,7 @@
 export const initialState = {
   searchOpen: true,
   keywords: '',
+  autoComplete: [],
 };
 
 export const inventorySearchReducer = (state = initialState, action) => {
@@ -15,6 +16,12 @@ export const inventorySearchReducer = (state = initialState, action) => {
       return {
         ...state,
         keywords: action.keywords,
+      };
+    }
+    case 'INVENTORYSEARCH_SET_AUTOCOMPLETE': {
+      return {
+        ...state,
+        autoComplete: action.autoComplete,
       };
     }
     default: {

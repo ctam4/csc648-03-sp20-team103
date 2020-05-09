@@ -2,7 +2,11 @@ import React, { useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { inventorySearchReducer, initialState } from '../../reducers/horizontal-prototype/InventorySearch';
-import { setSearchOpen, setKeywords } from '../../actions/horizontal-prototype/InventorySearch';
+import {
+  setSearchOpen,
+  setKeywords,
+  setAutoComplete,
+} from '../../actions/horizontal-prototype/InventorySearch';
 
 import { View, useWindowDimensions } from 'react-native';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
@@ -13,6 +17,7 @@ import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
+import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
 
 let strings = new LocalizedStrings({
   en: {
@@ -29,6 +34,29 @@ export default () => {
 
   const load = async () => {
     // TODO: fetch
+    /*
+    await fetch(apiUrl + '/v3/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(res.status + ' ' + res.statusText);
+      }
+      return res.json();
+    })
+    .then(async (data) => {
+      let ingredients = [];
+      data.foreach((item) => ingredients.push({
+        key: item.ingredientID,
+        // @todo
+      }));
+      dispatch(setAutoComplete(ingredients));
+    });
+    */
   };
 
   const toggleSearch = () => {
@@ -39,6 +67,10 @@ export default () => {
     if (history.length > 0) {
       history.back();
     }
+  };
+
+  const handleAutoComplete = (value) => {
+    window.location.href = '../inventory/view?id=' + state.autoComplete[value].key;
   };
 
   return (
@@ -62,7 +94,12 @@ export default () => {
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
-
+              <Cell columns={12}>
+                <MaterialSingleSelectionList
+                  items={state.autoComplete}
+                  handleSelect={handleAutoComplete}
+                ></MaterialSingleSelectionList>
+              </Cell>
             </Row>
           </Grid>
         </DrawerAppContent>

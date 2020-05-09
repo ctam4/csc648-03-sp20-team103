@@ -10,6 +10,7 @@ import {
   setFatFilter,
   setProteinFilter,
   setCarbonhydratesFilter,
+  setAutoComplete,
 } from '../../actions/horizontal-prototype/RecipesSearch';
 
 import { View, useWindowDimensions } from 'react-native';
@@ -24,6 +25,7 @@ import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype
 import { Body1 } from '../../components/horizontal-prototype/MaterialTypography';
 import MaterialChoiceChips from '../../components/horizontal-prototype/MaterialChoiceChips';
 import MaterialFilterChips from '../../components/horizontal-prototype/MaterialFilterChips';
+import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
 
 let strings = new LocalizedStrings({
   en: {
@@ -72,6 +74,30 @@ export default () => {
 
   const load = async () => {
     // TODO: fetch
+    /*
+    await fetch(apiUrl + '/v3/recipes/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(res.status + ' ' + res.statusText);
+      }
+      return res.json();
+    })
+    .then(async (data) => {
+      let recipes = [];
+      data.foreach((item) => recipes.push({
+        key: item.recipeID,
+        primaryText: item.name,
+        // @todo
+      }));
+      dispatch(setAutoComplete(recipes));
+    });
+    */
   };
 
   const toggleSearch = () => {
@@ -82,6 +108,10 @@ export default () => {
     if (history.length > 0) {
       history.back();
     }
+  };
+
+  const handleAutoComplete = (value) => {
+    window.location.href = '../recipes/view?id=' + state.autoComplete[value].key;
   };
 
   return (
@@ -144,6 +174,14 @@ export default () => {
                   handleSelect={(value) => dispatch(setCarbonhydratesFilter(value))}
                   choices={carbonhydratesFilterChoices}
                 ></MaterialFilterChips>
+              </Cell>
+            </Row>
+            <Row>
+              <Cell columns={12}>
+                <MaterialSingleSelectionList
+                  items={state.autoComplete}
+                  handleSelect={handleAutoComplete}
+                ></MaterialSingleSelectionList>
               </Cell>
             </Row>
           </Grid>

@@ -32,3 +32,8 @@ export const setCarbonhydratesFilter = (carbonhydratesFilter) => ({
   type: 'RECIPESSEARCH_SET_CALORIESFILTER',
   carbonhydratesFilter: carbonhydratesFilter,
 });
+
+export const setAutoComplete = (autoComplete) => ({
+  type: 'RECIPESSEARCH_SET_AUTOCOMPLETE',
+  autoComplete: autoComplete,
+});

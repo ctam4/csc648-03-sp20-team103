@@ -6,6 +6,7 @@ export const initialState = {
   fatFilter: [],
   proteinFilter: [],
   carbonhydrates: [],
+  autoComplete: [],
 };
 
 export const recipesSearchReducer = (state = initialState, action) => {
@@ -50,6 +51,12 @@ export const recipesSearchReducer = (state = initialState, action) => {
       return {
         ...state,
         carbonhydratesFilter: action.carbonhydratesFilter,
+      };
+    }
+    case 'RECIPESSEARCH_SET_AUTOCOMPLETE': {
+      return {
+        ...state,
+        autoComplete: action.autoComplete,
       };
     }
     default: {
