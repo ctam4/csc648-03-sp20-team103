@@ -174,6 +174,21 @@ recipes.get('/', async (req, res) => {
          connection.release(); // release to pool
       }
    }
+recipes.post('/', async (req, res) => {
+  try {
+    connection = await pool.getConnection();
+    await connection.query('INSERT IGNORE INTO fridges VALUES (?)', req.body.fridge_id)
+      .then((results) => {
+        res.json(results).end();
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release(); // release to pool
+    }
+  }
 });
 
 

@@ -114,7 +114,7 @@ ingredients.post('/', async (req, res) => {
       throw new TypeError();
     }
     session = req.body.session;
-    ingredientID = parseInt(ingredientID);
+    ingredientID = parseInt(req.body.ingredientID);
     name = req.body.name;
     image = req.body.image;
   } catch (error) {
@@ -135,7 +135,7 @@ ingredients.post('/', async (req, res) => {
       .then(async (rows) => {
         if (rows.length > 0) {
           // insert for endpoint
-          await connection.query('INSERT INTO v3_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image])
+          await connection.query('INSERT IGNORE INTO v3_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image])
             .then(async (results) => {
               if (results.affectedRows > 0) {
                 res.json({ ingredientID: ingredientID }).end();

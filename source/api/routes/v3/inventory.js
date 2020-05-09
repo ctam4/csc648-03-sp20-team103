@@ -173,10 +173,10 @@ inventory.post('/add/manual', async (req, res) => {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          await connection.query('INSERT INTO v3_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, price) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price])
+          await connection.query('INSERT IGNORE INTO v3_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, price) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price])
             .then(async (results) => {
               if (results.affectedRows > 0) {
-                await connection.query('INSERT INTO v3_inventory_log (inventory_id, quantity, user_id, action, action_ts) VALUES (?, ?, ?, \'added\', FROM_UNIXTIME(?))', [results.insertId, totalQuantity, userID, expirationDate])
+                await connection.query('INSERT IGNORE INTO v3_inventory_log (inventory_id, quantity, user_id, action, action_ts) VALUES (?, ?, ?, \'added\', FROM_UNIXTIME(?))', [results.insertId, totalQuantity, userID, expirationDate])
                   .then((results2) => {
                     if (results2.affectedRows > 0) {
                       res.json({ inventoryID: results.insertId }).end();
@@ -250,7 +250,7 @@ inventory.post('/consume', async (req, res) => {
           // insert for endpoint
           const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v3_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0].total_quantity;
           if (totalQuantity >= 0) {
-            await connection.query('INSERT INTO v3_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'consumed\')', [inventoryID, quantity, userID])
+            await connection.query('INSERT IGNORE INTO v3_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'consumed\')', [inventoryID, quantity, userID])
               .then(async (results) => {
                 if (results.affectedRows > 0) {
                   await connection.query('UPDATE v3_inventory SET total_quantity=? WHERE inventory_id=?', [totalQuantity, inventoryID])
@@ -258,11 +258,11 @@ inventory.post('/consume', async (req, res) => {
                       if (results2.affectedRows > 0) {
                         res.sendStatus(200).end();
                       } else {
-                        res.sendStatus(400).end();
+                        res.sendStatus(406).end();
                       }
                     });
                 } else {
-                  res.sendStatus(400).end();
+                  res.sendStatus(406).end();
                 }
               });
           } else {
@@ -328,9 +328,9 @@ inventory.post('/discard', async (req, res) => {
           // @todo handle possible duplicate sessions
           // @todo unit conversion
           // insert for endpoint
-          const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v3_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0];
+          const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v3_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0].total_quantity;
           if (totalQuantity >= 0) {
-            await connection.query('INSERT INTO v3_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'discarded\')', [inventoryID, quantity, userID])
+            await connection.query('INSERT IGNORE INTO v3_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'discarded\')', [inventoryID, quantity, userID])
               .then(async (results) => {
                 if (results.affectedRows > 0) {
                   await connection.query('UPDATE v3_inventory SET total_quantity=? WHERE inventory_id=?', [totalQuantity, inventoryID])
