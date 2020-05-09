@@ -258,11 +258,11 @@ inventory.post('/consume', async (req, res) => {
                       if (results2.affectedRows > 0) {
                         res.sendStatus(200).end();
                       } else {
-                        res.sendStatus(400).end();
+                        res.sendStatus(406).end();
                       }
                     });
                 } else {
-                  res.sendStatus(400).end();
+                  res.sendStatus(406).end();
                 }
               });
           } else {
@@ -328,7 +328,7 @@ inventory.post('/discard', async (req, res) => {
           // @todo handle possible duplicate sessions
           // @todo unit conversion
           // insert for endpoint
-          const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v3_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0];
+          const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v3_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0].total_quantity;
           if (totalQuantity >= 0) {
             await connection.query('INSERT INTO v3_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'discarded\')', [inventoryID, quantity, userID])
               .then(async (results) => {
