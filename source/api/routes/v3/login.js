@@ -41,7 +41,7 @@ login.post('/', async (req, res) => {
           const fridgeID = rows[0].fridge_id;
           const session = uuidv4();
           const results = (await connection.query('SELECT CURRENT_TIMESTAMP as logged_in_ts, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 MONTH) as expires_ts'))[0];
-          await connection.query('INSERT INTO v3_sessions(session, fridge_id, logged_in_ts, expires_ts) VALUES (?, ?, ?, ?)', [session, fridgeID, results.logged_in_ts, results.expires_ts]);
+          await connection.query('INSERT IGNORE INTO v3_sessions(session, fridge_id, logged_in_ts, expires_ts) VALUES (?, ?, ?, ?)', [session, fridgeID, results.logged_in_ts, results.expires_ts]);
           res.json({ ...results, session: session }).end();
         } else {
           res.sendStatus(406).end();

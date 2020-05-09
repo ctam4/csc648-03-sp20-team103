@@ -103,7 +103,7 @@ users.post('/', async (req, res) => {
           // @todo handle duplicate names
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          await connection.query('INSERT INTO v3_users (fridge_id, name, role, intolerances) VALUES (?, ?, ?, ?)', [fridgeID, name, role, intolerances.join(',')])
+          await connection.query('INSERT IGNORE INTO v3_users (fridge_id, name, role, intolerances) VALUES (?, ?, ?, ?)', [fridgeID, name, role, intolerances.join(',')])
             .then(async (results) => {
               if (results.affectedRows > 0) {
                 res.json({ userID: results.insertId }).end();
