@@ -8,7 +8,7 @@ test.before(async (t) => {
     const express = require('express');
     const http = require('http');
     const app = express();
-    const httpPort = 10004;
+    const httpPort = 10005;
     const compression = require('compression');
     const cors = require('cors');
     app.use(express.json());
@@ -21,12 +21,12 @@ test.before(async (t) => {
   }
   await waitPort({
     host: 'localhost',
-    port: 10004,
+    port: 10005,
     output: 'silent',
     timeout: 5,
   })
     .then(async () => {
-      t.context.baseUrl = 'http://localhost:10004';
+      t.context.baseUrl = 'http://localhost:10005';
       await fetch(t.context.baseUrl + '/v3/register', {
         method: 'post',
         headers: {
@@ -95,7 +95,7 @@ test.before(async (t) => {
 });
 
 test('/inventory/list/all | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=123456789012345678&page=1&limit=10', {
+  await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=abcd&page=1&limit=10', {
     method: 'get',
     headers: {
       'Accept': 'application/json',
@@ -207,7 +207,7 @@ test('/inventory/list/all | GET | 200', async (t) => {
 });
 
 test('/inventory/list/stored | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=123456789012345678&page=1&limit=10', {
+  await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=abcd&page=1&limit=10', {
     method: 'get',
     headers: {
       'Accept': 'application/json',
@@ -319,7 +319,7 @@ test('/inventory/list/stored | GET | 200', async (t) => {
 });
 
 test('/inventory/list/expired | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=123456789012345678&page=1&limit=10', {
+  await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=abcd&page=1&limit=10', {
     method: 'get',
     headers: {
       'Accept': 'application/json',
@@ -517,7 +517,7 @@ test('/inventory/consume | POST | 400', async (t) => {
       inventoryID: t.context.inventoryID,
       quantity: -1,
       unit: 'stedt',
-      session: t.context.session,
+      session: 'abcd',
     }),
   })
     .then((res) => {
@@ -600,7 +600,7 @@ test('/inventory/discard | POST | 400', async (t) => {
       inventoryID: t.context.inventoryID,
       quantity: '-1',
       unit: 'stedt',
-      session: t.context.session,
+      session: 'abcd',
     }),
   })
     .then((res) => {
