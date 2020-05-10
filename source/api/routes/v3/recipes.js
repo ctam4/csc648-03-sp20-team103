@@ -348,16 +348,63 @@ recipes.delete('/favorites', async (req, res) => {
     }
 });
 
-//for testing
+/**
+ * GET /v3/recipes/favorites
+ * @description Retrieve recipes list of current fridges with session.
+ * @param {string} session
+ * @param {string} query
+ * @param {integer} page (optional)
+ * @param {integer} limit (optional)
+ * @returns {object[]} recipeID
+ */
 recipes.get('/favorites', async (req, res) => {
+    // check params data type
+    if ((Object.keys(req.query).length == 3 ||
+            (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
+        !('session' in req.query && 'query' in req.query)) {
+        res.sendStatus(400).end();
+        return;
+    }
+    // check params data type
+    let session, query, page, limit, userID;
+    try {
+        session = req.query.session;
+        query = req.query.query;
+        userID = req.query.userID;
+        page = (req.query.page && parseInt(req.query.page)) || 1;
+        limit = (req.query.limit && parseInt(req.query.limit)) || 20;
+    } catch (error) {
+        res.sendStatus(400).end();
+        throw error;
+    }
+    // check params data range
+    if (!session || page <= 0 || limit <= 0) {
+        res.sendStatus(400).end();
+        return;
+    }
+
+    // run query to mariadb
     try {
         connection = await pool.getConnection();
-        let sql = 'SELECT * FROM v3_recipe_favorites';
-        await connection.query(sql)
-            .then((results) => {
-                res.send(JSON.stringify(results)).end();
-                // res.json(results).end();
-            });
+        await connection.query('SELECT fridge_id AS fridgeID FROM v3_sessions WHERE session=?', [session])
+            .then(async (rows) => {
+                if (rows.length > 0) {
+                    const fridgeID = rows[0].fridgeID;
+                    let sql = 'SELECT recipe_id AS recipeID FROM v3_recipe_favorites WHERE user_id=?';
+                    await connection.query(sql + ' LIMIT ? OFFSET ?', [userID, limit, (page - 1) * limit])
+                        .then((rows) => {
+                            if (rows.length > 0) {
+                                // res.send(JSON.stringify(rows)).end();
+                                res.json(rows).end();
+                            } else {
+                                res.sendStatus(406).end();
+                            }
+                        });
+
+                } else {
+                    res.sendStatus(401).end();
+                }
+            })
     } catch (error) {
         res.sendStatus(500).end();
         throw error;
@@ -367,6 +414,26 @@ recipes.get('/favorites', async (req, res) => {
         }
     }
 });
+
+//for testing
+// recipes.get('/favorites', async (req, res) => {
+//     try {
+//         connection = await pool.getConnection();
+//         let sql = 'SELECT * FROM v3_recipe_favorites';
+//         await connection.query(sql)
+//             .then((results) => {
+//                 res.send(JSON.stringify(results)).end();
+//                 // res.json(results).end();
+//             });
+//     } catch (error) {
+//         res.sendStatus(500).end();
+//         throw error;
+//     } finally {
+//         if (connection) {
+//             connection.release(); // release to pool
+//         }
+//     }
+// });
 
 
 
