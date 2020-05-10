@@ -14,7 +14,7 @@ import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTop
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
-import UserDialog from '../../components/horizontal-prototype/UserDialog';
+import UsersDialog from '../../components/horizontal-prototype/UsersDialog';
 import UsersListCard from '../../components/horizontal-prototype/UsersListCard';
 
 import { apiUrl } from '../../url';
@@ -161,7 +161,7 @@ export default () => {
           ></MaterialFab>
         </TopAppBarFixedAdjust>
       </View>
-      <UserDialog
+      <UsersDialog
         open={dialogOpen}
         name={name}
         role={role}
@@ -173,7 +173,7 @@ export default () => {
         onTrailingIconSelect2={() => setRole('')}
         onTrailingIconSelect3={() => setIntolerances('')}
         onClose={handleSubmission}
-      ></UserDialog>
+      ></UsersDialog>
     </>
   );
 };

@@ -18,7 +18,7 @@ let strings = new LocalizedStrings({
   },
 });
 
-function UserDialog(props) {
+function UsersDialog(props) {
   return (
     <Dialog open={props.open} onClose={props.onClose}>
       <DialogTitle>{strings.create_edit_user}</DialogTitle>
@@ -47,4 +47,4 @@ function UserDialog(props) {
   );
 }
 
-export default UserDialog;
+export default UsersDialog;
