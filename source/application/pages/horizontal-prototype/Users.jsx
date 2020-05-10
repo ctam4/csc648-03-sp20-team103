@@ -14,7 +14,6 @@ import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTop
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
-import IngredientsListCard from '../../components/horizontal-prototype/IngredientsListCard';
 import UserDialog from '../../components/horizontal-prototype/UserDialog';
 import UsersListCard from '../../components/horizontal-prototype/UsersListCard';
 
