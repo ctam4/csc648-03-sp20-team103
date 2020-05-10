@@ -39,18 +39,40 @@ export default () => {
   }, []);
 
   const dummySetup = () => {
-    // TODO: hard code consumption array
+    // TODO: hard code users array
     setUsers([
       {
-        title: 'User 1 ',
-        role: 'role',
- 
+        primaryText: 'User 1 ',
+        secondaryText: 'role',
       }
     ]);
   };
 
   const load = async () => {
-    // TODO: fetch
+    await fetch(apiUrl + '/v3/users?session=' + cookies.session, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(res.status + ' ' + res.statusText);
+      }
+      return res.json();
+    })
+    .then((data) => {
+      let users = [];
+      data.foreach((item) => users.push({
+        key: item.userID,
+        primaryText: item.name,
+        secondaryText: item.role,
+      }));
+      setUsers(users);
+    })
+    .catch(console.log);
+    // @todo snackbar
   };
 
   const toggleDrawer = () => {
@@ -68,6 +90,7 @@ export default () => {
   const handleSubmission = () => {
     // @todo
     toggleDialog();
+    window.location.reload();
   };
 
   return (
