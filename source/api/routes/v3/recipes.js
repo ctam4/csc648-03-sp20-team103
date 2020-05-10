@@ -17,19 +17,18 @@ let connection;
  */
 
 let recipeIDS = [];
-let recipeInfo = [];
 
 //function to get recipe info of each recipeID
 async function handleRecipes() {
-    recipeInfo = [];
+    let recipeInfo = [];
     for (let i = 0; i < recipeIDS.length; i++) {
         let results = [];
-        await fetch('https://api.spoonacular.com/recipes/' + recipeIDS[i] + '/information?includeNutrition=false' + '&apiKey=1732084d103b437e9bc0a778d540c589', {
-            method: 'get',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
+        await fetch('https://api.spoonacular.com/recipes/' + recipeIDS[i] + '/information?includeNutrition=false' + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
+                method: 'get',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
             .then((res) => {
                 if (!res.ok) {
                     throw new Error('error ' + res.status);
@@ -37,33 +36,42 @@ async function handleRecipes() {
                 return res.json();
             })
             .then((data) => {
-                let recipe_id = data.id;
+                let recipeID = data.id;
                 // let name = data.sourceName;
                 let title = data.title;
                 let image = data.image;
                 let servings = data.servings;
-                let cooking_time = data.readyInMinutes;
-                let instructions = "none";
+                let cookingTime = data.readyInMinutes;
+                let instructions = 'none';
                 if (data.instructions !== null) {
                     instructions = data.instructions;
                 }
 
-                connection.query('INSERT INTO v3_recipes(recipe_id,  title, image, servings, cooking_time, instructions) VALUES(?, ?, ?, ?, ?, ?)', [recipe_id, title, image, servings, cooking_time, instructions]);
+                connection.query('INSERT IGNORE INTO v3_recipes(recipe_id,  title, image, servings, cooking_time, instructions) VALUES(?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions]);
                 // console.log(data);
                 let ingredientInfo = [];
                 //getting the ingredients
-                if (data) {
+                if (data !== 'undefined') {
                     data.extendedIngredients.map((item) => {
-                        ingredientInfo.push(item.original);
+                        let ingredientID = parseInt(item.id);
+                        let quantity = parseInt(item.amount);
+                        let unit = (item.unit);
+                        let name = item.name
+                        connection.query('INSERT IGNORE INTO v3_ingredients(ingredient_id,  name, image) VALUES(?, ?, ?)', [ingredientID, name, image]);
+                        ingredientInfo = {
+                            ingredientID: ingredientID,
+                            quantity: quantity,
+                            unit: unit
+                        }
                     });
                     // parse date format
                     //store recipe info
                     results = {
-                        recipe_id: recipe_id,
+                        recipeID: recipeID,
                         title: title,
                         image: image,
                         servings: servings,
-                        cooking_time: cooking_time,
+                        cookingTime: cookingTime,
                         instructions: instructions,
                         ingredients: ingredientInfo
                     }
@@ -80,7 +88,7 @@ async function handleRecipes() {
 recipes.get('/search', async (req, res) => {
     // check correct params
     if ((Object.keys(req.query).length == 2 ||
-        (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
+            (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
         !('session' in req.query && 'query' in req.query)) {
         res.sendStatus(400).end();
         return;
@@ -103,7 +111,6 @@ recipes.get('/search', async (req, res) => {
     }
     // run query to mariadb
     try {
-
         connection = await pool.getConnection();
         // retrieve fridge_id
         await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
@@ -112,12 +119,12 @@ recipes.get('/search', async (req, res) => {
                     // @todo handle possible duplicate sessions
                     const fridgeID = rows[0].fridge_id;
                     // retrieve for endpoint
-                    await fetch('https://api.spoonacular.com/recipes/search?query=' + query + '&number=' + limit + '&apiKey=1732084d103b437e9bc0a778d540c589', {
-                        method: 'get',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    })
+                    await fetch('https://api.spoonacular.com/recipes/search?query=' + query + '&number=' + limit + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
+                            method: 'get',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
                         .then((res) => {
                             if (!res.ok) {
                                 throw new Error('error ' + res.status);
@@ -140,7 +147,7 @@ recipes.get('/search', async (req, res) => {
                         });
 
                     //call function to get recipe info for all recipeIDS
-                    recipeInfo = await handleRecipes();
+                    let recipeInfo = await handleRecipes();
                     res.json(recipeInfo).end();
 
                 } else {
@@ -156,6 +163,7 @@ recipes.get('/search', async (req, res) => {
         }
     }
 });
+
 
 /**
  * GET /v3/recipes
