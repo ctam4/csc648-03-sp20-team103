@@ -1,25 +1,25 @@
-import * as React from "react";
-import CreateReactClass from "create-react-class";
-import { connect } from "react-redux";
-import LocalizedStrings from "react-localization";
-import { Button, StyleSheet, Text, View } from "react-native";
+import * as React from 'react';
+import CreateReactClass from 'create-react-class';
+import { connect } from 'react-redux';
+import LocalizedStrings from 'react-localization';
+import { Button, StyleSheet, Text, View } from 'react-native';
 
-import { login } from "../../actions/product-prototype/auth";
+import { login } from '../../actions/product-prototype/auth';
 
 let apiUrl = process.env.API_HOST || location.hostname;
 if (process.env.API_PORT) {
-  apiUrl += ":" + process.env.API_PORT;
+  apiUrl += ':' + process.env.API_PORT;
 }
 
 let strings = new LocalizedStrings({
   en: {
-    loggeg_in: "Logged In: ",
-    login: "Login",
+    loggeg_in: 'Logged In: ',
+    login: 'Login',
   },
 });
 const styles = StyleSheet.create({
   box: { padding: 10 },
-  text: { fontWeight: "bold" },
+  text: { fontWeight: 'bold' },
 });
 const mapStateToProps = (state) => {
   return {

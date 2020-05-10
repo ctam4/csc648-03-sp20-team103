@@ -1,58 +1,52 @@
-import React, { useEffect, useState } from "react";
-import { useCookies } from "react-cookie";
+import React, { useEffect, useState } from 'react';
+import { useCookies } from 'react-cookie';
 
-import { StyleSheet, View, ScrollView } from "react-native";
-import { TopAppBarFixedAdjust } from "@material/react-top-app-bar";
-import { DrawerAppContent } from "@material/react-drawer";
-import LocalizedStrings from "react-localization";
+import { View, useWindowDimensions } from 'react-native';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import { DrawerAppContent } from '@material/react-drawer';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import '@material/react-layout-grid/dist/layout-grid.css';
+import LocalizedStrings from 'react-localization';
 
-import MaterialTopAppBar from "../../components/horizontal-prototype/MaterialTopAppBar";
-import MaterialDrawer from "../../components/horizontal-prototype/MaterialDrawer";
-import CartsCard from "../../components/horizontal-prototype/CartsCard";
-import AppFooter from "../../components/horizontal-prototype/AppFooter";
+import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
+import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
+import CartsCard from '../../components/horizontal-prototype/CartsCard';
+
+import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
   en: {
-    carts: "Carts",
-    last_updated: "last updated",
-    user_cart: "'s cart",
-    preview_cart: "This is the preview of the cart. It may shows up to 10 lines of items with quantity",
-    edit: "Edit",
-    clear_cart: "Clear cart",
-  },
-});
-const styles = StyleSheet.create({
-  scrollArea1: {
-    minWidth: 360,
-    width: "100%",
-    height: "100%",
-    minHeight: 628,
-    maxHeight: "100%",
-    backgroundColor: "rgba(230, 230, 230,1)",
-  },
-  scrollArea1_contentContainerStyle: {
-    minWidth: 360,
-    width: "100%",
-    flexDirection: "column",
-  },
-  materialCardWithoutImage: {
-    alignSelf: "stretch",
-    margin: 15,
-  },
-  materialBasicFooter1: {
-    minWidth: 360,
-    width: "100%",
-    height: 56,
+    carts: 'Carts',
+    last_updated: 'last updated ',
+    user_cart: ' \'s cart',
+    edit: 'Edit',
+    clear_cart: 'Clear cart',
+    toast_edited: 'Cart edited.',
+    toast_cleared: 'Cart cleared.',
   },
 });
 
 export default () => {
-  const [cookies, setCookie] = useCookies(["session"]);
+  const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [toast, setToast] = useState('');
+  const [carts, setCarts] = useState([]);
 
   useEffect(() => {
+    dummySetup();
     load();
   }, []);
+
+  const dummySetup = () => {
+    // TODO: hard code carts array
+    setCarts([
+      {
+        title: 'user 1',
+        subtitle: '21 days ago',
+        content: 'This is the preview of the cart. It may shows up to 10 lines of items with quantity.',
+      },
+    ]);
+  };
 
   const load = async () => {
     // TODO: fetch
@@ -67,36 +61,42 @@ export default () => {
   };
 
   return (
-    <View style={styles.drawerContainer}>
+    <View className='drawer-container'>
       <MaterialTopAppBar
         title={strings.carts}
         onClick1={toggleDrawer}
         //onClick2={() => window.location.href = './' }
       ></MaterialTopAppBar>
-      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <MaterialDrawer
           open={drawerOpen}
+          selectedIndex={2}
           onClose={toggleDrawer}
         ></MaterialDrawer>
-        <DrawerAppContent className="drawer-app-content">
-          <View style={styles.scrollArea1}>
-            <ScrollView
-              contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-            >
-              <CartsCard
-                text1={strings.user_cart}
-                text2={strings.last_updated}
-                text3={strings.preview_cart}
-                text4={strings.edit}
-                text5={strings.clear_cart}
-                style={styles.materialCardWithoutImage}
-                onPressAction1={() => { window.location.href = './carts/view?id=' }}
-                onPressAction2={handleClearCart}
-              ></CartsCard>
-            </ScrollView>
-            <AppFooter style={styles.materialBasicFooter1}></AppFooter>
-          </View>
+        <DrawerAppContent className='drawer-app-content'>
+          <Grid style={{ height: useWindowDimensions().height - 64 }}>
+            {carts.length > 0 && (
+            <Row>
+              {carts.map((item) => (
+              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                <CartsCard
+                  mainText1={item.title + strings.user_cart}
+                  mainText2={strings.last_updated + item.subtitle}
+                  bodyText={item.content}
+                  actionText1={strings.edit}
+                  actionText2={strings.clear_cart}
+                  onClickAction1={() => { window.location.href = 'view/?id=' }}
+                  onClickAction2={handleClearCart}
+                ></CartsCard>
+              </Cell>
+              ))}
+            </Row>
+            )}
+          </Grid>
         </DrawerAppContent>
+        {toast && (
+        <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+        )}
       </TopAppBarFixedAdjust>
     </View>
   );

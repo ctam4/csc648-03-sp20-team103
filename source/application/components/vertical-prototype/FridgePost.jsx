@@ -66,16 +66,16 @@ export default React.createElement(CreateReactClass({
       <form onSubmit={this.handleSubmit}>
         <p><label>FridgePost</label></p>
         <p><input
-          type="number"
-          id="fridge_id"
-          name="fridge_id"
+          type='number'
+          id='fridge_id'
+          name='fridge_id'
           value={this.state.fridge_id}
           onChange={this.handleTextChange}
           required
         /></p>
         <p>
-          <button id="btnSubmit">Send</button>
-          <button id="btnReset" onClick={this.handleReset}>Reset</button>
+          <button id='btnSubmit'>Send</button>
+          <button id='btnReset' onClick={this.handleReset}>Reset</button>
         </p>
         <code>{msg}</code>
       </form>
