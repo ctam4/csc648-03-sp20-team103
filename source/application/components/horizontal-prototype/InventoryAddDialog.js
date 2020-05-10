@@ -6,9 +6,9 @@ import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings({
   en: {
-    add_edit_inventory: 'ADD / EDIT inventory',
+    add_inventory: 'ADD inventory',
     quantity: 'Quantity',
-    quantity_helper: 'This is the name of the storable.',
+    quantity_helper: 'This is the quantity of the storable.',
     unit: 'Unit',
     unit_helper: 'This is the unit of the storable.',
     price: 'Price',
@@ -16,14 +16,14 @@ let strings = new LocalizedStrings({
     expiration_date: 'Expiration date',
     expiration_date_helper: 'This is the expiration date of the storable.',
     cancel: 'Cancel',
-    okay: 'OK',
+    okay: 'Add',
   },
 });
 
-function InventoryDialog(props) {
+function InventoryAddDialog(props) {
   return (
     <Dialog open={props.open} onClose={props.onClose}>
-      <DialogTitle>{strings.add_edit_inventory}</DialogTitle>
+      <DialogTitle>{strings.add_inventory}</DialogTitle>
       <DialogContent>
         <MaterialFilledTextField
           label={strings.quantity}
@@ -56,10 +56,10 @@ function InventoryDialog(props) {
       </DialogContent>
       <DialogFooter>
         <DialogButton action='dismiss'>{strings.cancel}</DialogButton>
-        <DialogButton action='confirm' isDefault>{strings.okay}</DialogButton>
+        <DialogButton action='confirm' isDefault>{strings.add}</DialogButton>
       </DialogFooter>
     </Dialog>
   );
 }
 
-export default InventoryDialog;
+export default InventoryAddDialog;
