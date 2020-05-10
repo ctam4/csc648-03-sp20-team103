@@ -55,7 +55,7 @@ function InventoryDialog(props) {
         ></MaterialFilledTextField>
       </DialogContent>
       <DialogFooter>
-        <DialogButton action='cancel'>{strings.cancel}</DialogButton>
+        <DialogButton action='dismiss'>{strings.cancel}</DialogButton>
         <DialogButton action='confirm' isDefault>{strings.okay}</DialogButton>
       </DialogFooter>
     </Dialog>
