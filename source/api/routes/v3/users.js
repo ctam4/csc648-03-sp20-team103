@@ -41,8 +41,7 @@ users.get('/', async (req, res) => {
           await connection.query('SELECT user_id AS userID, name, role, intolerances, created_ts AS createdTS FROM v3_users WHERE fridge_id=?', [fridgeID])
             .then((rows2) => {
               if (rows2.length > 0) {
-                // res.send(JSON.stringify(rows)).end();
-                res.json(rows2).end();
+                res.json(rows2.filter((user, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }

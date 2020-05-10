@@ -82,7 +82,7 @@ inventory.get('/list/:state', async (req, res) => {
             .then((rows) => {
               if (rows.length > 0) {
                 // res.send(JSON.stringify(rows)).end();
-                res.json(rows).end();
+                res.json(rows.filter((inventory, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
