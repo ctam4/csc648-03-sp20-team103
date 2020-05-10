@@ -161,7 +161,7 @@ recipes.get('/search', async (req, res) => {
  * GET /v3/recipes
  * @description Retreives recipe information given their IDs.
  * @param {integer[]} recipeIDs
- * @returns {Recipe[]} recipes
+ * @returns {Recipe[]}
  */
 recipes.get('/', async (req, res) => {
     // check correct params
@@ -170,23 +170,22 @@ recipes.get('/', async (req, res) => {
         return;
     }
     // check params data range
-    if (typeof req.query.session !== 'string' || typeof req.query.recipeID !== 'string') {
+    if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
         res.sendStatus(400).end();
         return;
     }
     // check recipeIDs
-    const ids = req.query.recipeIDs.split(',').map(parseInt);
-    if (!ids.every(value => !isNaN(value) && value >= 0)) {
+    const recipeIDs = req.query.recipeIDs.split(',').map(parseInt);
+    if (!recipeIDs.every(value => !isNaN(value) && value >= 0)) {
         res.sendStatus(400).end();
         return;
     }
-
     try {
         connection = await pool.getConnection();
         await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
             .then(async (rows) => {
                 if (rows.length > 0) {
-                    await connection.query('SELECT recipe_id as recipeID, title, image, servings, cooking_time as cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?)', ids.split(','))
+                    await connection.query('SELECT recipe_id as recipeID, title, image, servings, cooking_time as cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?)', [recipeIDs.split(',')])
                         .then(async (rows2) => {
                             const recipes = await Promise.all(rows2.map(async (recipe, index) => {
                                 if (index !== 'meta') {
