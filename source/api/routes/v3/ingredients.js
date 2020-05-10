@@ -8,8 +8,8 @@ let connection;
 /**
  * GET /v3/ingredients
  * @description Retrieves ingredient information given their IDs.
- * @param {integer[]} ingredientIDs
- * @return {Ingredient[]}
+ * @param {integer(,integer)} ingredientIDs
+ * @return {object[]} ingredients
  */
 ingredients.get('/', async (req, res) => {
   // check correct params
@@ -17,14 +17,19 @@ ingredients.get('/', async (req, res) => {
     res.sendStatus(400).end();
     return;
   }
-  // check params data range
-  if (typeof req.query.session !== 'string' || typeof req.query.ingredientIDs !== 'string') {
+  // check params data type
+  let ingredientIDs;
+  try {
+    if (typeof req.query.session !== 'string' || typeof req.query.ingredientIDs !== 'string') {
+      throw new TypeError();
+    }
+    ingredientIDs = req.query.ingredientIDs.split(',').map(parseInt);
+  } catch (error) {
     res.sendStatus(400).end();
-    return;
+    throw error;
   }
-  // check ingredientIDs
-  const ingredientIDs = req.query.ingredientIDs.split(',').map(parseInt);
-  if (!ingredientIDs.every(value => !isNaN(value) && value >= 0)) {
+  // check params data range
+  if (session.length !== 36 || ingredientIDs.length === 0 || !ingredientIDs.every(value => !isNaN(value) && value > 0)) {
     res.sendStatus(400).end();
     return;
   }
@@ -33,11 +38,10 @@ ingredients.get('/', async (req, res) => {
     await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await connection.query('SELECT ingredient_id as ingredientID, name, image FROM v3_ingredients WHERE ingredient_id IN (?)', [ingredientIDs.split(',')])
+          await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v3_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id', [ingredientIDs])
             .then(async (rows2) => {
-              const ingredients = rows2.filter((ingredient, index) => index !== 'meta');
-              if (ingredients.length > 0) {
-                res.json(ingredients).end();
+              if (row2.length > 0) {
+                res.json(rows2.filter((ingredient, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -50,9 +54,9 @@ ingredients.get('/', async (req, res) => {
     res.sendStatus(500).end();
     throw error;
   } finally {
-      if (connection) {
-          connection.release(); // release to pool
-      }
+    if (connection) {
+      connection.release(); // release to pool
+    }
   }
 });
 
@@ -68,8 +72,8 @@ ingredients.get('/', async (req, res) => {
 ingredients.get('/search', async (req, res) => {
   // check correct params
   if ((Object.keys(req.query).length === 2 ||
-  (Object.keys(req.query).length === 4 && !('page' in req.query && 'limit' in req.query))) &&
-  !('session' in req.query && 'query' in req.query)) {
+    (Object.keys(req.query).length === 4 && !('page' in req.query && 'limit' in req.query))) &&
+    !('session' in req.query && 'query' in req.query)) {
     res.sendStatus(400).end();
     return;
   }

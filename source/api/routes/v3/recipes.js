@@ -160,8 +160,8 @@ recipes.get('/search', async (req, res) => {
 /**
  * GET /v3/recipes
  * @description Retreives recipe information given their IDs.
- * @param {integer[]} recipeIDs
- * @returns {Recipe[]}
+ * @param {integer(,integer)} recipeIDs
+ * @returns {object[]} recipes
  */
 recipes.get('/', async (req, res) => {
     // check correct params
@@ -172,7 +172,7 @@ recipes.get('/', async (req, res) => {
     // check params data type
     let recipeIDs;
     try {
-        if (typeof req.query.session !== 'string' || typeof req.query.recipeID !== 'string') {
+        if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
             throw new TypeError();
         }
         recipeIDs = req.query.recipeIDs.split(',').map(parseInt);
@@ -181,7 +181,7 @@ recipes.get('/', async (req, res) => {
         throw error;
     }
     // check params data range
-    if (session.length !== 36 || !recipeIDs.every(value => !isNaN(value) && value > 0)) {
+    if (session.length !== 36 || recipeIDs.length === 0 || !recipeIDs.every(value => !isNaN(value) && value > 0)) {
         res.sendStatus(400).end();
         return;
     }
@@ -191,7 +191,7 @@ recipes.get('/', async (req, res) => {
         await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
             .then(async (rows) => {
                 if (rows.length > 0) {
-                    await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?)', recipeIDs)
+                    await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', recipeIDs)
                         .then(async (rows2) => {
                             if (rows2.length > 0) {
                                 const recipes = await Promise.all(rows2.map(async (recipe, index) => {
@@ -199,7 +199,7 @@ recipes.get('/', async (req, res) => {
                                         await connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v3_recipe_ingredients WHERE recipe_id=?', [recipe.recipeID])
                                             .then(async (rows3) => {
                                                 if (row3.length > 0) {
-                                                  recipe.ingredients = rows3.filter((ingredient, index) => index !== 'meta');
+                                                  recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
                                                 }
                                             });
                                     }
