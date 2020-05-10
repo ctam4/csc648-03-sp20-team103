@@ -197,28 +197,29 @@ recipes.get('/', async (req, res) => {
         return;
     }
     // check params data type
-    let recipeIDs;
+    let session, recipeIDs;
     try {
         if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
             throw new TypeError();
         }
+        session.req.query.session;
         recipeIDs = req.query.recipeIDs.split(',').map(value => parseInt(value));
     } catch (error) {
         res.sendStatus(400).end();
         throw error;
     }
     // check params data range
-    if (req.query.session.length !== 36 || recipeIDs.length === 0 || !recipeIDs.every(value => !isNaN(value) && value > 0)) {
+    if (session.length !== 36 || recipeIDs.length === 0 || !recipeIDs.every(value => !isNaN(value) && value > 0)) {
         res.sendStatus(400).end();
         return;
     }
     // run query to mariadb
     try {
         connection = await pool.getConnection();
-        await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [req.query.session])
+        await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
             .then(async (rows) => {
                 if (rows.length > 0) {
-                    await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(',')])
+                    await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(', ')])
                         .then(async (rows2) => {
                             if (rows2.length > 0) {
                               // console.log(rows2);
