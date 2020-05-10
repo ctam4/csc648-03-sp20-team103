@@ -59,11 +59,12 @@ async function handleRecipes() {
                         let name = item.name
                         connection.query('INSERT IGNORE INTO v3_recipe_ingredients(recipe_id,  ingredient_id, quantity, unit) VALUES(?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
                         connection.query('INSERT IGNORE INTO v3_ingredients(ingredient_id,  name, image) VALUES(?, ?, ?)', [ingredientID, name, image]);
-                        ingredientInfo = {
+                        ingredientInfo.push({
                             ingredientID: ingredientID,
                             quantity: quantity,
                             unit: unit
-                        }
+                        })
+                        // console.log(ingredientInfo);
                     });
                     // parse date format
                     //store recipe info
