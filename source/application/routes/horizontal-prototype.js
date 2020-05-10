@@ -1,6 +1,6 @@
 const express = require('express');
 const fs = require('fs');
-const router = express.Router();
+const router = express.Router({ mergeParams: true, strict: true });
 const handlebars = require('handlebars');
 
 router.get('/', async (req, res) => {
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
   res.send(render);
 });
 
-router.get('/inventory', async (req, res) => {
+router.get('/inventory/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_inventory.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -21,7 +21,7 @@ router.get('/inventory', async (req, res) => {
   res.send(render);
 });
 
-router.get('/inventory/view', async (req, res) => {
+router.get('/inventory/view/', async (req, res) => {
   // TODO: check for id exits using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_inventory-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
@@ -31,7 +31,7 @@ router.get('/inventory/view', async (req, res) => {
   res.send(render);
 });
 
-router.get('/inventory/search', async (req, res) => {
+router.get('/inventory/search/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_inventory-search.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -40,7 +40,7 @@ router.get('/inventory/search', async (req, res) => {
   res.send(render);
 });
 
-router.get('/inventory/add', async (req, res) => {
+router.get('/inventory/add/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_inventory-add.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -49,7 +49,7 @@ router.get('/inventory/add', async (req, res) => {
   res.send(render);
 });
 
-router.get('/inventory/add/barcode', async (req, res) => {
+router.get('/inventory/add/barcode/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_inventory-add-barcode.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -58,7 +58,7 @@ router.get('/inventory/add/barcode', async (req, res) => {
   res.send(render);
 });
 
-router.get('/inventory/add/receipt', async (req, res) => {
+router.get('/inventory/add/receipt/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_inventory-add-receipt.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -67,7 +67,7 @@ router.get('/inventory/add/receipt', async (req, res) => {
   res.send(render);
 });
 
-router.get('/recipes', async (req, res) => {
+router.get('/recipes/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_recipes.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -76,7 +76,7 @@ router.get('/recipes', async (req, res) => {
   res.send(render);
 });
 
-router.get('/recipes/view', async (req, res) => {
+router.get('/recipes/view/', async (req, res) => {
   // TODO: check for id exits using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_recipes-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
@@ -86,7 +86,7 @@ router.get('/recipes/view', async (req, res) => {
   res.send(render);
 });
 
-router.get('/recipes/create', async (req, res) => {
+router.get('/recipes/create/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_recipes-create.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -95,7 +95,7 @@ router.get('/recipes/create', async (req, res) => {
   res.send(render);
 });
 
-router.get('/recipes/search', async (req, res) => {
+router.get('/recipes/search/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_recipes-search.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -104,7 +104,7 @@ router.get('/recipes/search', async (req, res) => {
   res.send(render);
 });
 
-router.get('/carts', async (req, res) => {
+router.get('/carts/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_carts.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -113,7 +113,7 @@ router.get('/carts', async (req, res) => {
   res.send(render);
 });
 
-router.get('/carts/view', async (req, res) => {
+router.get('/carts/view/', async (req, res) => {
   // TODO: check for id exits using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_carts-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
@@ -123,7 +123,7 @@ router.get('/carts/view', async (req, res) => {
   res.send(render);
 });
 
-router.get('/consumption', async (req, res) => {
+router.get('/consumption/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_consumption.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -132,7 +132,7 @@ router.get('/consumption', async (req, res) => {
   res.send(render);
 });
 
-router.get('/consumption/view', async (req, res) => {
+router.get('/consumption/view/', async (req, res) => {
   // TODO: check for id exits using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_consumption-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
@@ -143,7 +143,7 @@ router.get('/consumption/view', async (req, res) => {
 });
 
 
-router.get('/meal-plans', async (req, res) => {
+router.get('/meal-plans/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_meal-plans.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -152,7 +152,7 @@ router.get('/meal-plans', async (req, res) => {
   res.send(render);
 });
 
-router.get('/meal-plans/view', async (req, res) => {
+router.get('/meal-plans/view/', async (req, res) => {
   // TODO: check for id exits using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_meal-plans-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
@@ -162,7 +162,7 @@ router.get('/meal-plans/view', async (req, res) => {
   res.send(render);
 });
 
-router.get('/users', async (req, res) => {
+router.get('/users/', async (req, res) => {
   const raw = fs.readFileSync('./build/horizontal-prototype_users.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({

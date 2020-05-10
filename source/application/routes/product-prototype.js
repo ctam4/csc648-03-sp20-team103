@@ -1,6 +1,6 @@
 const express = require('express');
 const fs = require('fs');
-const router = express.Router();
+const router = express.Router({ mergeParams: true, strict: true });
 const handlebars = require('handlebars');
 
 router.get('/', async (req, res) => {
