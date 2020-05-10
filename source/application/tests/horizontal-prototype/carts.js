@@ -10,7 +10,10 @@ test.before(async (t) => {
     const app = express();
     const httpPort = 20004;
     const compression = require('compression');
+    const cookieParser = require('cookie-parser');
+    app.use(cookieParser());
     app.use(compression());
+    app.enable('strict routing');
     app.use('/horizontal-prototype', require('../../routes/horizontal-prototype.js'));
     app.use(/^\/(.*)\.(?!html|htm)(.+)\/?(?=\/|$)/i, (req, res, next) => {
       req.url = path.basename(req.originalUrl);
@@ -31,16 +34,16 @@ test.before(async (t) => {
     });
 });
 
-test('/carts | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/horizontal-prototype/carts')
+test('/carts/ | GET | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/horizontal-prototype/carts/')
     .then((res) => {
-      t.is(res.status, 200);
+      t.is(res.status, 401);
     });
 });
 
-test('/carts/view | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/horizontal-prototype/carts/view')
+test('/carts/view/ | GET | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/horizontal-prototype/carts/view/')
     .then((res) => {
-      t.is(res.status, 200);
+      t.is(res.status, 401);
     });
 });

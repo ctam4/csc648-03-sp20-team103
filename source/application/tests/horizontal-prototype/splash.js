@@ -10,7 +10,10 @@ test.before(async (t) => {
     const app = express();
     const httpPort = 20001;
     const compression = require('compression');
+    const cookieParser = require('cookie-parser');
+    app.use(cookieParser());
     app.use(compression());
+    app.enable('strict routing');
     app.use('/horizontal-prototype', require('../../routes/horizontal-prototype.js'));
     app.use(/^\/(.*)\.(?!html|htm)(.+)\/?(?=\/|$)/i, (req, res, next) => {
       req.url = path.basename(req.originalUrl);
@@ -32,7 +35,7 @@ test.before(async (t) => {
 });
 
 test('/ | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/horizontal-prototype')
+  await fetch(t.context.baseUrl + '/horizontal-prototype/')
     .then((res) => {
       t.is(res.status, 200);
     });

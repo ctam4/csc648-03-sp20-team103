@@ -10,7 +10,10 @@ test.before(async (t) => {
     const app = express();
     const httpPort = 20003;
     const compression = require('compression');
+    const cookieParser = require('cookie-parser');
+    app.use(cookieParser());
     app.use(compression());
+    app.enable('strict routing');
     app.use('/horizontal-prototype', require('../../routes/horizontal-prototype.js'));
     app.use(/^\/(.*)\.(?!html|htm)(.+)\/?(?=\/|$)/i, (req, res, next) => {
       req.url = path.basename(req.originalUrl);
@@ -31,30 +34,30 @@ test.before(async (t) => {
     });
 });
 
-test('/recipes | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/horizontal-prototype/recipes')
+test('/recipes/ | GET | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/horizontal-prototype/recipes/')
     .then((res) => {
-      t.is(res.status, 200);
+      t.is(res.status, 401);
     });
 });
 
-test('/recipes/view | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/horizontal-prototype/recipes/view')
+test('/recipes/view/ | GET | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/horizontal-prototype/recipes/view/')
     .then((res) => {
-      t.is(res.status, 200);
+      t.is(res.status, 401);
     });
 });
 
-test('/recipes/create | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/horizontal-prototype/recipes/create')
+test('/recipes/create/ | GET | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/horizontal-prototype/recipes/create/')
     .then((res) => {
-      t.is(res.status, 200);
+      t.is(res.status, 401);
     });
 });
 
-test('/recipes/search | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/horizontal-prototype/recipes/search')
+test('/recipes/search/ | GET | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/horizontal-prototype/recipes/search/')
     .then((res) => {
-      t.is(res.status, 200);
+      t.is(res.status, 401);
     });
 });
