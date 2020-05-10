@@ -144,31 +144,33 @@ export default () => {
   };
 
   const handleSave = async () => {
-    await Promise.all(inventory.forEach(async (item) => {
-      await fetch(apiUrl + '/v3/inventory/add/manual', {
-        method: 'post',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          session: cookies.session,
-          userID: cookies.userID,
-          ingredientID: item.ingredientID,
-          totalQuantity: item.quantity,
-          unit: item.unit,
-          price: item.price,
-          expirationDate: item.expirationDate,
-        }),
-      })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(res.status + ' ' + res.statusText);
-          }
-          return res.json();
+    if (inventory.length > 0) {
+      await Promise.all(inventory.forEach(async (item) => {
+        await fetch(apiUrl + '/v3/inventory/add/manual', {
+          method: 'post',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            session: cookies.session,
+            userID: cookies.userID,
+            ingredientID: item.ingredientID,
+            totalQuantity: item.quantity,
+            unit: item.unit,
+            price: item.price,
+            expirationDate: item.expirationDate,
+          }),
         })
-        .catch(console.log);
-    }));
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error(res.status + ' ' + res.statusText);
+            }
+            return res.json();
+          })
+          .catch(console.log);
+      }));
+    }
     window.location.href = '..';
   };
 
