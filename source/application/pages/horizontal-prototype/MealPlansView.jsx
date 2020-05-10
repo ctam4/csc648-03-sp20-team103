@@ -67,7 +67,7 @@ export default () => {
       return res.json();
     })
     .then((data) => {
-      // TODO: fetch ingrdients info
+      // TODO: fetch meal plans info
       setQuantity(data.quantity);
       setUnit(data.unit);
       setPrice(data.price);
