@@ -192,7 +192,7 @@ recipes.get('/', async (req, res) => {
                                 if (index !== 'meta') {
                                     await connection.query('SELECT ingredient_id as ingredientID, quantity, unit in v3_recipe_ingredients WHERE recipe_id = ?', [row.recipeID])
                                         .then(async (rows) => {
-                                            recipe.ingredients = rows.filter(ingredient => ingredient !== 'meta');
+                                            recipe.ingredients = rows.filter((ingredient, index) => index !== 'meta');
                                         });
                                 }
                             }));
