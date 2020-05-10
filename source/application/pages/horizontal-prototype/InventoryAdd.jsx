@@ -173,6 +173,7 @@ export default () => {
   };
 
   const handleSubmission = (value) => {
+    toggleDialog();
     if (value === 'confirm') {
       let ingredient = ingredients.find((item) => item.ingredientID === state.ingredientID);
       inventory.push({
