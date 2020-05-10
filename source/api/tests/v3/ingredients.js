@@ -250,10 +250,9 @@ test('/ingredients | GET | 401', async (t) => {
       return res.json();
     })
     .then((data) => {
-      console.log(data);
       t.context.ingredientID1 = data.ingredientID;
     }).then(async () => {
-      await fetch(t.context.baseUrl + '/v3/ingredients/search?session=123456789012345678901234567890123456'+'&ingredientIDs='+t.context.ingredientID1, {
+      await fetch(t.context.baseUrl + '/v3/ingredients?session=123456789012345678901234567890123456'+'&ingredientIDs='+t.context.ingredientID1, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -298,7 +297,6 @@ test('/ingredients | GET | 200', async (t) => {
     return res.json();
   })
   .then((data) => {
-    console.log(data);
     t.context.ingredientID1 = data.ingredientID;
   }).then(async () => {
     await fetch(t.context.baseUrl + '/v3/ingredients?session='+t.context.session+'&ingredientIDs='+t.context.ingredientID1, {
@@ -313,7 +311,6 @@ test('/ingredients | GET | 200', async (t) => {
       return res.json();
     })
     .then((data) => {
-      console.log(data);
       t.true(data.length >= 1);
       t.is(Object.keys(data[0]).length, 3);
       t.true('ingredientID' in data[0]);
@@ -341,7 +338,6 @@ test('/ingredients | GET | 200', async (t) => {
           return res.json();
         })
         .then((data) => {
-          console.log(data);
           t.context.ingredientID2 = data.ingredientID;
         }).then(async () => {
           await fetch(t.context.baseUrl + '/v3/ingredients?session='+t.context.session+'&ingredientIDs='+t.context.ingredientID1 + ',' +t.context.ingredientID2, {
@@ -356,7 +352,6 @@ test('/ingredients | GET | 200', async (t) => {
             return res.json();
           })
           .then((data) => {
-            console.log(data);
             t.true(data.length >= 2);
             t.is(Object.keys(data[0]).length, 3);
             t.true('ingredientID' in data[0]);
