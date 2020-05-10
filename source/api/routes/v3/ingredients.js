@@ -80,7 +80,7 @@ ingredients.get('/search', async (req, res) => {
   // check params data type
   let session, query, page, limit;
   try {
-    if (typeof req.body.session !== 'string' || typeof req.body.query !== 'string') {
+    if (typeof req.query.session !== 'string' || typeof req.query.query !== 'string') {
       throw new TypeError();
     }
     session = req.query.session;
@@ -104,8 +104,9 @@ ingredients.get('/search', async (req, res) => {
       .then(async (rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
+          // @todo page
           // retrieve for endpoint
-          await fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&apiKey=bd1784451bab4f47ac234225bd2549ee', {
+          await fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&metaInformation=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
             method: 'get',
             headers: {
               'Content-Type': 'application/json',
