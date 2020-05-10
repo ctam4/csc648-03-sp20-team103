@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 import MaterialCard from './MaterialCard';
-import List, { ListGroup, ListGroupSubheader, ListDivider, ListItem, ListItemText } from '@material/react-list';
-import '@material/react-list/dist/list.css';
+import MaterialList from './MaterialList';
+import { ListGroup, ListGroupSubheader, ListDivider } from '@material/react-list';
 import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings({
@@ -19,16 +19,7 @@ function IngredientsListCard(props) {
         {props.list1 && (
         <>
           <ListGroupSubheader tag='h2'>{strings.required_ingredients}</ListGroupSubheader>
-          <List twoLine>
-            {props.list1.map((item, i) => (
-            <ListItem>
-              <ListItemText
-                primaryText={item.primaryText}
-                secondaryText={item.secondaryText}
-              />
-            </ListItem>
-            ))}
-          </List>
+          <MaterialList items={props.list1} />
         </>
         )}
         {props.list1 && props.list2 && (
@@ -37,16 +28,7 @@ function IngredientsListCard(props) {
         {props.list2 && (
         <>
           <ListGroupSubheader tag='h2'>{strings.optional_ingredients}</ListGroupSubheader>
-          <List twoLine>
-            {props.list2.map((item, i) => (
-            <ListItem>
-              <ListItemText
-                primaryText={item.primaryText}
-                secondaryText={item.secondaryText}
-              />
-            </ListItem>
-            ))}
-          </List>
+          <MaterialList items={props.list2} />
         </>
         )}
       </ListGroup>
