@@ -2,7 +2,17 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { inventoryAddReducer, initialState } from '../../reducers/horizontal-prototype/InventoryAdd';
-import { setSearchOpen, setKeywords } from '../../actions/horizontal-prototype/InventoryAdd';
+import {
+  setSearchOpen,
+  setDialogOpen,
+  setKeywords,
+  setAutoComplete,
+  setIngredientID,
+  setQuantity,
+  setUnit,
+  setPrice,
+  setExpirationDate,
+} from '../../actions/horizontal-prototype/InventoryAdd';
 
 import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
@@ -12,17 +22,21 @@ import MaterialIcon from '@material/react-material-icon';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import '@material/react-material-icon/dist/material-icon.css';
 import LocalizedStrings from 'react-localization';
+import Sugar from 'sugar';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
+import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
 import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
+import InventoryDialog from '../../components/horizontal-prototype/InventoryDialog';
 
 import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
   en: {
-    select: 'Select',
+    expiring: 'Expiring',
+    expired: 'Expired',
     remove: 'Remove',
   },
 });
@@ -31,11 +45,12 @@ export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [state, dispatch] = useReducer(inventoryAddReducer, initialState);
   const [inventory, setInventory] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-    dummySetup();
+    // dummySetup();
     load();
-  }, []);
+  });
 
   const dummySetup = () => {
     // TODO: hard code inventory array
@@ -54,11 +69,43 @@ export default () => {
   };
 
   const load = async () => {
-    // TODO: fetch
+    if (state.searchOpen) {
+      if (state.keywords.length > 0) {
+        await fetch(apiUrl + '/v3/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+          method: 'get',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((res) => {
+            if (!res.ok) {
+              throw new Error(res.status + ' ' + res.statusText);
+            }
+            return res.json();
+          })
+          .then((data) => {
+            setIngredients(data);
+            const ingredients = data.map((item) => {
+              return {
+                key: item.ingredientID,
+                primaryText: item.name,
+                ingredient: item,
+              };
+            });
+            dispatch(setAutoComplete(ingredients));
+          })
+          .catch(console.log);
+      }
+    }
   };
 
   const toggleSearch = () => {
     dispatch(setSearchOpen(!state.searchOpen));
+  };
+
+  const toggleDialog = () => {
+    dispatch(setDialogOpen(!state.dialogOpen));
   };
 
   const handleGoBack = () => {
@@ -67,60 +114,162 @@ export default () => {
     }
   };
 
-  const handleRemove = async () => {
-    // TODO: fetch
+  const handleAutoComplete = async (value) => {
+    // add to ingredients, prototype
+    await fetch(apiUrl + '/v3/ingredients', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session: cookies.session,
+        ingredientID: state.autoComplete[value].ingredient.ingredientID,
+        name: state.autoComplete[value].ingredient.name,
+        image: state.autoComplete[value].ingredient.image,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.status + ' ' + res.statusText);
+        }
+      })
+      .catch(console.log);
+    dispatch(setIngredientID(state.autoComplete[value].key))
+    toggleDialog();
+  };
+
+  const handleRemove = (key) => {
+    setInventory(inventory.filter((item) => item.key !== key));
   };
 
   const handleSave = async () => {
-    // TODO: fetch to post
-    if (history.length > 0) {
-      history.go(-2);
+    await Promise.all(inventory.forEach(async (item) => {
+      await fetch(apiUrl + '/v3/inventory/add/manual', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session: cookies.session,
+          userID: cookies.userID,
+          ingredientID: item.ingredientID,
+          totalQuantity: item.quantity,
+          unit: item.unit,
+          price: item.price,
+          expirationDate: item.expirationDate,
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(res.status + ' ' + res.statusText);
+          }
+          return res.json();
+        })
+        .catch(console.log);
+    }));
+    window.location.href = '..';
+  };
+
+  const handleSubmission = (value) => {
+    if (value === 'confirm') {
+      let ingredient = ingredients.find((item) => item.ingredientID === state.ingredientID);
+      inventory.push({
+        ingredientID: state.ingredientID,
+        quantity: state.quantity,
+        unit: state.unit,
+        price: state.price,
+        expirationDate: state.expirationDate,
+        title: ingredient.name,
+        subtitle: () => {
+          let value = state.quantity + ' ' + state.unit + '\n';
+          const expirationDate = Sugar.Date.create(state.expirationDate).format('{X}');
+          if (expirationDate >= Date.now()) {
+            value += strings.expiring;
+          } else {
+            value += strings.expired;
+          }
+          value += ' ' + expirationDate.relative();
+          return value;
+        },
+        image: ingredient.image,
+      });
     }
+    // @todo reset quantity, unit, price, expirationDate
   };
 
   return (
-    <View className='drawer-container'>
-      {!state.searchOpen && (
-      <MaterialTopAppBarDialog
-        icon1={'arrow_back'}
-        onClick1={handleGoBack}
-        onClick2={toggleSearch}
-      ></MaterialTopAppBarDialog>
-      )}
-      {state.searchOpen && (
-      <MaterialTopAppBarSearchDialog
-        value={state.keywords}
-        onClick1={toggleSearch}
-        onChange={(e) => dispatch(setKeywords(e.target.value))}
-        onTrailingIconSelect={() => dispatch(setKeywords(''))}
-      ></MaterialTopAppBarSearchDialog>
-      )}
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-        <DrawerAppContent className='drawer-app-content'>
-          <Grid style={{ height: useWindowDimensions().height - 64}}>
-            <Row>
-              {inventory.map((item) => (
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <InventoryCard
-                  mainText1={item.title}
-                  mainText2={item.subtitle}
-                  actionText1={strings.select}
-                  actionText2={strings.remove}
-                  //onClickAction1={() => { window.location.href = './inventory/view?id=' }}
-                  //onClickAction2={handleDiscard}
-                  mainImage={item.image}
-                ></InventoryCard>
-              </Cell>
+    <>
+      <View className='drawer-container'>
+        {!state.searchOpen && (
+          <MaterialTopAppBarDialog
+            icon1={'arrow_back'}
+            onClick1={handleGoBack}
+            onClick2={toggleSearch}
+          ></MaterialTopAppBarDialog>
+        )}
+        {state.searchOpen && (
+          <MaterialTopAppBarSearchDialog
+            value={state.keywords}
+            onClick1={toggleSearch}
+            onChange={(e) => dispatch(setKeywords(e.target.value))}
+            onTrailingIconSelect={() => dispatch(setKeywords(''))}
+          ></MaterialTopAppBarSearchDialog>
+        )}
+        <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+          <DrawerAppContent className='drawer-app-content'>
+            <Grid style={{ height: useWindowDimensions().height - 64 }}>
+              {(state.searchOpen && (
+                <Row>
+                  <Cell columns={12}>
+                    <MaterialSingleSelectionList
+                      items={state.autoComplete}
+                      handleSelect={handleAutoComplete}
+                    ></MaterialSingleSelectionList>
+                  </Cell>
+                </Row>
               ))}
-            </Row>
-          </Grid>
-        </DrawerAppContent>
-        <MaterialFab
-          icon={<MaterialIcon icon='check'/>}
-          style={{ position: 'absolute', right: 16, bottom: 16 }}
-          onClick={handleSave}
-        ></MaterialFab>
-      </TopAppBarFixedAdjust>
-    </View>
+              {(!state.searchOpen && (
+                <Row>
+                  {inventory.map((item) => (
+                    <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                      <InventoryCard
+                        mainText1={item.title}
+                        mainText2={item.subtitle}
+                        actionText1={strings.remove}
+                        onClickAction1={() => handleRemove(item.key)}
+                        mainImage={item.image}
+                      ></InventoryCard>
+                    </Cell>
+                  ))}
+                </Row>
+              ))}
+            </Grid>
+          </DrawerAppContent>
+          <MaterialFab
+            icon={<MaterialIcon icon='check' />}
+            style={{ position: 'absolute', right: 16, bottom: 16 }}
+            onClick={handleSave}
+          ></MaterialFab>
+        </TopAppBarFixedAdjust>
+      </View>
+      <InventoryDialog
+        open={state.dialogOpen}
+        quantity={state.quantity}
+        unit={state.unit}
+        price={state.price}
+        expirationDate={state.expirationDate}
+        onChange1={(e) => dispatch(setQuantity(e.target.value))}
+        onChange2={(e) => dispatch(setUnit(e.target.value))}
+        onChange3={(e) => dispatch(setPrice(e.target.value))}
+        onChange4={(e) => dispatch(setExpirationDate(e.target.value))}
+        onTrailingIconSelect1={() => setQuantity(1.0)}
+        onTrailingIconSelect2={() => setUnit('')}
+        onTrailingIconSelect3={() => setPrice(0)}
+        onTrailingIconSelect4={() => setExpirationDate('')}
+        onClose={handleSubmission}
+      ></InventoryDialog>
+    </>
   );
 };
