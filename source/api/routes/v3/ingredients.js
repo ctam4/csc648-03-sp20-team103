@@ -6,6 +6,57 @@ const pool = require('../../database.js');
 let connection;
 
 /**
+ * GET /v3/ingredients
+ * @description Retrieves ingredient information given their IDs.
+ * @param {integer[]} ingredientIDs
+ * @return {Ingredient[]}
+ */
+ingredients.get('/', async (req, res) => {
+  // check correct params
+  if (Object.keys(req.query).length !== 2 || !('session' in req.query) || !('ingredientIDs' in req.query)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data range
+  if (typeof req.query.session !== 'string' || typeof req.query.ingredientIDs !== 'string') {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check ingredientIDs
+  const ingredientIDs = req.query.ingredientIDs.split(',').map(parseInt);
+  if (!ingredientIDs.every(value => !isNaN(value) && value >= 0)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  try {
+    connection = await pool.getConnection();
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+          await connection.query('SELECT ingredient_id as ingredientID, name, image FROM v3_ingredients WHERE ingredient_id IN (?)', [ingredientIDs.split(',')])
+            .then(async (rows2) => {
+              const ingredients = rows2.filter((ingredient, index) => index !== 'meta');
+              if (ingredients.length > 0) {
+                res.json(ingredients).end();
+              } else {
+                res.sendStatus(406).end();
+              }
+            });
+        } else {
+          res.sendStatus(401).end();
+        }
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+      if (connection) {
+          connection.release(); // release to pool
+      }
+  }
+});
+
+/**
  * GET /v3/ingredients/search
  * @description Retrieve ingredients list of current fridges with session.
  * @param {string} session

@@ -161,7 +161,7 @@ recipes.get('/search', async (req, res) => {
  * GET /v3/recipes
  * @description Retreives recipe information given their IDs.
  * @param {integer[]} recipeIDs
- * @returns {Recipe[]} recipes
+ * @returns {Recipe[]}
  */
 recipes.get('/', async (req, res) => {
     // check correct params
