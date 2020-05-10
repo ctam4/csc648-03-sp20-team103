@@ -29,7 +29,7 @@ import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
 import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
-import InventoryDialog from '../../components/horizontal-prototype/InventoryDialog';
+import InventoryAddDialog from '../../components/horizontal-prototype/InventoryAddDialog';
 
 import { apiUrl } from '../../url';
 
@@ -260,7 +260,7 @@ export default () => {
           ></MaterialFab>
         </TopAppBarFixedAdjust>
       </View>
-      <InventoryDialog
+      <InventoryAddDialog
         open={state.dialogOpen}
         quantity={state.quantity}
         unit={state.unit}
@@ -270,12 +270,12 @@ export default () => {
         onChange2={(e) => dispatch(setUnit(e.target.value))}
         onChange3={(e) => dispatch(setPrice(e.target.value))}
         onChange4={(e) => dispatch(setExpirationDate(e.target.value))}
-        onTrailingIconSelect1={() => setQuantity(1.0)}
-        onTrailingIconSelect2={() => setUnit('')}
-        onTrailingIconSelect3={() => setPrice(0)}
-        onTrailingIconSelect4={() => setExpirationDate('')}
+        onTrailingIconSelect1={() => dispatch(setQuantity(1.0))}
+        onTrailingIconSelect2={() => dispatch(setUnit(''))}
+        onTrailingIconSelect3={() => dispatch(setPrice(0))}
+        onTrailingIconSelect4={() => dispatch(setExpirationDate(''))}
         onClose={handleSubmission}
-      ></InventoryDialog>
+      ></InventoryAddDialog>
     </>
   );
 };

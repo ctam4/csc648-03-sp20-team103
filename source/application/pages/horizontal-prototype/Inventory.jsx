@@ -16,6 +16,8 @@ import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
+import InventoryConsumeDialog from '../../components/horizontal-prototype/InventoryConsumeDialog';
+import InventoryDiscardDialog from '../../components/horizontal-prototype/InventoryDiscardDialog';
 
 import { apiUrl } from '../../url';
 
@@ -23,6 +25,7 @@ let strings = new LocalizedStrings({
   en: {
     inventory: 'Inventory',
     view_log: 'View log',
+    consume: 'Consume',
     discard: 'Discard',
     expiring: 'Expiring',
     expired: 'Expired',
@@ -36,6 +39,10 @@ let strings = new LocalizedStrings({
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(null);
+  const [inventoryID, setInventoryID] = useState(null);
+  const [quantity, setQuantity] = useState(0.0);
+  const [unit, setUnit] = useState('');
   const [toast, setToast] = useState('');
   const [inventory, setInventory] = useState([]);
   const [ingredients, setIngredients] = useState([]);
@@ -129,53 +136,120 @@ export default () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handleDiscard = async () => {
-    // TODO: fetch
+  const toggleDialog = (dialogOpen) => {
+    setDialogOpen(dialogOpen);
   };
 
+  const handleConsume = (key) => {
+    setInventoryID(key);
+    toggleDialog('consume');
+  };
+
+  const handleDiscard = (key) => {
+    setInventoryID(key);
+    toggleDialog('discard');
+  };
+
+  const handleSubmission = async (value) => {
+    const action = dialogOpen;
+    toggleDialog(null);
+    if (value === 'confirm') {
+      switch (action) {
+        case 'consume':
+        case 'discard':
+          await fetch(apiUrl + '/v3/inventory/' + action, {
+            method: 'post',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              session: cookies.session,
+              userID: cookies.userID,
+              inventoryID: inventoryID,
+              quantity: quantity,
+              unit: unit,
+            }),
+          })
+            .then((res) => {
+              if (!res.ok) {
+                throw new Error(res.status + ' ' + res.statusText);
+              }
+              return res.json();
+            })
+            .catch((error) => setToast(error.toString()));
+          window.location.reload();
+          break;
+      }
+    }
+  }
+
   return (
-    <View className='drawer-container'>
-      <MaterialTopAppBar
-        title={strings.inventory}
-        onClick1={toggleDrawer}
-        onClick2={() => window.location.href = 'search/'}
-      ></MaterialTopAppBar>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-        <MaterialDrawer
-          open={drawerOpen}
-          selectedIndex={0}
-          onClose={toggleDrawer}
-        ></MaterialDrawer>
-        <DrawerAppContent className='drawer-app-content'>
-          <Grid style={{ height: useWindowDimensions().height - 64 }}>
-            {inventory.length > 0 && (
-            <Row>
-              {inventory.map((item) => (
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <InventoryCard
-                  mainText1={item.title}
-                  mainText2={item.subtitle}
-                  actionText1={strings.view_log}
-                  actionText2={strings.discard}
-                  onClickAction1={() => { window.location.href = 'view/?id=' + item.key }}
-                  onClickAction2={handleDiscard}
-                  mainImage={item.image}
-                ></InventoryCard>
-              </Cell>
-              ))}
-            </Row>
-            )}
-          </Grid>
-        </DrawerAppContent>
-        {toast && (
-        <MaterialSnackbar message={toast} onClose={() => setToast('')} />
-        )}
-        <MaterialFab
-          icon={<MaterialIcon icon='library_add' />}
-          style={{ position: 'absolute', right: 16, bottom: 16 }}
-          onClick={() => window.location.href = 'add/receipt/'}
-        ></MaterialFab>
-      </TopAppBarFixedAdjust>
-    </View>
+    <>
+      <View className='drawer-container'>
+        <MaterialTopAppBar
+          title={strings.inventory}
+          onClick1={toggleDrawer}
+          onClick2={() => window.location.href = 'search/'}
+        ></MaterialTopAppBar>
+        <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+          <MaterialDrawer
+            open={drawerOpen}
+            selectedIndex={0}
+            onClose={toggleDrawer}
+          ></MaterialDrawer>
+          <DrawerAppContent className='drawer-app-content'>
+            <Grid style={{ height: useWindowDimensions().height - 64 }}>
+              {inventory.length > 0 && (
+              <Row>
+                {inventory.map((item) => (
+                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                  <InventoryCard
+                    mainText1={item.title}
+                    mainText2={item.subtitle}
+                    actionText1={strings.consume}
+                    actionText2={strings.discard}
+                    onClickMain={() => { window.location.href = 'view/?id=' + item.key }}
+                    onClickAction1={() => handleConsume(item.key)}
+                    onClickAction2={() => handleDiscard(item.key)}
+                    mainImage={item.image}
+                  ></InventoryCard>
+                </Cell>
+                ))}
+              </Row>
+              )}
+            </Grid>
+          </DrawerAppContent>
+          {toast && (
+          <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+          )}
+          <MaterialFab
+            icon={<MaterialIcon icon='library_add' />}
+            style={{ position: 'absolute', right: 16, bottom: 16 }}
+            onClick={() => window.location.href = 'add/receipt/'}
+          ></MaterialFab>
+        </TopAppBarFixedAdjust>
+      </View>
+      <InventoryConsumeDialog
+        open={dialogOpen === 'consume'}
+        quantity={quantity}
+        unit={unit}
+        onChange1={(e) => setQuantity(e.target.value)}
+        onChange2={(e) => setUnit(e.target.value)}
+        onTrailingIconSelect1={() => setQuantity(1.0)}
+        onTrailingIconSelect2={() => setUnit('')}
+        onClose={handleSubmission}
+      ></InventoryConsumeDialog>
+      <InventoryDiscardDialog
+        open={dialogOpen === 'discard'}
+        quantity={quantity}
+        unit={unit}
+        onChange1={(e) => setQuantity(e.target.value)}
+        onChange2={(e) => setUnit(e.target.value)}
+        onTrailingIconSelect1={() => setQuantity(1.0)}
+        onTrailingIconSelect2={() => setUnit('')}
+        onClose={handleSubmission}
+      ></InventoryDiscardDialog>
+    </>
   );
 };
