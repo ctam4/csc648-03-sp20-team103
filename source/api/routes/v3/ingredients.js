@@ -24,7 +24,7 @@ ingredients.get('/', async (req, res) => {
       throw new TypeError();
     }
     session = req.query.session;
-    ingredientIDs = req.query.ingredientIDs.split(',').map(parseInt);
+    ingredientIDs = req.query.ingredientIDs.split(',').map(value => parseInt(value));
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
