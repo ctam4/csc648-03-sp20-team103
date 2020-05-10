@@ -1,14 +1,12 @@
 import React, { Component } from 'react';
 import Dialog, { DialogTitle, DialogContent, DialogFooter, DialogButton } from '@material/react-dialog';
-import List, { ListItem, ListItemText } from '@material/react-list';
 import MaterialFilledTextField from './MaterialFilledTextField';
 import '@material/react-dialog/dist/dialog.css';
-import '@material/react-list/dist/list.css';
 import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings({
   en: {
-    edit_user: 'CREATE / EDIT user',
+    create_edit_user: 'CREATE / EDIT user',
     name: 'Name',
     name_helper: 'This is the name of the user.',
     role: 'Role',
@@ -23,7 +21,7 @@ let strings = new LocalizedStrings({
 function UserDialog(props) {
   return (
     <Dialog open={props.open} onClose={props.onClose}>
-      <DialogTitle>{strings.edit_user}</DialogTitle>
+      <DialogTitle>{strings.create_edit_user}</DialogTitle>
       <DialogContent>
         <MaterialFilledTextField
           label={strings.name}
