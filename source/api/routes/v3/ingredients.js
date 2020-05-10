@@ -29,18 +29,18 @@ ingredients.get('/', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (session.length !== 36 || ingredientIDs.length === 0 || !ingredientIDs.every(value => !isNaN(value) && value > 0)) {
+  if (req.query.session.length !== 36 || ingredientIDs.length === 0 || !ingredientIDs.every(value => !isNaN(value) && value > 0)) {
     res.sendStatus(400).end();
     return;
   }
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [req.query.session])
       .then(async (rows) => {
         if (rows.length > 0) {
           await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v3_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id', [ingredientIDs])
             .then(async (rows2) => {
-              if (row2.length > 0) {
+              if (rows2.length > 0) {
                 res.json(rows2.filter((ingredient, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
