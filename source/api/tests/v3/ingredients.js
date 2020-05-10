@@ -262,30 +262,31 @@ test('/ingredients | POST | 401', async (t) => {
 });
 
 test('/ingredients | POST | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/ingredients', {
+  const id = 10000 + (Math.random() * 10000);
+  await fetch(`${t.context.baseUrl}/v3/ingredients`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      ingredientID: 10000,
-      name: 'Apple',
+      ingredientID: id,
+      name: `${id}`,
       image: 'image.jpg',
       session: t.context.session,
     }),
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/ingredients', {
+      await fetch(`${t.context.baseUrl}/v3/ingredients`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          ingredientID: 10000,
-          name: 'Apple',
+          ingredientID: id,
+          name: `${id}`,
           image: 'image.jpg',
           session: t.context.session,
         }),

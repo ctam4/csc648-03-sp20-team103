@@ -160,7 +160,7 @@ inventory.post('/add/manual', async (req, res) => {
   // check params data range
   // @todo unit valid values
   if (session.length !== 36 || userID <= 0 || ingredientID <= 0 || totalQuantity <= 0.0 || unit.length === 0 || unit.length > 8 || price < 0) {
-    res.sendStatus(903).end();
+    res.sendStatus(400).end();
     return;
   }
   // run query to mariadb
