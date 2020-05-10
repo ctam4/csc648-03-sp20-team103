@@ -35,7 +35,7 @@ ingredients.get('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [req.query.session])
       .then(async (rows) => {
         if (rows.length > 0) {
           await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v3_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id', [ingredientIDs])
