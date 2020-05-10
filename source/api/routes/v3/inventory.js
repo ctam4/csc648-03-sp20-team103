@@ -128,7 +128,7 @@ inventory.get('/', async (req, res) => {
  * @param {string} session
  * @param {integer} userID
  * @param {integer} ingredientID
- * @param {timestamp} expirationDate
+ * @param {timestamp|null} expirationDate
  * @param {float} totalQuantity
  * @param {string} unit
  * @param {integer} price
@@ -149,7 +149,7 @@ inventory.post('/add/manual', async (req, res) => {
     session = req.body.session;
     userID = parseInt(req.body.userID);
     ingredientID = parseInt(req.body.ingredientID);
-    expirationDate = parseInt(req.body.expirationDate);
+    expirationDate = (req.body.expirationDate && parseInt(req.body.expirationDate)) || null;
     totalQuantity = parseFloat(req.body.totalQuantity);
     unit = req.body.unit;
     price = parseInt(req.body.price);
@@ -159,8 +159,8 @@ inventory.post('/add/manual', async (req, res) => {
   }
   // check params data range
   // @todo unit valid values
-  if (session.length !== 36 || userID <= 0 || ingredientID <= 0 || totalQuantity <= 0.0 || unit.length === 0 || unit.length > 8 || price <= 0) {
-    res.sendStatus(400).end();
+  if (session.length !== 36 || userID <= 0 || ingredientID <= 0 || totalQuantity <= 0.0 || unit.length === 0 || unit.length > 8 || price < 0) {
+    res.sendStatus(903).end();
     return;
   }
   // run query to mariadb
