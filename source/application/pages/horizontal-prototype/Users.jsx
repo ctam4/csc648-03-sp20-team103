@@ -141,6 +141,7 @@ export default () => {
           ></MaterialDrawer>
           <DrawerAppContent className='drawer-app-content'>
             <Grid style={{ height: useWindowDimensions().height - 64 }}>
+              {users.length > 0 && (
               <Row>
                 <Cell columns={12}>
                   <UsersListCard
@@ -149,6 +150,7 @@ export default () => {
                   ></UsersListCard>
                 </Cell>
               </Row>
+              )}
             </Grid>
           </DrawerAppContent>
           {toast && (

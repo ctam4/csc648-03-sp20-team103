@@ -98,6 +98,7 @@ export default () => {
         ></MaterialDrawer>
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
+            { mealPlans.length > 0 && (
             <Row>
               {mealPlans.map((item) => (
               <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
@@ -112,6 +113,7 @@ export default () => {
               </Cell>
               ))}
             </Row>
+            )}
           </Grid>
         </DrawerAppContent>
         {toast && (

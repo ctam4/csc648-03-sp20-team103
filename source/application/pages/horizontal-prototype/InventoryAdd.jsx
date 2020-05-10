@@ -222,29 +222,29 @@ export default () => {
           <DrawerAppContent className='drawer-app-content'>
             <Grid style={{ height: useWindowDimensions().height - 64 }}>
               {(state.searchOpen && (
-                <Row>
-                  <Cell columns={12}>
-                    <MaterialSingleSelectionList
-                      items={state.autoComplete}
-                      handleSelect={handleAutoComplete}
-                    ></MaterialSingleSelectionList>
-                  </Cell>
-                </Row>
+              <Row>
+                <Cell columns={12}>
+                  <MaterialSingleSelectionList
+                    items={state.autoComplete}
+                    handleSelect={handleAutoComplete}
+                  ></MaterialSingleSelectionList>
+                </Cell>
+              </Row>
               ))}
-              {(!state.searchOpen && (
-                <Row>
-                  {inventory.map((item) => (
-                    <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                      <InventoryCard
-                        mainText1={item.title}
-                        mainText2={item.subtitle}
-                        actionText1={strings.remove}
-                        onClickAction1={() => handleRemove(item.key)}
-                        mainImage={item.image}
-                      ></InventoryCard>
-                    </Cell>
-                  ))}
-                </Row>
+              {(!state.searchOpen && inventory.length > 0 && (
+              <Row>
+                {inventory.map((item) => (
+                  <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                    <InventoryCard
+                      mainText1={item.title}
+                      mainText2={item.subtitle}
+                      actionText1={strings.remove}
+                      onClickAction1={() => handleRemove(item.key)}
+                      mainImage={item.image}
+                    ></InventoryCard>
+                  </Cell>
+                ))}
+              </Row>
               ))}
             </Grid>
           </DrawerAppContent>
