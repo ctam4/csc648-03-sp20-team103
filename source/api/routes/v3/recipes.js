@@ -221,16 +221,22 @@ recipes.get('/', async (req, res) => {
                     await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(',')])
                         .then(async (rows2) => {
                             if (rows2.length > 0) {
+                              // console.log(rows2);
                                 const recipes = await Promise.all(rows2.map(async (recipe, index) => {
                                     if (index !== 'meta') {
                                         await connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v3_recipe_ingredients WHERE recipe_id=?', [recipe.recipeID])
                                             .then(async (rows3) => {
-                                                if (rows3.length > 0) {
+                                                if (rows3.length > 0) {                                                  
                                                   recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
+                                                  // console.log(recipe.ingredients);
                                                 }
+                                                // console.log(recipe, "HEREE");                                                
                                             });
+                                            return recipe
+                                            
                                     }
                                 }));
+                                // console.log(recipes);
                                 res.json(recipes).end();
                             } else {
                                 res.sendStatus(406).end();
