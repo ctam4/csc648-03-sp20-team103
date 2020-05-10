@@ -107,8 +107,8 @@ export default () => {
                   mainText2={item.cal_per_day + strings.calories}
                   bodyText={item.description}
                   actionText1={strings.view}
-                  onClickMain={() => { window.location.href = './meal-plans/view?id=' }}
-                  onClickAction1={() => { window.location.href = './meal-plans/view?id=' }}
+                  onClickMain={() => { window.location.href = 'view/?id=' }}
+                  onClickAction1={() => { window.location.href = 'view/?id=' }}
                 ></MealPlansCard>
               </Cell>
               ))}

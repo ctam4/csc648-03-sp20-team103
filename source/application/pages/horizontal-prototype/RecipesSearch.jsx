@@ -113,7 +113,7 @@ export default () => {
   };
 
   const handleAutoComplete = (value) => {
-    window.location.href = '../recipes/view?id=' + state.autoComplete[value].key;
+    window.location.href = '../view/?id=' + state.autoComplete[value].key;
   };
 
   return (

@@ -87,7 +87,7 @@ export default () => {
       <MaterialTopAppBarDialog
         icon2={'add'}
         onClick1={handleGoBack}
-        onClick2={() => window.location.href = './'}
+        onClick2={() => window.location.href = '..'}
       ></MaterialTopAppBarDialog>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <DrawerAppContent className='drawer-app-content'>

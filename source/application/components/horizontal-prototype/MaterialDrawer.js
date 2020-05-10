@@ -28,28 +28,28 @@ function MaterialDrawer(props) {
       </DrawerHeader>
       <DrawerContent>
         <List singleSelection selectedIndex={props.selectedIndex}>
-          <ListItem onClick={() => window.location.href = './inventory'}>
+          <ListItem onClick={() => window.location.href = '../inventory/'}>
             <ListItemGraphic graphic={<MaterialIcon icon='kitchen'/>} />
             <ListItemText primaryText={strings.inventory} />
           </ListItem>
-          <ListItem onClick={() => window.location.href = './recipes'} >
+          <ListItem onClick={() => window.location.href = '../recipes/'} >
             <ListItemGraphic graphic={<MaterialIcon icon='list_alt'/>} />
             <ListItemText primaryText={strings.recipes} />
           </ListItem>
-          <ListItem onClick={() => window.location.href = './carts'}>
+          <ListItem onClick={() => window.location.href = '../carts/'}>
             <ListItemGraphic graphic={<MaterialIcon icon='shopping_cart'/>} />
             <ListItemText primaryText={strings.carts} />
           </ListItem>
-          <ListItem onClick={() => window.location.href = './consumption'}>
+          <ListItem onClick={() => window.location.href = '../consumption/'}>
             <ListItemGraphic graphic={<MaterialIcon icon='bar_chart'/>} />
             <ListItemText primaryText={strings.consumption} />
           </ListItem>
-          <ListItem onClick={() => window.location.href = './meal-plans'}>
+          <ListItem onClick={() => window.location.href = '../meal-plans/'}>
             <ListItemGraphic graphic={<MaterialIcon icon='menu_book'/>} />
             <ListItemText primaryText={strings.meal_plans} />
           </ListItem>
           <ListDivider tag='div' />
-          <ListItem onClick={() => window.location.href = './users'}>
+          <ListItem onClick={() => window.location.href = '../users/'}>
             <ListItemGraphic graphic={<MaterialIcon icon='people'/>} />
             <ListItemText primaryText={strings.users} />
           </ListItem>

@@ -104,7 +104,7 @@ export default () => {
                   mainText1={item.title}
                   mainText2={item.subtitle + strings.calories}
                   actionText1={strings.change}
-                  // onClickMain={() => { window.location.href = './recipes/view?id=' }}
+                  // onClickMain={() => { window.location.href = 'view/?id=' }}
                   // onClickAction1={handleFavorite}
                   // onClickAction2={handleHistory}
                   // onClickAction3={handleAddToCart}

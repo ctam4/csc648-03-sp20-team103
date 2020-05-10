@@ -72,7 +72,7 @@ export default () => {
   };
 
   const handleAutoComplete = (value) => {
-    window.location.href = '../inventory/view?id=' + state.autoComplete[value].key;
+    window.location.href = '../view/?id=' + state.autoComplete[value].key;
   };
 
   return (

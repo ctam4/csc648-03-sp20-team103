@@ -136,7 +136,7 @@ export default () => {
       <MaterialTopAppBar
         title={strings.inventory}
         onClick1={toggleDrawer}
-        onClick2={() => window.location.href = './inventory/search'}
+        onClick2={() => window.location.href = 'search/'}
       ></MaterialTopAppBar>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <MaterialDrawer
@@ -155,7 +155,7 @@ export default () => {
                   mainText2={item.subtitle}
                   actionText1={strings.view_log}
                   actionText2={strings.discard}
-                  onClickAction1={() => { window.location.href = './inventory/view?id=' + item.key }}
+                  onClickAction1={() => { window.location.href = 'view/?id=' + item.key }}
                   onClickAction2={handleDiscard}
                   mainImage={item.image}
                 ></InventoryCard>
@@ -171,7 +171,7 @@ export default () => {
         <MaterialFab
           icon={<MaterialIcon icon='library_add' />}
           style={{ position: 'absolute', right: 16, bottom: 16 }}
-          onClick={() => window.location.href = './inventory/add/receipt'}
+          onClick={() => window.location.href = 'add/receipt/'}
         ></MaterialFab>
       </TopAppBarFixedAdjust>
     </View>

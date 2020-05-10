@@ -81,7 +81,7 @@ export default () => {
       <MaterialTopAppBar
         title={strings.recipes}
         onClick1={toggleDrawer}
-        onClick2={() => window.location.href = './recipes/search' }
+        onClick2={() => window.location.href = 'search/' }
       ></MaterialTopAppBar>
       <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
         <MaterialDrawer
@@ -98,7 +98,7 @@ export default () => {
                 <RecipesCard
                   mainText1={item.title}
                   mainText2={item.subtitle + strings.calories}
-                  onClickMain={() => { window.location.href = './recipes/view?id=' }}
+                  onClickMain={() => { window.location.href = 'view/?id=' }}
                   onClickAction1={handleFavorite}
                   onClickAction2={handleHistory}
                   onClickAction3={handleAddToCart}
@@ -116,7 +116,7 @@ export default () => {
         <MaterialFab
           icon={<MaterialIcon icon='note_add'/>}
           style={{ position: 'absolute', right: 16, bottom: 16 }}
-          onClick={() => window.location.href = './recipes/create' }
+          onClick={() => window.location.href = 'create/' }
         ></MaterialFab>
       </TopAppBarFixedAdjust>
     </View>

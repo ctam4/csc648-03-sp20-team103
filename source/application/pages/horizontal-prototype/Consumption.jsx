@@ -77,8 +77,8 @@ export default () => {
                   mainText={item.content}
                   actionText1={strings.view_details}
                   //onClickUser={() => alert('user')}
-                  onClickMain={() => { window.location.href = './consumption/view?id=' }}
-                  onClickAction1={() => { window.location.href = './consumption/view?id=' }}
+                  onClickMain={() => { window.location.href = 'view/?id=' }}
+                  onClickAction1={() => { window.location.href = 'view/?id=' }}
                   mainImage={item.image}
                 ></ConsumptionCard>
               </Cell>

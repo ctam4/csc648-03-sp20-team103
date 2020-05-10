@@ -85,7 +85,7 @@ export default () => {
                   bodyText={item.content}
                   actionText1={strings.edit}
                   actionText2={strings.clear_cart}
-                  onClickAction1={() => { window.location.href = './carts/view?id=' }}
+                  onClickAction1={() => { window.location.href = 'view/?id=' }}
                   onClickAction2={handleClearCart}
                 ></CartsCard>
               </Cell>
