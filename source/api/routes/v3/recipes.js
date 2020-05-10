@@ -175,7 +175,7 @@ recipes.get('/', async (req, res) => {
         return;
     }
     // check recipeIDs
-    const ids = req.query.recipeIDs.split(',').map(value => parseInt);
+    const ids = req.query.recipeIDs.split(',').map(parseInt);
     if (!ids.every(value => !isNaN(value) && value >= 0)) {
         res.sendStatus(400).end();
         return;
@@ -187,20 +187,24 @@ recipes.get('/', async (req, res) => {
             .then(async (rows) => {
                 if (rows.length > 0) {
                     await connection.query('SELECT recipe_id as recipeID, title, image, servings, cooking_time as cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?)', ids.split(','))
-                        .then(async (rows) => {
-                            const recipes = await Promise.all(rows.map(async (recipe, index) => {
+                        .then(async (rows2) => {
+                            const recipes = await Promise.all(rows2.map(async (recipe, index) => {
                                 if (index !== 'meta') {
-                                    await connection.query('SELECT ingredient_id as ingredientID, quantity, unit in v3_recipe_ingredients WHERE recipe_id = ?', [row.recipeID])
-                                        .then(async (rows) => {
-                                            recipe.ingredients = rows.filter((ingredient, index) => index !== 'meta');
+                                    await connection.query('SELECT ingredient_id as ingredientID, quantity, unit in v3_recipe_ingredients WHERE recipe_id = ?', [recipe.recipeID])
+                                        .then(async (rows3) => {
+                                            recipe.ingredients = rows3.filter((ingredient, index) => index !== 'meta');
                                         });
                                 }
                             }));
 
-                            res.json(recipes).end();
+                            if (recipes.length > 0) {
+                                res.json(recipes).end();
+                            } else {
+                                res.sendStatus(406).end();
+                            }
                         });
                 } else {
-                    res.sendStatus(403).end();
+                    res.sendStatus(401).end();
                 }
             });
     } catch (error) {
