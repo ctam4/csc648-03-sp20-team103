@@ -27,7 +27,7 @@ users.post('/:name', async (req, res) => {
     connection = await pool.getConnection();
     // sql = 'UPDATE v2_users (name) VALUES (?) WHERE fridge_id=' + req.params.fridge_id;
     // sql = 'UPDATE v2_users SET name=' + req.params.name + ' WHERE fridge_id=' + req.params.fridge_id;
-    sql = 'INSERT INTO v2_users (name, fridge_id, role) VALUES(?, ?, ?)';
+    sql = 'INSERT INTO v2_users (name, fridge_id, role) VALUES(?, ?, ?,?)';
     console.log(req.params)
     await connection.query(sql, [req.params.name, req.body.fridge_id, req.body.role])
       .then((results) => {

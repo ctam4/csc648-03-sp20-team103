@@ -1,6 +1,6 @@
 const express = require('express');
 const fs = require('fs');
-const router = express.Router();
+const router = express.Router({ mergeParams: true, strict: true });
 //const react = require('react');
 //const reactDOMServer = require('react-dom/server');
 //const appComponent = require('../components/App.jsx');
