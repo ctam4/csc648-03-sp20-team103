@@ -38,7 +38,7 @@ export default () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [inventory, setInventory] = useState([]);
-  const [ingredients, setIngrdients] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
     dummySetup();
@@ -78,47 +78,47 @@ export default () => {
       return res.json();
     })
     .then(async (data) => {
-      let inventory = [];
-      data.foreach((item) => inventory.push({
-        key: item.inventoryID,
-        title: 'This is the name', // @todo ingredient name
-        subtitle: () => {
-          let value = item.totalQuantity + ' ' + item.unit + '\n';
-          const expirationDate = Sugar.Date.create(item.expirationDate).format('{X}');
-          if (expirationDate >= Date.now()) {
-            value += strings.expiring;
-          } else {
-            value += strings.expired;
+      let ingredientIDs = [];
+      data.map((item) => ingredientIDs.push(item.ingredientID));
+      if (ingredientIDs.length > 0) {
+        await fetch(apiUrl + '/v3/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
+          method: 'get',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+        .then((res2) => {
+          if (!res2.ok) {
+            throw new Error(res2.status + ' ' + res2.statusText);
           }
-          value += ' ' + expirationDate.relative();
-          return value;
-        },
-        image: item.image,
-      }));
-      setInventory(inventory);
-      /*
-      await fetch(apiUrl + '/v3/ingredients?session=' + cookies.session, {
-        method: 'get',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((res2) => {
-        if (!res2.ok) {
-          throw new Error(res2.status + ' ' + res2.statusText);
-        }
-        return res2.json();
-      })
-      .then(async (data2) => {
-        let ingredients = [];
-        data.foreach((item) => ingredients.push({
-          key: item.ingredientID,
-          // @todo
-        }));
-        setIngrdients(ingredients);
+          return res2.json();
+        })
+        .then(async (data2) => {
+          setIngredients(data2);
+        });
+      }
+      let inventory = [];
+      data.foreach((item) => {
+        let ingredient = ingredients.find((item2) => item.ingredientID === item2.ingredientID);
+        inventory.push({
+          key: item.inventoryID,
+          title: ingredient.name,
+          subtitle: () => {
+            let value = item.totalQuantity + ' ' + item.unit + '\n';
+            const expirationDate = Sugar.Date.create(item.expirationDate).format('{X}');
+            if (expirationDate >= Date.now()) {
+              value += strings.expiring;
+            } else {
+              value += strings.expired;
+            }
+            value += ' ' + expirationDate.relative();
+            return value;
+          },
+          image: item.image,
+        });
       });
-      */
+      setInventory(inventory);
     })
     .catch((error) => setToast(error.toString()));
   };
