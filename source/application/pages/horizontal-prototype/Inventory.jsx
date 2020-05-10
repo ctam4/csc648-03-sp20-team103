@@ -120,9 +120,7 @@ export default () => {
       });
       */
     })
-    .catch((error) => {
-      setToast(error.toString());
-    });
+    .catch((error) => setToast(error.toString()));
   };
 
   const toggleDrawer = () => {

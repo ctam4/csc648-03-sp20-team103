@@ -7,8 +7,8 @@ import LocalizedStrings from 'react-localization';
 
 let strings = new LocalizedStrings({
   en: {
-    required_ingredients: 'Ingredients (Required)',
-    optional_ingredients: 'Ingredients (Optional)',
+    required_ingredients: 'Ingredients (required)',
+    optional_ingredients: 'Ingredients (optional)',
   },
 });
 

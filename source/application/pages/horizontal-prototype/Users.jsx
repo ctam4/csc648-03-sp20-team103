@@ -71,8 +71,7 @@ export default () => {
       }));
       setUsers(users);
     })
-    .catch(console.log);
-    // @todo snackbar
+    .catch((error) => setToast(error.toString()));
   };
 
   const toggleDrawer = () => {
