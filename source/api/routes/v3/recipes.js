@@ -76,6 +76,7 @@ async function handleRecipes() {
     return recipeInfo
 
 }
+
 recipes.get('/search', async (req, res) => {
     // check correct params
     if ((Object.keys(req.query).length == 2 ||
@@ -156,15 +157,51 @@ recipes.get('/search', async (req, res) => {
     }
 });
 
-//for testing
+/**
+ * GET /v3/recipes
+ * @description Retreives recipe information given their IDs.
+ * @param {integer[]} recipeIDs
+ * @returns {Recipe[]} recipes
+ */
 recipes.get('/', async (req, res) => {
+    // check correct params
+    if (Object.keys(req.query).length !== 2 || !('session' in req.query) || !('recipeIDs' in req.query)) {
+        res.sendStatus(400).end();
+        return;
+    }
+    // check params data range
+    if (typeof req.query.session !== 'string' || typeof req.query.recipeID !== 'string') {
+        res.sendStatus(400).end();
+        return;
+    }
+    // check recipeIDs
+    const ids = req.query.recipeIDs.split(',').map(value => parseInt);
+    if (!ids.every(value => !isNaN(value) && value >= 0)) {
+        res.sendStatus(400).end();
+        return;
+    }
+
     try {
         connection = await pool.getConnection();
-        let sql = 'SELECT * FROM v3_recipes';
-        await connection.query(sql)
-            .then((results) => {
-                res.send(JSON.stringify(results)).end();
-                // res.json(results).end();
+        await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+            .then(async (rows) => {
+                if (rows.length > 0) {
+                    await connection.query('SELECT recipe_id as recipeID, title, image, servings, cooking_time as cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?)', ids.split(','))
+                        .then(async (rows) => {
+                            const recipes = await Promise.all(rows.map(async (recipe, index) => {
+                                if (index !== 'meta') {
+                                    await connection.query('SELECT ingredient_id as ingredientID, quantity, unit in v3_recipe_ingredients WHERE recipe_id = ?', [row.recipeID])
+                                        .then(async (rows) => {
+                                            recipe.ingredients = rows.filter(ingredient => ingredient !== 'meta');
+                                        });
+                                }
+                            }));
+
+                            res.json(recipes).end();
+                        });
+                } else {
+                    res.sendStatus(403).end();
+                }
             });
     } catch (error) {
         res.sendStatus(500).end();
@@ -175,7 +212,6 @@ recipes.get('/', async (req, res) => {
         }
     }
 });
-
 
 /**
  * POST /v3/recipes/favorite
