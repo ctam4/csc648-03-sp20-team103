@@ -13,6 +13,8 @@ services:
       - ./node_modules/:/home/node/app/node_modules/:ro
     command: "npm run build-watch"
   node-ava:
+    depends_on:
+      - "node-nodemon"
     image: "node:12.15.0"
     user: "node"
     environment:
@@ -23,6 +25,8 @@ services:
       - ./node_modules/:/home/node/app/node_modules/:ro
     command: "npm run test-watch"
   node-nodemon:
+    depends_on:
+      - "node-parcel"
     image: "node:12.15.0"
     ports:
       - "9080:80"
