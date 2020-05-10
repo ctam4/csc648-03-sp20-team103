@@ -30,11 +30,12 @@ export default () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [name, setName] = useState('');
   const [role, setRole] = useState('');
+  const [intolerances, setIntolerances] = useState([]);
   const [toast, setToast] = useState('');
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    dummySetup();
+    // dummySetup();
     load();
   }, []);
 
@@ -42,8 +43,14 @@ export default () => {
     // TODO: hard code users array
     setUsers([
       {
+        key: 1,
         primaryText: 'User 1 ',
         secondaryText: 'role',
+      },
+      {
+        key: 2,
+        primaryText: 'User 2 ',
+        secondaryText: 'role 2',
       }
     ]);
   };
@@ -64,7 +71,7 @@ export default () => {
     })
     .then((data) => {
       let users = [];
-      data.foreach((item) => users.push({
+      data.forEach((item) => users.push({
         key: item.userID,
         primaryText: item.name,
         secondaryText: item.role,
@@ -82,14 +89,41 @@ export default () => {
     setDialogOpen(!dialogOpen);
   };
 
-  const handleRemoveUser = () => {
+  const handleDelete = () => {
     // @todo
   };
 
-  const handleSubmission = () => {
-    // @todo
+  const handleSubmission = async (value) => {
     toggleDialog();
-    window.location.reload();
+    if (value === 'confirm') {
+      await fetch(apiUrl + '/v3/users', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session: cookies.session,
+          name: name,
+          role: role,
+          intolerances: intolerances,
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(res.status + ' ' + res.statusText);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setCookie('userID', data.userID, {
+            // httpOnly: true,
+            // expires: new Date(data.expires_ts),
+          });
+        })
+        .catch(console.log);
+      window.location.reload();
+    }
   };
 
   return (
@@ -108,15 +142,12 @@ export default () => {
           <DrawerAppContent className='drawer-app-content'>
             <Grid style={{ height: useWindowDimensions().height - 64 }}>
               <Row>
-              {users.map((item) => (
-                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4} Cell columns={12}>
+                <Cell columns={12}>
                   <UsersListCard
-                  primaryText={item.title}
-                  secondaryText={item.role}
-                  list1={[{ primaryText: 'item 1'}]}
-                ></UsersListCard>
+                    items={users}
+                    // handleSelect={handleDelete}
+                  ></UsersListCard>
                 </Cell>
-              ))}
               </Row>
             </Grid>
           </DrawerAppContent>
@@ -134,29 +165,15 @@ export default () => {
         open={dialogOpen}
         name={name}
         role={role}
+        intolerances={intolerances}
         onChange1={(e) => setName(e.target.value)}
         onChange2={(e) => setRole(e.target.value)}
+        onChange3={(e) => setIntolerances(e.target.value)}
         onTrailingIconSelect1={() => setName('')}
         onTrailingIconSelect2={() => setRole('')}
+        onTrailingIconSelect3={() => setIntolerances('')}
         onClose={handleSubmission}
       ></UserDialog>
     </>
   );
 };
-
-//{users.map((item) => (
-   // ))}
-
-
-/*                  <ConsumptionCard
-                    userText1={item.title}
-                    userText2={item.subtitle}
-                    mainText={item.content}
-                    actionText1={strings.edit_details}
-                    actionText2={strings.remove_user}
-                    //onClickUser={() => alert('user')}
-                    onClickMain={() => { window.location.href = './consumption/view?id=' }}
-                    //onClickAction1={() => { window.location.href = './users/view?id=' }}
-                    onClickAction2={handleRemoveUser}
-                    mainImage={item.image}
-                  ></ConsumptionCard>*/
