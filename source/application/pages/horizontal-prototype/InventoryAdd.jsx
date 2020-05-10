@@ -22,7 +22,7 @@ import MaterialIcon from '@material/react-material-icon';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import '@material/react-material-icon/dist/material-icon.css';
 import LocalizedStrings from 'react-localization';
-import Sugar from 'sugar';
+import Moment from 'moment';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
@@ -183,17 +183,20 @@ export default () => {
         price: state.price,
         expirationDate: state.expirationDate,
         title: ingredient.name,
-        subtitle: () => {
-          let value = state.quantity + ' ' + state.unit + '\n';
-          const expirationDate = Sugar.Date.create(state.expirationDate).format('{X}');
-          if (expirationDate >= Date.now()) {
-            value += strings.expiring;
-          } else {
-            value += strings.expired;
+        subtitle: (() => {
+          let value = state.quantity + ' ' + state.unit;
+          if (state.expirationDate) {
+            value += ' | ';
+            let expirationDate = Moment.utc(state.expirationDate);
+            if (expirationDate.unix() >= Moment.utc()) {
+              value += strings.expiring;
+            } else {
+              value += strings.expired;
+            }
+            value += ' ' + expirationDate.fromNow();
           }
-          value += ' ' + expirationDate.relative();
           return value;
-        },
+        })(),
         image: ingredient.image,
       });
     }

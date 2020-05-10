@@ -9,7 +9,7 @@ import MaterialIcon from '@material/react-material-icon';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import '@material/react-material-icon/dist/material-icon.css';
 import LocalizedStrings from 'react-localization';
-import Sugar from 'sugar';
+import Moment from 'moment';
 
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
@@ -41,8 +41,8 @@ export default () => {
   const [ingredients, setIngredients] = useState([]);
 
   useEffect(() => {
-    dummySetup();
-    // load();
+    // dummySetup();
+    load();
   }, []);
 
   const dummySetup = () => {
@@ -79,7 +79,7 @@ export default () => {
     })
     .then(async (data) => {
       let ingredientIDs = [];
-      data.map((item) => ingredientIDs.push(item.ingredientID));
+      data.forEach((item) => ingredientIDs.push(item.ingredientID));
       if (ingredientIDs.length > 0) {
         await fetch(apiUrl + '/v3/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
           method: 'get',
@@ -94,31 +94,33 @@ export default () => {
           }
           return res2.json();
         })
-        .then(async (data2) => {
-          setIngredients(data2);
+        .then((data2) => {
+          let inventory = [];
+          data.forEach((item2) => {
+            let ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
+            inventory.push({
+              key: item2.inventoryID,
+              title: ingredient.name,
+              subtitle: (() => {
+                let value = item2.totalQuantity + ' ' + item2.unit;
+                if (item2.expirationDate !== null) {
+                  value += ' | ';
+                  let expirationDate = Moment.utc(item2.expirationDate);
+                  if (expirationDate.unix() >= Moment.utc()) {
+                    value += strings.expiring;
+                  } else {
+                    value += strings.expired;
+                  }
+                  value += ' ' + expirationDate.fromNow();
+                }
+                return value;
+              })(),
+              image: ingredient.image,
+            });
+          });
+          setInventory(inventory);
         });
       }
-      let inventory = [];
-      data.foreach((item) => {
-        let ingredient = ingredients.find((item2) => item.ingredientID === item2.ingredientID);
-        inventory.push({
-          key: item.inventoryID,
-          title: ingredient.name,
-          subtitle: () => {
-            let value = item.totalQuantity + ' ' + item.unit + '\n';
-            const expirationDate = Sugar.Date.create(item.expirationDate).format('{X}');
-            if (expirationDate >= Date.now()) {
-              value += strings.expiring;
-            } else {
-              value += strings.expired;
-            }
-            value += ' ' + expirationDate.relative();
-            return value;
-          },
-          image: item.image,
-        });
-      });
-      setInventory(inventory);
     })
     .catch((error) => setToast(error.toString()));
   };
