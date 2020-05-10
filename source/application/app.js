@@ -12,12 +12,14 @@ const httpsOptions = {
   key: fs.readFileSync('server.key'),
   cert: fs.readFileSync('server.cert'),
 };
+const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const staticOptions = {
   index: false,
   redirect: false,
 };
 
+app.use(cookieParser());
 app.use(compression());
 
 app.use('/about-team', express.static('about-team'));
