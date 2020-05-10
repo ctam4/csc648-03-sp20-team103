@@ -202,7 +202,7 @@ recipes.get('/', async (req, res) => {
         if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
             throw new TypeError();
         }
-        recipeIDs = req.query.recipeIDs.split(',').map(parseInt);
+        recipeIDs = req.query.recipeIDs.split(',').map(value => parseInt(value));
     } catch (error) {
         res.sendStatus(400).end();
         throw error;
@@ -218,7 +218,7 @@ recipes.get('/', async (req, res) => {
         await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [req.query.session])
             .then(async (rows) => {
                 if (rows.length > 0) {
-                    await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', recipeIDs)
+                    await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(',')])
                         .then(async (rows2) => {
                             if (rows2.length > 0) {
                                 const recipes = await Promise.all(rows2.map(async (recipe, index) => {

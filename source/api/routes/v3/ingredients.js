@@ -23,7 +23,7 @@ ingredients.get('/', async (req, res) => {
     if (typeof req.query.session !== 'string' || typeof req.query.ingredientIDs !== 'string') {
       throw new TypeError();
     }
-    ingredientIDs = req.query.ingredientIDs.split(',').map(parseInt);
+    ingredientIDs = req.query.ingredientIDs.split(',').map(value => parseInt(value));
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
@@ -38,7 +38,7 @@ ingredients.get('/', async (req, res) => {
     await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [req.query.session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v3_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id', [ingredientIDs])
+          await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v3_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id', [ingredientIDs.join(',')])
             .then(async (rows2) => {
               if (rows2.length > 0) {
                 res.json(rows2.filter((ingredient, index) => index !== 'meta')).end();
