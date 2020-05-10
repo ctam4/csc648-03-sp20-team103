@@ -57,7 +57,7 @@ async function handleRecipes() {
                         let quantity = parseInt(item.amount);
                         let unit = (item.unit);
                         let name = item.name
-                        connection.query('INSERT IGNORE INTO v3_ingredients(ingredient_id,  name, image) VALUES(?, ?, ?)', [ingredientID, name, image]);
+                        connection.query('INSERT IGNORE INTO v3_recipe_ingredients(recipe_id,  ingredient_id, quantity, unit) VALUES(?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
                         ingredientInfo = {
                             ingredientID: ingredientID,
                             quantity: quantity,
@@ -164,6 +164,24 @@ recipes.get('/search', async (req, res) => {
     }
 });
 
+recipes.get('/', async (req, res) => {
+    try {
+        connection = await pool.getConnection();
+        let sql = 'SELECT * FROM v3_recipes';
+        await connection.query(sql)
+            .then((results) => {
+                res.send(JSON.stringify(results)).end();
+                // res.json(results).end();
+            });
+    } catch (error) {
+        res.sendStatus(500).end();
+        throw error;
+    } finally {
+        if (connection) {
+            connection.release(); // release to pool
+        }
+    }
+});
 
 /**
  * GET /v3/recipes
