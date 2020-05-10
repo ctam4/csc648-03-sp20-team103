@@ -18,27 +18,28 @@ ingredients.get('/', async (req, res) => {
     return;
   }
   // check params data type
-  let ingredientIDs;
+  let session, ingredientIDs;
   try {
     if (typeof req.query.session !== 'string' || typeof req.query.ingredientIDs !== 'string') {
       throw new TypeError();
     }
+    session = req.query.session;
     ingredientIDs = req.query.ingredientIDs.split(',').map(parseInt);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
   // check params data range
-  if (req.query.session.length !== 36 || ingredientIDs.length === 0 || !ingredientIDs.every(value => !isNaN(value) && value > 0)) {
+  if (session.length !== 36 || ingredientIDs.length === 0 || !ingredientIDs.every(value => !isNaN(value) && value > 0)) {
     res.sendStatus(400).end();
     return;
   }
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [req.query.session])
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v3_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id', [ingredientIDs])
+          await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v3_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id', [ingredientIDs.join(', ')])
             .then(async (rows2) => {
               if (rows2.length > 0) {
                 res.json(rows2.filter((ingredient, index) => index !== 'meta')).end();
