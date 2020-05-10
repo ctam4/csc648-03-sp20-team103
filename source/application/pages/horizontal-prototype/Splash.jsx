@@ -86,6 +86,7 @@ export default () => {
     })
     .then(async (data) => {
       setCookie('session', data.session, {
+        path: '/horizontal-prototype/',
         // httpOnly: true,
         expires: new Date(data.expires_ts),
       });
@@ -124,12 +125,13 @@ export default () => {
   const handleUserID = (value) => {
     if (value < state.users.length - 1) {
       setCookie('userID', state.users[value], {
+        path: '/horizontal-prototype/',
         // httpOnly: true,
         // expires: new Date(data.expires_ts),
       });
-      window.location.href = './inventory';
+      window.location.href = 'inventory/';
     } else {
-      window.location.href = './users';
+      window.location.href = 'users/';
     }
   };
 

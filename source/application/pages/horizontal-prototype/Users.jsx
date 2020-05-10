@@ -117,6 +117,7 @@ export default () => {
         })
         .then((data) => {
           setCookie('userID', data.userID, {
+            path: '/horizontal-prototype/',
             // httpOnly: true,
             // expires: new Date(data.expires_ts),
           });
