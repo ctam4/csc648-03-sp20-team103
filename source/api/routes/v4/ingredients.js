@@ -127,7 +127,7 @@ ingredients.get('/search', async (req, res) => {
                   results.push({
                     ingredientID: item.id,
                     name: item.name,
-                    image: item.image,
+                    image: `https://spoonacular.com/cdn/ingredients_500x500/${item.image}`,
                   });
                 });
                 res.json(results).end();
