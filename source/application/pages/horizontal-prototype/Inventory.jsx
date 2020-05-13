@@ -29,7 +29,6 @@ let strings = new LocalizedStrings({
     discard: 'Discard',
     expiring: 'Expiring',
     expired: 'Expired',
-    toast_added: 'Item added to inventory.',
     toast_edited: 'Item edited in inventory.',
     toast_consumed: 'Item consumed from inventory.',
     toast_discarded: 'Item discarded from inventory.',
@@ -192,6 +191,14 @@ export default () => {
               return res.json();
             })
             .catch((error) => setToast(error.toString()));
+          switch (action) {
+            case 'consume':
+              setToast(strings.toast_consumed);
+              break;
+            case 'discard':
+              setToast(strings.toast_discarded);
+              break;
+          }
           window.location.reload();
           break;
       }

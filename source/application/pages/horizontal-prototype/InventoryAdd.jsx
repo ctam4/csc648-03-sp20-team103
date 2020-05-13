@@ -39,6 +39,8 @@ let strings = new LocalizedStrings({
     expiring: 'Expiring',
     expired: 'Expired',
     remove: 'Remove',
+    toast_removed: 'Item removed from pending inventory.',
+    toast_saved: 'Item(s) saved from pending inventory to inventory.',
   },
 });
 
@@ -141,6 +143,7 @@ export default () => {
 
   const handleRemove = (key) => {
     setInventory(inventory.filter((item) => item.key !== key));
+    setToast(strings.toast_removed);
   };
 
   const handleSave = async () => {
@@ -170,6 +173,7 @@ export default () => {
           .catch((error) => setToast(error.toString()));
       }));
     }
+    setToast(strings.toast_saved);
     window.location.href = '..';
   };
 
