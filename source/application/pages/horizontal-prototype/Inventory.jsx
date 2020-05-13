@@ -80,53 +80,65 @@ export default () => {
     })
     .then((res) => {
       if (!res.ok) {
-        throw new Error(res.status + ' ' + res.statusText);
+        if (res.status !== 406) {
+          throw new Error(res.status + ' ' + res.statusText);
+        } else {
+          return null;
+        }
       }
       return res.json();
     })
     .then(async (data) => {
-      let ingredientIDs = [];
-      data.forEach((item) => ingredientIDs.push(item.ingredientID));
-      if (ingredientIDs.length > 0) {
-        await fetch(apiUrl + '/v3/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
-          method: 'get',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
-        .then((res2) => {
-          if (!res2.ok) {
-            throw new Error(res2.status + ' ' + res2.statusText);
-          }
-          return res2.json();
-        })
-        .then((data2) => {
-          let inventory = [];
-          data.forEach((item2) => {
-            let ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
-            inventory.push({
-              key: item2.inventoryID,
-              title: ingredient.name,
-              subtitle: (() => {
-                let value = item2.totalQuantity + ' ' + item2.unit;
-                if (item2.expirationDate !== null) {
-                  value += ' | ';
-                  let expirationDate = Moment.utc(item2.expirationDate);
-                  if (expirationDate.unix() >= Moment.utc()) {
-                    value += strings.expiring;
-                  } else {
-                    value += strings.expired;
-                  }
-                  value += ' ' + expirationDate.fromNow();
-                }
-                return value;
-              })(),
-              image: ingredient.image,
-            });
+      if (data !== null) {
+        let ingredientIDs = [];
+        data.forEach((item) => ingredientIDs.push(item.ingredientID));
+        if (ingredientIDs.length > 0) {
+          await fetch(apiUrl + '/v3/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          })
+          .then((res2) => {
+            if (!res2.ok) {
+              if (res2.status !== 406) {
+                throw new Error(res2.status + ' ' + res2.statusText);
+              } else {
+                return null;
+              }
+            }
+            return res2.json();
+          })
+          .then((data2) => {
+            if (data2 !== null) {
+              let inventory = [];
+              data.forEach((item2) => {
+                let ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
+                inventory.push({
+                  key: item2.inventoryID,
+                  title: ingredient.name,
+                  subtitle: (() => {
+                    let value = item2.totalQuantity + ' ' + item2.unit;
+                    if (item2.expirationDate !== null) {
+                      value += ' | ';
+                      let expirationDate = Moment.utc(item2.expirationDate);
+                      if (expirationDate.unix() >= Moment.utc()) {
+                        value += strings.expiring;
+                      } else {
+                        value += strings.expired;
+                      }
+                      value += ' ' + expirationDate.fromNow();
+                    }
+                    return value;
+                  })(),
+                  image: ingredient.image,
+                });
+              });
+              setInventory(inventory);
+            }
           });
-          setInventory(inventory);
-        });
+        }
       }
     })
     .catch((error) => setToast(error.toString()));

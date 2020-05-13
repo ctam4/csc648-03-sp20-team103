@@ -65,18 +65,24 @@ export default () => {
     })
     .then((res) => {
       if (!res.ok) {
-        throw new Error(res.status + ' ' + res.statusText);
+        if (res.status !== 406) {
+          throw new Error(res.status + ' ' + res.statusText);
+        } else {
+          return null;
+        }
       }
       return res.json();
     })
     .then((data) => {
-      let users = [];
-      data.forEach((item) => users.push({
-        key: item.userID,
-        primaryText: item.name,
-        secondaryText: item.role,
-      }));
-      setUsers(users);
+      if (data !== null) {
+        let users = [];
+        data.forEach((item) => users.push({
+          key: item.userID,
+          primaryText: item.name,
+          secondaryText: item.role,
+        }));
+        setUsers(users);
+      }
     })
     .catch((error) => setToast(error.toString()));
   };

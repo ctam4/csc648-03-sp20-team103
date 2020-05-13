@@ -16,7 +16,7 @@ let strings = new LocalizedStrings({
     expiration_date: 'Expiration date',
     expiration_date_helper: 'This is the expiration date of the storable.',
     cancel: 'Cancel',
-    okay: 'Add',
+    add: 'Add',
   },
 });
 
