@@ -92,6 +92,7 @@ export default () => {
         let ingredientIDs = [];
         data.forEach((item) => ingredientIDs.push(item.ingredientID));
         if (ingredientIDs.length > 0) {
+          ingredientIDs = [...new Set(ingredientIDs)];
           await fetch(apiUrl + '/v3/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
             method: 'get',
             headers: {
@@ -191,7 +192,6 @@ export default () => {
               if (!res.ok) {
                 throw new Error(res.status + ' ' + res.statusText);
               }
-              return res.json();
             })
             .catch((error) => setToast(error.toString()));
           switch (action) {
