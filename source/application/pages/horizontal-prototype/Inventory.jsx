@@ -130,6 +130,9 @@ export default () => {
                         }
                         value += ' ' + expirationDate.fromNow();
                       }
+                      if (item2.price) {
+                        value += ' | $' + item2.price;
+                      }
                       return value;
                     })(),
                     image: ingredient.image,

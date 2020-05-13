@@ -200,6 +200,9 @@ export default () => {
             }
             value += ' ' + expirationDate.fromNow();
           }
+          if (state.price) {
+            value += ' | $' + state.price;
+          }
           return value;
         })(),
         image: ingredient.image,
