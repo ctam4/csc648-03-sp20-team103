@@ -99,16 +99,22 @@ export default () => {
       })
       .then((res2) => {
         if (!res2.ok) {
-          throw new Error(res2.status + ' ' + res2.statusText);
+          if (res2.status !== 406) {
+            throw new Error(res2.status + ' ' + res2.statusText);
+          } else {
+            return null;
+          }
         }
         return res2.json();
       })
       .then((data2) => {
         let users = [];
-        data2.foreach((item) => users.push({
-          key: item.userID,
-          text: item.name,
-        }));
+        if (data2 !== null) {
+          data2.foreach((item) => users.push({
+            key: item.userID,
+            text: item.name,
+          }));
+        }
         dispatch(setUsers(users));
       })
       .finally(() => {
