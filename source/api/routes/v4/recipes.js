@@ -115,10 +115,11 @@ recipes.get('/search', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    
+    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
+          console.log("HerewwW", session)
         if (rows.length > 0) {
-          // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
           await fetch('https://api.spoonacular.com/recipes/search?query=' + query + '&number=' + limit + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
@@ -143,7 +144,7 @@ recipes.get('/search', async (req, res) => {
                 });
                 console.log(recipeIDS);
                 // res.json(results).end();
-              } else {
+              } else {                  
                 res.sendStatus(406).end();
               }
             });
@@ -152,7 +153,7 @@ recipes.get('/search', async (req, res) => {
           let recipeInfo = await handleRecipes();
           res.json(recipeInfo).end();
 
-        } else {
+        } else {            
           res.sendStatus(401).end();
         }
       });
@@ -441,8 +442,5 @@ recipes.get('/favorites', async (req, res) => {
 //         }
 //     }
 // });
-
-
-
 
 module.exports = recipes
