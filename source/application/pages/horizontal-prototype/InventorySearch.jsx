@@ -31,35 +31,7 @@ export default () => {
   const [state, dispatch] = useReducer(inventorySearchReducer, initialState);
 
   useEffect(() => {
-    load();
   });
-
-  const load = async () => {
-    // TODO: fetch
-    /*
-    await fetch(apiUrl + '/v3/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
-      method: 'get',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(res.status + ' ' + res.statusText);
-      }
-      return res.json();
-    })
-    .then(async (data) => {
-      let ingredients = [];
-      data.foreach((item) => ingredients.push({
-        key: item.ingredientID,
-        // @todo
-      }));
-      dispatch(setAutoComplete(ingredients));
-    });
-    */
-  };
 
   const toggleSearch = () => {
     dispatch(setSearchOpen(!state.searchOpen));
@@ -71,7 +43,56 @@ export default () => {
     }
   };
 
-  const handleAutoComplete = (value) => {
+  const handleSearch = async (keywords) => {
+    dispatch(setKeywords(keywords));
+    if (state.keywords.length > 0) {
+      await fetch(apiUrl + '/v3/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+        method: 'get',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.status + ' ' + res.statusText);
+        }
+        return res.json();
+      })
+      .then(async (data) => {
+        const ingredients = data.map((item) => {
+          return {
+            key: item.ingredientID,
+            primaryText: item.name,
+            ingredient: item,
+          };
+        });
+        dispatch(setAutoComplete(ingredients));
+      });
+    }
+  };
+
+  const handleAutoComplete = async (value) => {
+    // add to ingredients, prototype
+    await fetch(apiUrl + '/v3/ingredients', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session: cookies.session,
+        ingredientID: state.autoComplete[value].ingredient.ingredientID,
+        name: state.autoComplete[value].ingredient.name,
+        image: state.autoComplete[value].ingredient.image,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.status + ' ' + res.statusText);
+        }
+      })
+      .catch((error) => setToast(error.toString()));
     window.location.href = '../view/?id=' + state.autoComplete[value].key;
   };
 
@@ -88,7 +109,7 @@ export default () => {
       <MaterialTopAppBarSearchDialog
         value={state.keywords}
         onClick1={toggleSearch}
-        onChange={(e) => dispatch(setKeywords(e.target.value))}
+        onChange={(e) => handleSearch(e.target.value)}
         onTrailingIconSelect={() => dispatch(setKeywords(''))}
       ></MaterialTopAppBarSearchDialog>
       )}
