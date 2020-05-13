@@ -90,7 +90,7 @@ export default () => {
         // httpOnly: true,
         expires: new Date(data.expires_ts),
       });
-      await fetch(apiUrl + '/v3/users?session=' + cookies.session, {
+      await fetch(apiUrl + '/v3/users?session=' + data.session, {
         method: 'get',
         headers: {
           'Accept': 'application/json',
