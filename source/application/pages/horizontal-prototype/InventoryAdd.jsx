@@ -27,6 +27,7 @@ import Moment from 'moment';
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
 import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
 import InventoryAddDialog from '../../components/horizontal-prototype/InventoryAddDialog';
@@ -44,6 +45,7 @@ let strings = new LocalizedStrings({
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [state, dispatch] = useReducer(inventoryAddReducer, initialState);
+  const [toast, setToast] = useState('');
   const [inventory, setInventory] = useState([]);
   const [ingredients, setIngredients] = useState([]);
 
@@ -108,7 +110,7 @@ export default () => {
           });
           dispatch(setAutoComplete(ingredients));
         })
-        .catch(console.log);
+        .catch((error) => setToast(error.toString()));
     }
   };
 
@@ -132,7 +134,7 @@ export default () => {
           throw new Error(res.status + ' ' + res.statusText);
         }
       })
-      .catch(console.log);
+      .catch((error) => setToast(error.toString()));
     dispatch(setIngredientID(state.autoComplete[value].key))
     toggleDialog();
   };
@@ -164,9 +166,8 @@ export default () => {
             if (!res.ok) {
               throw new Error(res.status + ' ' + res.statusText);
             }
-            return res.json();
           })
-          .catch(console.log);
+          .catch((error) => setToast(error.toString()));
       }));
     }
     window.location.href = '..';
@@ -251,6 +252,9 @@ export default () => {
               ))}
             </Grid>
           </DrawerAppContent>
+          {toast && (
+          <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+          )}
           {!state.searchOpen && (
           <MaterialFab
             icon={<MaterialIcon icon='check' />}
