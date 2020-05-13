@@ -49,7 +49,6 @@ export default () => {
 
   useEffect(() => {
     // dummySetup();
-    load();
   });
 
   const dummySetup = () => {
@@ -68,38 +67,6 @@ export default () => {
     ]);
   };
 
-  const load = async () => {
-    if (state.searchOpen) {
-      if (state.keywords.length > 0) {
-        await fetch(apiUrl + '/v3/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
-          method: 'get',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
-          .then((res) => {
-            if (!res.ok) {
-              throw new Error(res.status + ' ' + res.statusText);
-            }
-            return res.json();
-          })
-          .then((data) => {
-            setIngredients(data);
-            const ingredients = data.map((item) => {
-              return {
-                key: item.ingredientID,
-                primaryText: item.name,
-                ingredient: item,
-              };
-            });
-            dispatch(setAutoComplete(ingredients));
-          })
-          .catch(console.log);
-      }
-    }
-  };
-
   const toggleSearch = () => {
     dispatch(setSearchOpen(!state.searchOpen));
   };
@@ -111,6 +78,37 @@ export default () => {
   const handleGoBack = () => {
     if (history.length > 0) {
       history.back();
+    }
+  };
+
+  const handleSearch = async (keywords) => {
+    dispatch(setKeywords(keywords));
+    if (state.keywords.length > 0) {
+      await fetch(apiUrl + '/v3/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+        method: 'get',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(res.status + ' ' + res.statusText);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setIngredients(data);
+          const ingredients = data.map((item) => {
+            return {
+              key: item.ingredientID,
+              primaryText: item.name,
+              ingredient: item,
+            };
+          });
+          dispatch(setAutoComplete(ingredients));
+        })
+        .catch(console.log);
     }
   };
 
@@ -219,7 +217,7 @@ export default () => {
           <MaterialTopAppBarSearchDialog
             value={state.keywords}
             onClick1={toggleSearch}
-            onChange={(e) => dispatch(setKeywords(e.target.value))}
+            onChange={(e) => handleSearch(e.target.value)}
             onTrailingIconSelect={() => dispatch(setKeywords(''))}
           ></MaterialTopAppBarSearchDialog>
         )}
