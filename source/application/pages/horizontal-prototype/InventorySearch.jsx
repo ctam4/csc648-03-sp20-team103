@@ -1,42 +1,33 @@
-import React, { useEffect, useReducer } from "react";
-import { useCookies } from "react-cookie";
+import React, { useEffect, useReducer } from 'react';
+import { useCookies } from 'react-cookie';
 
-import { inventorySearchReducer, initialState } from "../../reducers/horizontal-prototype/InventorySearch";
-import { setKeywords } from "../../actions/horizontal-prototype/InventorySearch";
+import { inventorySearchReducer, initialState } from '../../reducers/horizontal-prototype/InventorySearch';
+import {
+  setSearchOpen,
+  setKeywords,
+  setAutoComplete,
+} from '../../actions/horizontal-prototype/InventorySearch';
 
-import { StyleSheet, View, ScrollView } from "react-native";
-import LocalizedStrings from "react-localization";
+import { View, useWindowDimensions } from 'react-native';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import { DrawerAppContent } from '@material/react-drawer';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import '@material/react-layout-grid/dist/layout-grid.css';
+import LocalizedStrings from 'react-localization';
 
-import Search from "../../components/horizontal-prototype/Search";
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
+import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
+
+import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
   en: {
   },
 });
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  scrollArea1: {
-    minWidth: 360,
-    width: "100%",
-    minHeight: 684,
-    maxHeight: "100%",
-    alignSelf: "center",
-  },
-  scrollArea1_contentContainerStyle: {
-    minWidth: 360,
-    width: "100%",
-  },
-  materialSearchBarWithBackground1: {
-    minWidth: 360,
-    width: "100%",
-    height: 56,
-  }
-});
 
 export default () => {
-  const [cookies, setCookie] = useCookies(["session"]);
+  const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [state, dispatch] = useReducer(inventorySearchReducer, initialState);
 
   useEffect(() => {
@@ -45,20 +36,76 @@ export default () => {
 
   const load = async () => {
     // TODO: fetch
+    /*
+    await fetch(apiUrl + '/v3/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(res.status + ' ' + res.statusText);
+      }
+      return res.json();
+    })
+    .then(async (data) => {
+      let ingredients = [];
+      data.foreach((item) => ingredients.push({
+        key: item.ingredientID,
+        // @todo
+      }));
+      dispatch(setAutoComplete(ingredients));
+    });
+    */
+  };
+
+  const toggleSearch = () => {
+    dispatch(setSearchOpen(!state.searchOpen));
+  };
+
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
+  };
+
+  const handleAutoComplete = (value) => {
+    window.location.href = '../view/?id=' + state.autoComplete[value].key;
   };
 
   return (
-    <View style={styles.container}>
-      <Search
-        textInput1={state.keywords}
-        style={styles.materialSearchBarWithBackground1}
+    <View className='drawer-container'>
+      {!state.searchOpen && (
+      <MaterialTopAppBarDialog
+        icon1={'arrow_back'}
+        onClick1={handleGoBack}
+        onClick2={toggleSearch}
+      ></MaterialTopAppBarDialog>
+      )}
+      {state.searchOpen && (
+      <MaterialTopAppBarSearchDialog
+        value={state.keywords}
+        onClick1={toggleSearch}
         onChange={(e) => dispatch(setKeywords(e.target.value))}
-      ></Search>
-      <View style={styles.scrollArea1}>
-        <ScrollView
-          contentContainerStyle={styles.scrollArea1_contentContainerStyle}
-        ></ScrollView>
-      </View>
+        onTrailingIconSelect={() => dispatch(setKeywords(''))}
+      ></MaterialTopAppBarSearchDialog>
+      )}
+      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+        <DrawerAppContent className='drawer-app-content'>
+          <Grid style={{ height: useWindowDimensions().height - 64 }}>
+            <Row>
+              <Cell columns={12}>
+                <MaterialSingleSelectionList
+                  items={state.autoComplete}
+                  handleSelect={handleAutoComplete}
+                ></MaterialSingleSelectionList>
+              </Cell>
+            </Row>
+          </Grid>
+        </DrawerAppContent>
+      </TopAppBarFixedAdjust>
     </View>
   );
 };

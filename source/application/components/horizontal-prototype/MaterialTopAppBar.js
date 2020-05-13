@@ -3,8 +3,6 @@ import TopAppBar, { TopAppBarIcon, TopAppBarRow, TopAppBarSection, TopAppBarTitl
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-top-app-bar/dist/top-app-bar.css';
 import '@material/react-material-icon/dist/material-icon.css';
-//import { IconContext } from 'react-icons';
-//import { MdMenu, MdSearch, MdMoreVert } from 'react-icons/md';
 
 function MaterialTopAppBar(props) {
   return (

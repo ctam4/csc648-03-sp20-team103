@@ -40,7 +40,7 @@ export default React.createElement(CreateReactClass({
     return (
       <div>
         <p><label>FridgeGet</label></p>
-        <button id="btnSubmit" onClick={this.handleButtonClick}>Request</button>
+        <button id='btnSubmit' onClick={this.handleButtonClick}>Request</button>
         <code>{msg}</code>
       </div>
     );

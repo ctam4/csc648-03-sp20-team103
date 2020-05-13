@@ -1,20 +1,34 @@
 export const initialState = {
-  serial_number: '',
+  serialNumber: '',
   pin: '',
+  dialogOpen: false,
+  users: [],
 };
 
 export const splashReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'SPLASH_SET_SERIAL_NUMBER': {
+    case 'SPLASH_SET_SERIALNUMBER': {
       return {
         ...state,
-        serial_number: action.serial_number,
+        serialNumber: action.serialNumber,
       };
     }
     case 'SPLASH_SET_PIN': {
       return {
         ...state,
         pin: action.pin,
+      };
+    }
+    case 'SPLASH_SET_DIALOGOPEN': {
+      return {
+        ...state,
+        dialogOpen: action.dialogOpen,
+      };
+    }
+    case 'SPLASH_SET_USERS': {
+      return {
+        ...state,
+        users: action.users,
       };
     }
     default: {

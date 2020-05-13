@@ -1,42 +1,59 @@
-import React, { Component } from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native';
+import React, { Component, useState } from 'react';
+import { View } from 'react-native';
 import LocalizedStrings from 'react-localization';
-import { IconContext } from 'react-icons';
-import { MdExpandLess } from 'react-icons/md';
+
+import { Headline6, Subtitle1, Subtitle2, Body2 } from './MaterialTypography';
+import MaterialIcon from '@material/react-material-icon';
+import MaterialCard, { CardMedia, CardActions, CardActionIcons } from './MaterialCard';
+import '@material/react-material-icon/dist/material-icon.css';
 
 function RecipesCardFull(props) {
+  const [cardOpen, setCardOpen] = useState(false);
+
+  const toggleCard = () => {
+    setCardOpen(!cardOpen);
+  };
+
   return (
-    <View style={[styles.container, props.style]}>
-      <Image
-        source={props.cardItemimage}
-        style={styles.cardItemImage}
-      ></Image>
-      <View style={styles.bodyContent}>
-        <Text style={styles.titleStyle}>
-          {props.text1 || 'Title goes here'}
-        </Text>
-        <Text style={styles.subtitleStyle}>
-          {props.text2 || 'Subtitle here'}
-        </Text>
+    <MaterialCard className='mdc-card'>
+      <CardMedia wide imageUrl={props.mainImage}></CardMedia>
+      <View style={{padding: 16}}>
+        <Headline6 style={{margin: 0}}>{props.mainText1}</Headline6>
+        <Subtitle2 style={{margin: 0}}>{props.mainText2}</Subtitle2>
       </View>
-      <View style={styles.actionBody}>
-        <TouchableOpacity style={styles.actionButton1} onPress={props.onPressAction1}>
-          <Text style={styles.actionText1}>{props.text3 || 'ACTION 1'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton2} onPress={props.onPressAction2}>
-          <Text style={styles.actionText2}>{props.text4 || 'ACTION 2'}</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.actionButton3} onPress={props.onPressAction3}>
-          <IconContext.Provider value={{ style: iconStyles.iconStyle }}>
-            <MdExpandLess />
-          </IconContext.Provider>
-        </TouchableOpacity>
+      <CardActions>
+        <CardActionIcons>
+          <MaterialIcon
+            aria-label='favorite'
+            hasRipple
+            icon='favorite'
+            onClick={props.onClickAction1}
+          />
+          <MaterialIcon
+            aria-label='history'
+            hasRipple
+            icon='history'
+            onClick={props.onClickAction2}
+          />
+          <MaterialIcon
+            aria-label='add_shopping_cart'
+            hasRipple
+            icon='add_shopping_cart'
+            onClick={props.onClickAction3}
+          />
+          <MaterialIcon
+            aria-label={cardOpen && 'expand_less' || 'expand_more'}
+            hasRipple
+            icon={cardOpen && 'expand_less' || 'expand_more'}
+            onClick={toggleCard}
+          />
+        </CardActionIcons>
+      </CardActions>
+      <View style={{padding: 16}}>
+        <Subtitle1 style={{margin: 0}}>{strings.instructions}</Subtitle1>
+        <Body2 style={{marginBottom: 0}}>{props.bodyText}</Body2>
       </View>
-      <View style={styles.body2}>
-        <Text style={styles.bodyHead1}>{strings.instructions}</Text>
-        <Text style={styles.bodyText1}>{props.bodyText1}</Text>
-      </View>
-    </View>
+    </MaterialCard>
   );
 }
 
@@ -45,99 +62,5 @@ let strings = new LocalizedStrings({
     instructions: 'Instructions',
   },
 });
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#FFF',
-    flexWrap: 'nowrap',
-    elevation: 3,
-    borderRadius: 2,
-    borderColor: '#CCC',
-    borderWidth: 1,
-    shadowOffset: {
-      height: 2,
-      width: -2
-    },
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 1.5,
-    overflow: 'hidden'
-  },
-  cardItemImage: {
-    flex: 1,
-    backgroundColor: '#ccc',
-    minHeight: 210
-  },
-  bodyContent: {
-    justifyContent: 'center',
-    padding: 16,
-    paddingTop: 24
-  },
-  titleStyle: {
-    color: '#000',
-    paddingBottom: 12,
-    fontSize: 24,
-    fontFamily: 'Roboto'
-  },
-  subtitleStyle: {
-    color: '#000',
-    opacity: 0.5,
-    fontSize: 14,
-    fontFamily: 'Roboto',
-    lineHeight: 16
-  },
-  actionBody: {
-    flexDirection: 'row',
-    padding: 8
-  },
-  actionButton1: {
-    height: 36,
-    padding: 8,
-    textTransform: 'uppercase'
-  },
-  actionText1: {
-    color: '#000',
-    opacity: 0.9,
-    fontSize: 14
-  },
-  actionButton2: {
-    height: 36,
-    padding: 8,
-    textTransform: 'uppercase'
-  },
-  actionText2: {
-    color: '#000',
-    opacity: 0.9,
-    fontSize: 14
-  },
-  actionButton3: {
-    height: 36,
-    position: 'absolute',
-    right: 8,
-    bottom: 12,
-    padding: 8
-  },
-  body2: {
-    padding: 16,
-    paddingTop: 8
-  },
-  bodyHead1: {
-    color: '#121212',
-    marginBottom: 10,
-    fontWeight: '700',
-    fontFamily: 'Roboto'
-  },
-  bodyText1: {
-    color: '#424242',
-    fontSize: 14,
-    lineHeight: 20
-  }
-});
-const iconStyles = {
-  iconStyle: {
-    color: '#000',
-    fontSize: 24,
-    opacity: 0.7
-  }
-};
 
 export default RecipesCardFull;
