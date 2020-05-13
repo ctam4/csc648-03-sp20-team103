@@ -251,11 +251,13 @@ export default () => {
               ))}
             </Grid>
           </DrawerAppContent>
+          {!state.searchOpen && (
           <MaterialFab
             icon={<MaterialIcon icon='check' />}
             style={{ position: 'absolute', right: 16, bottom: 16 }}
             onClick={handleSave}
           ></MaterialFab>
+          )}
         </TopAppBarFixedAdjust>
       </View>
       <InventoryAddDialog
