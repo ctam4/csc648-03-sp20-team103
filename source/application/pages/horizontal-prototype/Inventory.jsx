@@ -115,25 +115,27 @@ export default () => {
               let inventory = [];
               data.forEach((item2) => {
                 let ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
-                inventory.push({
-                  key: item2.inventoryID,
-                  title: ingredient.name,
-                  subtitle: (() => {
-                    let value = item2.totalQuantity + ' ' + item2.unit;
-                    if (item2.expirationDate !== null) {
-                      value += ' | ';
-                      let expirationDate = Moment.utc(item2.expirationDate);
-                      if (expirationDate.unix() >= Moment.utc()) {
-                        value += strings.expiring;
-                      } else {
-                        value += strings.expired;
+                if (ingredient) {
+                  inventory.push({
+                    key: item2.inventoryID,
+                    title: ingredient.name,
+                    subtitle: (() => {
+                      let value = item2.totalQuantity + ' ' + item2.unit;
+                      if (item2.expirationDate !== null) {
+                        value += ' | ';
+                        let expirationDate = Moment.utc(item2.expirationDate);
+                        if (expirationDate.unix() >= Moment.utc()) {
+                          value += strings.expiring;
+                        } else {
+                          value += strings.expired;
+                        }
+                        value += ' ' + expirationDate.fromNow();
                       }
-                      value += ' ' + expirationDate.fromNow();
-                    }
-                    return value;
-                  })(),
-                  image: ingredient.image,
-                });
+                      return value;
+                    })(),
+                    image: ingredient.image,
+                  });
+                }
               });
               setInventory(inventory);
             }
