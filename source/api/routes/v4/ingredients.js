@@ -5,7 +5,7 @@ const fetch = require('node-fetch');
 const pool = require('../../database.js');
 let connection;
 
-const { insertIngredient, importIngredients } = require('./functions/ingredients.js');
+const { selectIngredients, insertIngredient, importIngredients } = require('./functions/ingredients.js');
 
 /**
  * GET /v4/ingredients
@@ -39,9 +39,9 @@ ingredients.get('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
-          await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v4_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id', [ingredientIDs.join(', ')])
+          selectIngredients(connection, ingredientIDs)
             .then(async (rows2) => {
               if (rows2.length > 0) {
                 res.json(rows2.filter((ingredient, index) => index !== 'meta')).end();
@@ -132,8 +132,20 @@ ingredients.get('/search', async (req, res) => {
                   });
                 });
                 const ingreidentIDs = importIngredients(ingredients);
-                // @todo select and return
-                // res.json(results).end();
+                selectIngredients(connection, ingreidentIDs)
+                  .then((res2) => {
+                    if (!res2.ok) {
+                      throw new Error('error ' + res2.status);
+                    }
+                    return res2.json();
+                  })
+                  .then((rows) => {
+                    if (rows.length > 0) {
+                      res.json(rows.filter((ingredient, index) => index !== 'meta')).end();
+                    } else {
+                      res.sendStatus(406).end();
+                    }
+                  });
               } else {
                 res.sendStatus(406).end();
               }
