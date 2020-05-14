@@ -28,7 +28,7 @@ inventory.get('/', async (req, res) => {
           await connection.query('SELECT ingredient_id as ingredientID, expiration_date as expirationDate, total_quantity as totalQuantity, unit, price FROM v4_inventory WHERE inventory_id=?', [inventoryID])
             .then(async (rows) => {
               if (rows.length > 0) {
-                const item = rows[0].filter((_, index) => index !== 'meta');
+                const item = rows[0];
                 await connection.query('SELECT user_id as userID, quantity, unit, action, action_ts as actionTS FROM v4_inventory_log WHERE inventory_id=? ORDER BY action_ts DESC', [inventoryID])
                   .then(async (rows2) => {
                     item.history = rows2.filter((_, index) => index !== 'meta');
