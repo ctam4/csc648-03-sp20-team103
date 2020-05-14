@@ -32,7 +32,7 @@ carts.post('/ingredient', async (req, res) => {
     ingredientID = parseInt(req.body.ingredientID);
     quantity = parseInt(req.body.quantity);
     unit = req.body.unit;
-    // addedTS = req.body.addedTS
+    addedTS = pasreInt(req.body.addedTS);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
@@ -51,7 +51,7 @@ carts.post('/ingredient', async (req, res) => {
       .then(async (rows) => {
         if (rows.length > 0) {
           // insert for endpoint
-          await connection.query('INSERT IGNORE INTO v4_carts (user_id, ingredient_id, quantity, unit) VALUES ( ?, ?, ?, ?)', [userID, ingredientID, quantity, unit])
+          await connection.query('INSERT IGNORE INTO v4_carts (user_id, ingredient_id, quantity, unit, added_ts) VALUES ( ?, ?, ?, ?, FROM_UNIXTIME(?))', [userID, ingredientID, quantity, unit, addedTS])
             .then(async (results) => {
               console.log('here', results);
               if (results.affectedRows > 0) {

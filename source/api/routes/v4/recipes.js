@@ -8,7 +8,7 @@ let connection;
 const { insertRecipe, importRecipes } = require('./functions/recipes.js');
 
 /**
- * GET /v3/recipes/search
+ * GET /v4/recipes/search
  * @description Retrieve recipes list of current fridges with session.
  * @param {string} session
  * @param {string} query
@@ -20,7 +20,7 @@ const { insertRecipe, importRecipes } = require('./functions/recipes.js');
 recipes.get('/search', async (req, res) => {
   // check correct params
   if ((Object.keys(req.query).length == 2 ||
-      (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
+    (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
     !('session' in req.query && 'query' in req.query)) {
     res.sendStatus(400).end();
     return;
@@ -110,7 +110,7 @@ recipes.get('/search', async (req, res) => {
 // });
 
 /**
- * GET /v3/recipes
+ * GET /v4/recipes
  * @description Retreives recipe information given their IDs.
  * @param {integer(,integer)} recipeIDs
  * @returns {object[]} recipes
@@ -156,7 +156,7 @@ recipes.get('/', async (req, res) => {
                           recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
                           // console.log(recipe.ingredients);
                         }
-                        // console.log(recipe, "HEREE");                                                
+                        // console.log(recipe, "HEREE");
                       });
                     return recipe
 
@@ -183,7 +183,7 @@ recipes.get('/', async (req, res) => {
 });
 
 /**
- * POST /v3/recipes/favorite
+ * POST /v4/recipes/favorite
  * @description Insert inventory for current fridges with session.
  * @param {integer} user_id
  * @param {integer} recipe_id
@@ -231,7 +231,7 @@ recipes.post('/favorites', async (req, res) => {
 });
 
 /**
- * POST /v3/recipes/favorite
+ * POST /v4/recipes/favorite
  * @description Insert inventory for current fridges with session.
  * @param {integer} user_id
  * @param {integer} recipe_id
@@ -280,7 +280,7 @@ recipes.delete('/favorites', async (req, res) => {
 });
 
 /**
- * GET /v3/recipes/favorites
+ * GET /v4/recipes/favorites
  * @description Retrieve recipes list of current fridges with session.
  * @param {string} session
  * @param {string} query
@@ -291,7 +291,7 @@ recipes.delete('/favorites', async (req, res) => {
 recipes.get('/favorites', async (req, res) => {
   // check params data type
   if ((Object.keys(req.query).length == 3 ||
-      (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
+    (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
     !('session' in req.query && 'query' in req.query)) {
     res.sendStatus(400).end();
     return;
