@@ -28,6 +28,9 @@ recipes.get('/search', async (req, res) => {
   // check params data type
   let session, query, page, limit;
   try {
+    if (typeof req.query.session !== 'string' || (req.query.sort && typeof req.query.sort !== 'string')) {
+      throw new TypeError();
+    }
     session = req.query.session;
     query = req.query.query;
     page = (req.query.page && parseInt(req.query.page)) || 1;
@@ -37,7 +40,7 @@ recipes.get('/search', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (!session || page <= 0 || limit <= 0) {
+  if (session.length !== 36 || query.length === 0 || page <= 0 || limit <= 0) {
     res.sendStatus(400).end();
     return;
   }
