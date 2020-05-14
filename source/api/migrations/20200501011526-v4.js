@@ -504,6 +504,7 @@ exports.up = (db, callback) => {
           },
           action_ts: {
             type: 'timestamp',
+            notNull: true,
             defaultValue: new String('CURRENT_TIMESTAMP'),
           },
         },
