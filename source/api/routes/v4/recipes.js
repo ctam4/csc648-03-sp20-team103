@@ -116,11 +116,10 @@ recipes.get('/search', async (req, res) => {
     connection = await pool.getConnection();
     // retrieve fridge_id
     
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
           console.log("HerewwW", session)
         if (rows.length > 0) {
-          const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
           await fetch('https://api.spoonacular.com/recipes/search?query=' + query + '&number=' + limit + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
               method: 'get',
@@ -218,7 +217,7 @@ recipes.get('/', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
           await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(', ')])
@@ -281,7 +280,7 @@ recipes.post('/favorites', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
           await connection.query('INSERT INTO v3_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [user_id, recipe_id])
@@ -330,7 +329,7 @@ recipes.delete('/favorites', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
           await connection.query('DELETE FROM v3_recipe_favorites WHERE user_id=?', [user_id])
@@ -394,10 +393,9 @@ recipes.get('/favorites', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT fridge_id AS fridgeID FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 AS fridgeID FROM v3_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          const fridgeID = rows[0].fridgeID;
           let sql = 'SELECT recipe_id AS recipeID FROM v3_recipe_favorites WHERE user_id=?';
           await connection.query(sql + ' LIMIT ? OFFSET ?', [userID, limit, (page - 1) * limit])
             .then((rows) => {
