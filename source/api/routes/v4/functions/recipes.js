@@ -1,11 +1,19 @@
 const { insertIngredient } = require('./ingredients.js');
 
+const selectRecipes = async (connection, recipeIDs) => {
+  return await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(', ')]);
+};
+
+const selectRecipeIngredients = async (connection, recipeID) => {
+  return await connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', [recipeID.join(', ')]);
+};
+
 const insertRecipeIngredient = async (connection, recipeID, ingredientID, quantity, unit) => {
-  return await connection.query('INSERT IGNORE INTO v3_recipe_ingredients (recipe_id, ingredient_id, quantity, unit) VALUES (?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
+  return await connection.query('INSERT IGNORE INTO v4_recipe_ingredients (recipe_id, ingredient_id, quantity, unit) VALUES (?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
 };
 
 const insertRecipe = async (connection, recipeID, title, image, servings, cookingTime, instructions, ingredients) => {
-  return await connection.query('INSERT IGNORE INTO v3_recipes (recipe_id, title, image, servings, cooking_time, instructions) VALUES (?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions])
+  return await connection.query('INSERT IGNORE INTO v4_recipes (recipe_id, title, image, servings, cooking_time, instructions) VALUES (?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions])
     .then(async (results) => {
       if (results.affectedRows > 0) {
         ingredients.forEach((item) => {
@@ -15,17 +23,17 @@ const insertRecipe = async (connection, recipeID, title, image, servings, cookin
             item.name,
             item.image,
           )
-          .then(async (results2) => {
-            if (results2.affectedRows > 0) {
-              insertRecipeIngredient(
-                connection,
-                recipeID,
-                item.ingredientID,
-                item.quantity,
-                item.unit,
-              );
-            }
-          });
+            .then(async (results2) => {
+              if (results2.affectedRows > 0) {
+                insertRecipeIngredient(
+                  connection,
+                  recipeID,
+                  item.ingredientID,
+                  item.quantity,
+                  item.unit,
+                );
+              }
+            });
         });
       }
     });
@@ -45,9 +53,9 @@ const importRecipes = async (connection, recipeIDs) => {
         }
         return res.json();
       })
-      .then(async (data) => {
+      .then((data) => {
         if (data.length > 0) {
-          data.forEach(async (item) => {
+          data.forEach((item) => {
             insertRecipe(
               connection,
               item.id,
@@ -73,6 +81,8 @@ const importRecipes = async (connection, recipeIDs) => {
 };
 
 module.exports = {
+  selectRecipes,
+  selectRecipeIngredients,
   insertRecipeIngredient,
   insertRecipe,
   importRecipes,

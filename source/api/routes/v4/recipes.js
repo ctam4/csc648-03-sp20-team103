@@ -5,7 +5,7 @@ const fetch = require("node-fetch");
 const pool = require('../../database.js');
 let connection;
 
-const { insertRecipe, importRecipes } = require('./functions/recipes.js');
+const { selectRecipes, selectRecipeIngredients, importRecipes } = require('./functions/recipes.js');
 
 /**
  * GET /v4/recipes/search
@@ -69,9 +69,21 @@ recipes.get('/search', async (req, res) => {
                 const recipeIDs = data.map((item) => {
                   return item.id
                 });
-                importRecipes(recipeIDs);
-                // @todo: select and return
-                // res.json().end();
+                importRecipes(connection, recipeIDs);
+                selectRecipes(connection, recipeIDs)
+                  .then((res2) => {
+                    if (!res2.ok) {
+                      throw new Error('error ' + res2.status);
+                    }
+                    return res2.json();
+                  })
+                  .then((rows) => {
+                    if (rows.length > 0) {
+                      res.json(rows.filter((recipe, index) => index !== 'meta')).end();
+                    } else {
+                      res.sendStatus(406).end();
+                    }
+                  });
               } else {
                 res.sendStatus(406).end();
               }
@@ -142,26 +154,26 @@ recipes.get('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
-          await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(', ')])
-            .then(async (rows2) => {
+          selectRecipes(connection, recipeIDs)
+            .then((rows2) => {
               if (rows2.length > 0) {
                 // console.log(rows2);
-                const recipes = await Promise.all(rows2.map(async (recipe, index) => {
+                const recipes = rows2.map((recipe, index) => {
                   if (index !== 'meta') {
-                    await connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v3_recipe_ingredients WHERE recipe_id=?', [recipe.recipeID])
-                      .then(async (rows3) => {
+                    selectRecipeIngredients(connection, recipe.recipeID)
+                      .then((rows3) => {
                         if (rows3.length > 0) {
                           recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
                           // console.log(recipe.ingredients);
                         }
                         // console.log(recipe, "HEREE");
                       });
-                    return recipe
 
+                    return recipe;
                   }
-                }));
+                });
                 // console.log(recipes);
                 res.json(recipes).end();
               } else {
