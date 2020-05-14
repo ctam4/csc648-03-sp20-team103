@@ -5,6 +5,54 @@ const pool = require('../../database.js');
 let connection;
 
 /**
+ * GET /v4/inventory
+ * @description Retreive information about a specific inventory item.
+ * @param {string} session
+ * @param {integer} inventoryID
+ * @return {object}
+ */
+inventory.get('/', async (req, res) => {
+  // check param types
+  const session = req.query.session;
+  const inventoryID = Number.parseInt(req.query.inventoryID);
+  if (typeof session !== 'string' || Number.isNaN(inventoryID) || session.length !== 36
+    || inventoryID < 0) {
+    res.sendStatus(400).end();
+    return;
+  }
+  try {
+    connection = await pool.getConnection();
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?',[session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+          await connection.query('SELECT ingredient_id as ingredientID, expiration_date as expirationDate, total_quantity as totalQuantity, unit, price FROM v4_inventory WHERE inventory_id=?', [inventoryID])
+            .then(async (rows) => {
+              if (rows.length > 0) {
+                const item = rows[0].filter((_, index) => index !== 'meta');
+                await connection.query('SELECT user_id as userID, quantity, unit, action, action_ts as actionTS FROM v4_inventory_log WHERE inventory_id=? ORDER BY action_ts DESC', [inventoryID])
+                  .then(async (rows2) => {
+                    item.history = rows2.filter((_, index) => index !== 'meta');
+                  });
+                res.json(item).end();
+              } else {
+                res.sendStatus(406).end();
+              }
+            });
+        } else {
+          res.sendStatus(401).end();
+        }
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (conection) {
+      connection.release(); // release to pool
+    }
+  }
+})
+
+/**
  * GET /v4/inventory/list:state
  * @description Retrieve inventory list of current fridges with session.
  * @param {string} session
@@ -93,27 +141,6 @@ inventory.get('/list/:state', async (req, res) => {
       });
   } catch (error) {
     res.sendStatus(500).end();
-    throw error;
-  } finally {
-    if (connection) {
-      connection.release(); // release to pool
-    }
-  }
-});
-
-//for testing
-inventory.get('/', async (req, res) => {
-  try {
-    connection = await pool.getConnection();
-    // let sql = 'SELECT * FROM v4_inventory'
-    let sql = 'SELECT * FROM v4_inventory WHERE inventory_id=?';
-    await connection.query(sql, req.query.inventory_id)
-      .then((results) => {
-        res.send(JSON.stringify(results)).end();
-        // res.json(results).end();
-      });
-  } catch (error) {
-    res.sendStatus(400).end();
     throw error;
   } finally {
     if (connection) {
