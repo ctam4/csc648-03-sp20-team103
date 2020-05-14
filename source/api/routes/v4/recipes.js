@@ -24,11 +24,11 @@ async function handleRecipes() {
   for (let i = 0; i < recipeIDS.length; i++) {
     let results = [];
     await fetch('https://api.spoonacular.com/recipes/' + recipeIDS[i] + '/information?includeNutrition=false' + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
-        method: 'get',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
       .then((res) => {
         if (!res.ok) {
           throw new Error('error ' + res.status);
@@ -90,7 +90,7 @@ async function handleRecipes() {
 recipes.get('/search', async (req, res) => {
   // check correct params
   if ((Object.keys(req.query).length == 2 ||
-      (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
+    (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
     !('session' in req.query && 'query' in req.query)) {
     res.sendStatus(400).end();
     return;
@@ -115,18 +115,18 @@ recipes.get('/search', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    
+
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
-          console.log("HerewwW", session)
+        console.log("HerewwW", session)
         if (rows.length > 0) {
           // retrieve for endpoint
           await fetch('https://api.spoonacular.com/recipes/search?query=' + query + '&number=' + limit + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
-              method: 'get',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            })
+            method: 'get',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
             .then((res) => {
               if (!res.ok) {
                 throw new Error('error ' + res.status);
@@ -143,7 +143,7 @@ recipes.get('/search', async (req, res) => {
                 });
                 console.log(recipeIDS);
                 // res.json(results).end();
-              } else {                  
+              } else {
                 res.sendStatus(406).end();
               }
             });
@@ -152,7 +152,7 @@ recipes.get('/search', async (req, res) => {
           let recipeInfo = await handleRecipes();
           res.json(recipeInfo).end();
 
-        } else {            
+        } else {
           res.sendStatus(401).end();
         }
       });
@@ -232,7 +232,7 @@ recipes.get('/', async (req, res) => {
                           recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
                           // console.log(recipe.ingredients);
                         }
-                        // console.log(recipe, "HEREE");                                                
+                        // console.log(recipe, "HEREE");
                       });
                     return recipe
 
@@ -367,7 +367,7 @@ recipes.delete('/favorites', async (req, res) => {
 recipes.get('/favorites', async (req, res) => {
   // check params data type
   if ((Object.keys(req.query).length == 3 ||
-      (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
+    (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
     !('session' in req.query && 'query' in req.query)) {
     res.sendStatus(400).end();
     return;
