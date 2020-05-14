@@ -6,26 +6,27 @@ const convert = express.Router();
 let connection;
 
 /**
- * GET /v3/convert
+ * GET /v4/convert
  * @description Converts a quantity from one unit to another.
  * @param {string} session
- * @param {string} ingredient
+ * @param {string} ingredientName
  * @param {number} quantity
  * @param {string} sourceUnit
  * @param {string} targetUnit
- * @returns {number} newQuantity
+ * @returns {number} amount
+ * @returns {string} unit
  */
-convert.post('/convert', async (req, res) => {
+convert.get('/', async (req, res) => {
   // check param types
   const quantity = Number.parseFloat(req.query.quantity);
   const {
     session,
-    ingredient,
+    ingredientName,
     sourceUnit,
     targetUnit,
   } = req.query;
-  if (typeof session !== 'string' || typeof ingredient !== 'string' || Number.isNaN(quantity)
-    || quantity < 0 || typeof unit !== 'string' || typeof newUnit !== 'string'
+  if (typeof session !== 'string' || typeof ingredientName !== 'string' || Number.isNaN(quantity)
+    || quantity < 0 || typeof sourceUnit !== 'string' || typeof targetUnit !== 'string'
     || session.length !== 36) {
     res.sendStatus(400).end();
     return;
@@ -35,7 +36,7 @@ convert.post('/convert', async (req, res) => {
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await fetch(`https://api.spoonacular.com/recipes/convert?ingredientName=${ingredient}&sourceAmount=${quantity}&sourceUnit=${sourceUnit}&targetUnit=${targetUnit}&apiKey=bd1784451bab4f47ac234225bd2549ee`, {
+          await fetch(`https://api.spoonacular.com/recipes/convert?ingredientName=${ingredientName}&sourceAmount=${quantity}&sourceUnit=${sourceUnit}&targetUnit=${targetUnit}&apiKey=bd1784451bab4f47ac234225bd2549ee`, {
             method: 'get',
             headers: {
               Accept: 'application/json',
@@ -49,7 +50,7 @@ convert.post('/convert', async (req, res) => {
               return res2.json();
             })
             .then((data) => {
-              res.json({ newQuantity: data.targetAmount }).end();
+              res.json({ amount: data.targetAmount, unit: data.targetUnit }).end();
             });
         } else {
           res.sendStatus(401).end();
@@ -64,3 +65,5 @@ convert.post('/convert', async (req, res) => {
     }
   }
 });
+
+module.exports = convert;

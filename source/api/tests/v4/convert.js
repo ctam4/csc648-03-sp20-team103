@@ -8,7 +8,7 @@ test.before(async (t) => {
     const express = require('express');
     const http = require('http');
     const app = express();
-    const httpPort = 10003;
+    const httpPort = 10007;
     const compression = require('compression');
     const cors = require('cors');
     app.use(express.json());
@@ -21,12 +21,12 @@ test.before(async (t) => {
   }
   await waitPort({
     host: 'localhost',
-    port: 10003,
+    port: 10004,
     output: 'silent',
     timeout: 5,
   })
     .then(async () => {
-      t.context.baseUrl = 'http://localhost:10003';
+      t.context.baseUrl = 'http://localhost:10007';
       await fetch(t.context.baseUrl + '/v4/register', {
         method: 'post',
         headers: {
@@ -58,7 +58,7 @@ test.before(async (t) => {
 });
 
 test('/convert | GET | 200', async (t) => {
-  await fetch(`${t.context.baseUrl}/v4/convert?session=${t.context.session}&ingredient=Flour&quantity=5&sourceUnit=grams&targetUnit=cups`, {
+  await fetch(`${t.context.baseUrl}/v4/convert?session=${t.context.session}&ingredientName=Flour&quantity=5&sourceUnit=grams&targetUnit=cups`, {
     method: 'get',
     headers: {
       Accept: 'application/json',
@@ -67,6 +67,33 @@ test('/convert | GET | 200', async (t) => {
   })
     .then((res) => res.json())
     .then((data) => {
-      t.is(data.newQuantity, 0.04);
+      t.is(data.amount, 0.04);
+    });
+});
+
+
+test('/convert | GET | 400', async (t) => {
+  await fetch(`${t.context.baseUrl}/v4/convert?session=${t.context.session}&ingredientName=Flour&quantity=abc&sourceUnit=grams&targetUnit=cups`, {
+    method: 'get',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 400);
+    });
+});
+
+test('/convert | GET | 401', async (t) => {
+  await fetch(`${t.context.baseUrl}/v4/convert?session=00000000-0000-0000-0000-000000000000&ingredientName=Flour&quantity=5&sourceUnit=grams&targetUnit=cups`, {
+    method: 'get',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => {
+      t.is(res.status, 401);
     });
 });
