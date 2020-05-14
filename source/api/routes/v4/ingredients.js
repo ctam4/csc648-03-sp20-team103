@@ -5,6 +5,8 @@ const fetch = require('node-fetch');
 const pool = require('../../database.js');
 let connection;
 
+const { insertIngredient, importIngredients } = require('./functions/ingredients.js');
+
 /**
  * GET /v4/ingredients
  * @description Retrieves ingredient information given their IDs.
@@ -121,16 +123,17 @@ ingredients.get('/search', async (req, res) => {
             })
             .then((data) => {
               if (data.length > 0) {
-                // parse date format
-                let results = [];
-                data.map((item) => {
-                  results.push({
+                let ingredients = [];
+                data.forEach((item) => {
+                  ingredients.push({
                     ingredientID: item.id,
                     name: item.name,
                     image: `https://spoonacular.com/cdn/ingredients_500x500/${item.image}`,
                   });
                 });
-                res.json(results).end();
+                const ingreidentIDs = importIngredients(ingredients);
+                // @todo select and return
+                // res.json(results).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -189,11 +192,16 @@ ingredients.post('/', async (req, res) => {
     connection = await pool.getConnection();
     // retrieve fridge_id
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
           // insert for endpoint
-          await connection.query('INSERT IGNORE INTO v4_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image])
-            .then(async (results) => {
+          insertIngredient(
+            connection,
+            ingredientID,
+            name,
+            image
+          )
+            .then((results) => {
               if (results.affectedRows > 0) {
                 res.json({ ingredientID: ingredientID }).end();
               } else {

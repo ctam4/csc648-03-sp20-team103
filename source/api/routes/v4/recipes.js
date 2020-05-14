@@ -2,9 +2,10 @@ const express = require('express');
 const recipes = express.Router();
 const fetch = require("node-fetch");
 
-
 const pool = require('../../database.js');
 let connection;
+
+const { insertRecipe, importRecipes } = require('./functions/recipes.js');
 
 /**
  * GET /v3/recipes/search
@@ -15,77 +16,6 @@ let connection;
  * @param {integer} limit (optional)
  * @returns {object[]} recipes
  */
-
-let recipeIDS = [];
-
-//function to get recipe info of each recipeID
-async function handleRecipes() {
-  let recipeInfo = [];
-  for (let i = 0; i < recipeIDS.length; i++) {
-    let results = [];
-    await fetch('https://api.spoonacular.com/recipes/' + recipeIDS[i] + '/information?includeNutrition=false' + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
-        method: 'get',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('error ' + res.status);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        let recipeID = data.id;
-        // let name = data.sourceName;
-        let title = data.title;
-        let image = data.image;
-        let servings = data.servings;
-        let cookingTime = data.readyInMinutes;
-        let instructions = 'none';
-        if (data.instructions !== null) {
-          instructions = data.instructions;
-        }
-
-        connection.query('INSERT IGNORE INTO v3_recipes(recipe_id,  title, image, servings, cooking_time, instructions) VALUES(?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions]);
-        // console.log(data);
-        let ingredientInfo = [];
-        //getting the ingredients
-        if (data !== 'undefined') {
-          data.extendedIngredients.map((item) => {
-            let ingredientID = parseInt(item.id);
-            let quantity = parseInt(item.amount);
-            let unit = (item.unit);
-            let name = item.name
-            connection.query('INSERT IGNORE INTO v3_recipe_ingredients(recipe_id,  ingredient_id, quantity, unit) VALUES(?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
-            connection.query('INSERT IGNORE INTO v3_ingredients(ingredient_id,  name, image) VALUES(?, ?, ?)', [ingredientID, name, image]);
-            ingredientInfo.push({
-              ingredientID: ingredientID,
-              quantity: quantity,
-              unit: unit
-            })
-            // console.log(ingredientInfo);
-          });
-          // parse date format
-          //store recipe info
-          results = {
-            recipeID: recipeID,
-            title: title,
-            image: image,
-            servings: servings,
-            cookingTime: cookingTime,
-            instructions: instructions,
-            ingredients: ingredientInfo
-          }
-        } else {
-          res.sendStatus(406).end();
-        }
-      });
-    recipeInfo.push(results);
-  }
-  return recipeInfo
-
-}
 
 recipes.get('/search', async (req, res) => {
   // check correct params
@@ -115,18 +45,16 @@ recipes.get('/search', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
-          console.log("HerewwW", session)
         if (rows.length > 0) {
           // retrieve for endpoint
           await fetch('https://api.spoonacular.com/recipes/search?query=' + query + '&number=' + limit + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
-              method: 'get',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-            })
+            method: 'get',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          })
             .then((res) => {
               if (!res.ok) {
                 throw new Error('error ' + res.status);
@@ -134,25 +62,18 @@ recipes.get('/search', async (req, res) => {
               return res.json();
             })
             .then((data) => {
-              console.log(data.results.length);
-              if (data.results.length > 0) {
-
-                data.results.map((item) => {
-                  recipeIDS.push(item.id);
-
+              if (data.length > 0) {
+                const recipeIDs = data.map((item) => {
+                  return item.id
                 });
-                console.log(recipeIDS);
-                // res.json(results).end();
-              } else {                  
+                importRecipes(recipeIDs);
+                // @todo: select and return
+                // res.json().end();
+              } else {
                 res.sendStatus(406).end();
               }
             });
-
-          //call function to get recipe info for all recipeIDS
-          let recipeInfo = await handleRecipes();
-          res.json(recipeInfo).end();
-
-        } else {            
+        } else {
           res.sendStatus(401).end();
         }
       });
