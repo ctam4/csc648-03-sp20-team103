@@ -21,7 +21,7 @@ test.before(async (t) => {
   }
   await waitPort({
     host: 'localhost',
-    port: 10004,
+    port: 10007,
     output: 'silent',
     timeout: 5,
   })
