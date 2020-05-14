@@ -7,7 +7,7 @@ const pool = require('../../database.js');
 let connection;
 
 /**
- * GET /v3/recipes/search
+ * GET /v4/recipes/search
  * @description Retrieve recipes list of current fridges with session.
  * @param {string} session
  * @param {string} query
@@ -186,7 +186,7 @@ recipes.get('/search', async (req, res) => {
 // });
 
 /**
- * GET /v3/recipes
+ * GET /v4/recipes
  * @description Retreives recipe information given their IDs.
  * @param {integer(,integer)} recipeIDs
  * @returns {object[]} recipes
@@ -259,7 +259,7 @@ recipes.get('/', async (req, res) => {
 });
 
 /**
- * POST /v3/recipes/favorite
+ * POST /v4/recipes/favorite
  * @description Insert inventory for current fridges with session.
  * @param {integer} user_id
  * @param {integer} recipe_id
@@ -307,7 +307,7 @@ recipes.post('/favorites', async (req, res) => {
 });
 
 /**
- * POST /v3/recipes/favorite
+ * POST /v4/recipes/favorite
  * @description Insert inventory for current fridges with session.
  * @param {integer} user_id
  * @param {integer} recipe_id
@@ -356,7 +356,7 @@ recipes.delete('/favorites', async (req, res) => {
 });
 
 /**
- * GET /v3/recipes/favorites
+ * GET /v4/recipes/favorites
  * @description Retrieve recipes list of current fridges with session.
  * @param {string} session
  * @param {string} query
