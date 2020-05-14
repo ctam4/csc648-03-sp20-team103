@@ -369,7 +369,7 @@ exports.up = (db, callback) => {
           },
           unit: {
             type: 'string',
-            length: 16,
+            length: 8,
             notNull: true,
           },
           price: {
@@ -449,7 +449,7 @@ exports.up = (db, callback) => {
         },
         ifNotExists: true,
       }),
-      
+
       db.addIndex.bind(db, `${prefix}_carts`, `${prefix}_carts_fridge_id_index`, ['fridge_id']),
       db.addIndex.bind(db, `${prefix}_inventory`, `${prefix}_inventory_fridge_id_index`, ['fridge_id']),
       db.addIndex.bind(db, `${prefix}_inventory`, `${prefix}_inventory_total_quantity_index`, ['total_quantity']),
@@ -477,6 +477,11 @@ exports.up = (db, callback) => {
           },
           quantity: {
             type: 'real',
+            notNull: true,
+          },
+          unit: {
+            type: 'string',
+            length: 8,
             notNull: true,
           },
           user_id: {
