@@ -183,46 +183,48 @@ carts.post('/recipe', async (req, res) => {
 // });
 
 /**
- * POST /v4/logout
- * @description Delete session to logout.
+ * DELETE /v4/carts
+ * @description Delete cart for current fridges with session.
  * @param {string} session
- * @param {[int]] cartID
+ * @param {integer(,integer)} cartIDs
  */
 carts.delete('/', async (req, res) => {
   // check correct params
-  let session, userIDs;
+  if (Object.keys(req.query).length !== 2 || !('session' in req.query && 'cartIDs' in req.query)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let session, cartIDs;
   try {
-    if (typeof req.query.session !== 'string' || typeof req.query.userIDs !== 'string') {
+    if (typeof req.query.session !== 'string') {
       throw new TypeError();
     }
     session = req.query.session;
-    userIDs = req.query.userIDs.split(',').map(value => parseInt(value));
+    cartIDs = req.query.cartIDs.split(',').map(value => parseInt(value));
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
-
-  if (session.length !== 36) {
+  // check params data range
+  if (session.length !== 36 || !cartIDs.every(value => !isNaN(value) && value > 0)) {
     res.sendStatus(400).end();
     return;
   }
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+    // retrieve fridge_id
+    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          console.log(userIDs.join(', '));
-          newIDs = userIDs.join(',')
-          console.log(newIDs)
-          sql = 'DELETE  FROM v4_carts WHERE user_id IN (' + newIDs + ')';
-          await connection.query(sql)
-            .then(async (rows2) => {
-              console.log(rows2.affectedRows);
-              if (rows2.affectedRows > 0) {
-                res.send(rows2).end();
-              } 
-              else{
+          // @todo handle possible duplicate sessions
+          const fridgeID = rows[0].fridge_id;
+          await connection.query('DELETE FROM v4_carts WHERE fridge_id=? AND cart_id IN (?)', [fridgeID, cartIDs.join(',')])
+            .then((results) => {
+              if (results.affectedRows > 0) {
+                res.sendStatus(200).end();
+              } else {
                 res.sendStatus(406).end();
               }
             });
