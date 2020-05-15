@@ -9,6 +9,7 @@ import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import RecipesCardFull from '../../components/horizontal-prototype/RecipesCardFull';
 import IngredientsListCard from '../../components/horizontal-prototype/IngredientsListCard';
 
@@ -16,6 +17,8 @@ import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
   en: {
+    toast_favorited: 'Recipe favorited.',
+    toast_added_to_cart: 'Recipe added to cart.',
   },
 });
 
@@ -27,6 +30,7 @@ export default () => {
   const [servings, setServings] = useState('');
   const [cookingTime, setCookingTime] = useState('');
   const [instructions, setInstructions] = useState('');
+  const [toast, setToast] = useState('');
 
   useEffect(() => {
     load();
@@ -55,7 +59,7 @@ export default () => {
       setCookingTime(data.cooking_time);
       setInstructions(data.instructions);
     })
-    .catch(console.log);
+    .catch((error) => setToast(error.toString()));
   };
 
   const handleGoBack = () => {
@@ -105,6 +109,9 @@ export default () => {
             </Row>
           </Grid>
         </DrawerAppContent>
+        {toast && (
+        <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+        )}
       </TopAppBarFixedAdjust>
     </View>
   );

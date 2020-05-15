@@ -29,7 +29,6 @@ let strings = new LocalizedStrings({
     discard: 'Discard',
     expiring: 'Expiring',
     expired: 'Expired',
-    toast_edited: 'Item edited in inventory.',
     toast_consumed: 'Item consumed from inventory.',
     toast_discarded: 'Item discarded from inventory.',
   },

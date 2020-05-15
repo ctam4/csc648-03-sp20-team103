@@ -9,6 +9,7 @@ import '@material/react-layout-grid/dist/layout-grid.css';
 import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import CartsCardFull from '../../components/horizontal-prototype/CartsCardFull';
 
 import { apiUrl } from '../../url';
@@ -26,6 +27,7 @@ export default () => {
   const [unit, setUnit] = useState('');
   const [price, setPrice] = useState('');
   const [state, setState] = useState('');
+  const [toast, setToast] = useState('');
 
   useEffect(() => {
     load();
@@ -53,7 +55,7 @@ export default () => {
       setPrice(data.price);
       setState(data.state);
     })
-    .catch(console.log);
+    .catch((error) => setToast(error.toString()));
   };
 
   const handleGoBack = () => {
@@ -86,6 +88,9 @@ export default () => {
             </Row>
           </Grid>
         </DrawerAppContent>
+        {toast && (
+        <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+        )}
       </TopAppBarFixedAdjust>
     </View>
   );

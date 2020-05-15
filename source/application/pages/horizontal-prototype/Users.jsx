@@ -128,7 +128,8 @@ export default () => {
             // expires: new Date(data.expires_ts),
           });
         })
-        .catch(console.log);
+        .catch((error) => setToast(error.toString()));
+      setToast(strings.toast_created);
       load();
     }
   };
