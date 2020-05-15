@@ -71,13 +71,21 @@ export default () => {
   ];
 
   useEffect(() => {
-    load();
   });
 
-  const load = async () => {
-    // TODO: fetch
-    /*
-    await fetch(apiUrl + '/v3/recipes/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+  const toggleSearch = () => {
+    dispatch(setSearchOpen(!state.searchOpen));
+  };
+
+  const handleGoBack = () => {
+    if (history.length > 0) {
+      history.back();
+    }
+  };
+
+  const handleSearch = async (keywords) => {
+    dispatch(setKeywords(keywords));
+    await fetch(apiUrl + '/v4/recipes/search?session=' + cookies.session + '&query=' + state.keywords, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -90,26 +98,16 @@ export default () => {
       }
       return res.json();
     })
-    .then(async (data) => {
-      let recipes = [];
-      data.foreach((item) => recipes.push({
-        key: item.recipeID,
-        primaryText: item.name,
-        // @todo
-      }));
+    .then((data) => {
+      const recipes = data.map((item) => {
+        return {
+          key: item.recipeID,
+          primaryText: item.title,
+          recipe: item,
+        };
+      });
       dispatch(setAutoComplete(recipes));
     });
-    */
-  };
-
-  const toggleSearch = () => {
-    dispatch(setSearchOpen(!state.searchOpen));
-  };
-
-  const handleGoBack = () => {
-    if (history.length > 0) {
-      history.back();
-    }
   };
 
   const handleAutoComplete = (value) => {
@@ -129,7 +127,7 @@ export default () => {
       <MaterialTopAppBarSearchDialog
         value={state.keywords}
         onClick1={toggleSearch}
-        onChange={(e) => dispatch(setKeywords(e.target.value))}
+        onChange={(e) => handleSearch(e.target.value)}
         onTrailingIconSelect={() => dispatch(setKeywords(''))}
       ></MaterialTopAppBarSearchDialog>
       )}
