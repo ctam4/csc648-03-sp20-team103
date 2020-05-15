@@ -2,8 +2,42 @@ const fetch = require('node-fetch');
 
 const { insertIngredient } = require('./ingredients.js');
 
-const selectRecipes = async (connection, recipeIDs, page, limit) => {
-  return await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes WHERE recipe_id IN (?) ORDER BY recipe_id ASC LIMIT ? OFFSET ?', [recipeIDs.join(', '), limit, (page - 1) * limit]);
+const selectRecipes = async (connection, recipeIDs, page, limit, sort, descending) => {
+  let sql = 'SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes';
+  if (recipeIDs !== null) {
+    sql += ' WHERE recipe_id IN (?)';
+  }
+  switch (sort) {
+    case 'recipe_id':
+      sql += ' ORDER BY ' + sort;
+      if (!descending) {
+        sql += ' ASC';
+      } else {
+        sql += ' DESC';
+      }
+      break;
+  }
+  sql += ' LIMIT ? OFFSET ?';
+  if (recipeIDs === null) {
+    return await connection.query(sql, [limit, (page - 1) * limit]);
+  } else {
+    return await connection.query(sql, [recipeIDs.join(', '), limit, (page - 1) * limit]);
+  }
+};
+
+const selectFavoritedRecipes = async (connection, userID, page, limit, sort, descending) => {
+  let sql = 'SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes WHERE recipe_id IN (SELECT DISTINCT recipe_id AS recipeID FROM v4_recipe_favorites WHERE user_id=?)';
+  switch (sort) {
+    case 'recipe_id':
+      sql += ' ORDER BY ' + sort;
+      if (!descending) {
+        sql += ' ASC';
+      } else {
+        sql += ' DESC';
+      }
+      break;
+  }
+  return await connection.query(sql + ' LIMIT ? OFFSET ?', [userID, limit, (page - 1) * limit]);
 };
 
 const selectRecipeIngredients = async (connection, recipeID) => {
@@ -92,6 +126,7 @@ const importRecipes = async (connection, recipeIDs) => {
 
 module.exports = {
   selectRecipes,
+  selectFavoritedRecipes,
   selectRecipeIngredients,
   insertRecipeIngredient,
   selectRecipeFavorites,
