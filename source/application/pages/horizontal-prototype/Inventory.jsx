@@ -202,7 +202,7 @@ export default () => {
               setToast(strings.toast_discarded);
               break;
           }
-          window.location.reload();
+          load();
           break;
       }
     }

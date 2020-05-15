@@ -129,7 +129,7 @@ export default () => {
           });
         })
         .catch(console.log);
-      window.location.reload();
+      load();
     }
   };
 

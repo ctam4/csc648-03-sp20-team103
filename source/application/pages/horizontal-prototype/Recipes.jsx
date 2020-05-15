@@ -116,7 +116,7 @@ export default () => {
       })
       .catch((error) => setToast(error.toString()));
     setToast(strings.toast_favorited);
-    window.location.reload();
+    load();
   };
 
   const handleHistory = async () => {
