@@ -1,7 +1,9 @@
+const fetch = require('node-fetch');
+
 const { insertIngredient } = require('./ingredients.js');
 
 const selectRecipes = async (connection, recipeIDs, page, limit) => {
-  return await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes WHERE recipe_id IN (?) ORDER BY recipe_id LIMIT ? OFFSET ?', [recipeIDs.join(', '), limit, (page - 1) * limit]);
+  return await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes WHERE recipe_id IN (?) ORDER BY recipe_id ASC LIMIT ? OFFSET ?', [recipeIDs.join(', '), limit, (page - 1) * limit]);
 };
 
 const selectRecipeIngredients = async (connection, recipeID) => {
@@ -26,7 +28,7 @@ const deleteRecipeFavorite = async (connection, recipeFavoriteID) => {
 
 const insertRecipe = async (connection, recipeID, title, image, servings, cookingTime, instructions, ingredients) => {
   return await connection.query('INSERT IGNORE INTO v4_recipes (recipe_id, title, image, servings, cooking_time, instructions) VALUES (?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions])
-    .then(async (results) => {
+    .then((results) => {
       if (results.affectedRows > 0) {
         ingredients.forEach((item) => {
           insertIngredient(
@@ -34,18 +36,14 @@ const insertRecipe = async (connection, recipeID, title, image, servings, cookin
             item.ingredientID,
             item.name,
             item.image,
-          )
-            .then(async (results2) => {
-              if (results2.affectedRows > 0) {
-                insertRecipeIngredient(
-                  connection,
-                  recipeID,
-                  item.ingredientID,
-                  item.quantity,
-                  item.unit,
-                );
-              }
-            });
+          );
+          insertRecipeIngredient(
+            connection,
+            recipeID,
+            item.ingredientID,
+            item.quantity,
+            item.unit,
+          );
         });
       }
     });
@@ -80,7 +78,7 @@ const importRecipes = async (connection, recipeIDs) => {
                 return {
                   ingredientID: item2.id,
                   name: item2.name,
-                  image: item2.image,
+                  image: `https://spoonacular.com/cdn/ingredients_500x500/${item2.image}`,
                   quantity: item2.amount,
                   unit: item2.unit,
                 };

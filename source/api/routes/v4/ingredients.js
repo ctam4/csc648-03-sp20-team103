@@ -132,8 +132,8 @@ ingredients.get('/search', async (req, res) => {
                     image: `https://spoonacular.com/cdn/ingredients_500x500/${item.image}`,
                   });
                 });
-                const ingreidentIDs = importIngredients(ingredients);
-                selectIngredients(connection, ingreidentIDs, 1, ingreidentIDs.length)
+                const ingredientIDs = importIngredients(connection, ingredients);
+                selectIngredients(connection, ingredientIDs, page, limit)
                   .then((rows) => {
                     if (rows.length > 0) {
                       res.json(rows.filter((ingredient, index) => index !== 'meta')).end();
