@@ -5,36 +5,38 @@ const fetch = require('node-fetch');
 const pool = require('../../database.js');
 let connection;
 
-
 /**
- * POST /v4/ingredients
- * @description Insert inventory list of current fridges with session.
+ * POST /v4/carts/ingredient
+ * @description Insert ingredient to carts list of current fridges with session.
  * @param {string} session
+ * @param {integer} userID
  * @param {integer} ingredientID
- * @param {string} name
- * @param {string|null} image
- * @returns {integer} ingredientID
+ * @param {float} quantity
+ * @param {string|null} unit
+ * @returns {integer} cartID
  */
 carts.post('/ingredient', async (req, res) => {
-
+  // check correct params
+  if (Object.keys(req.body).length == 5 && !('session' in req.body && 'userID' in req.body && 'ingredientID' in req.body && 'quantity' in req.body && 'unit' in req.body)) {
+    res.sendStatus(400).end();
+    return;
+  }
   let userID, ingredientID, quantity, unit;
   try {
-    // if (typeof req.body.session !== 'string' || typeof req.body.name !== 'string' || (typeof req.body.image !== 'string' && req.body.image !== null)) {
-    //   throw new TypeError();
-    // }
+    if (typeof req.body.session !== 'string' || typeof req.body.unit !== 'string') {
+      throw new TypeError();
+    }
     session = req.body.session;
     userID = parseInt(req.body.userID);
     ingredientID = parseInt(req.body.ingredientID);
-    quantity = parseInt(req.body.quantity);
+    quantity = parseFloat(req.body.quantity);
     unit = req.body.unit;
-    // addedTS = pasreInt(req.body.addedTS);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
   // check params data range
-  // @todo validate image is url
-  if (session.length !== 36 || ingredientID <= 0) {
+  if (session.length !== 36 || userID <= 0 || ingredientID <= 0 || quantity <= 0.0 || unit.length === 0) {
     res.sendStatus(400).end();
     return;
   }
@@ -45,16 +47,13 @@ carts.post('/ingredient', async (req, res) => {
     await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
+          // @todo handle possible duplicate sessions
+          const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          // await connection.query('INSERT IGNORE INTO v4_carts (user_id, ingredient_id, quantity, unit, added_ts) VALUES ( ?, ?, ?, ?, FROM_UNIXTIME(?))', [userID, ingredientID, quantity, unit, addedTS])
-          await connection.query('INSERT IGNORE INTO v4_carts (user_id, ingredient_id, quantity, unit) VALUES ( ?, ?, ?, ?)', [userID, ingredientID, quantity, unit])
-            .then(async (results) => {
-              console.log('here', results);
+          await connection.query('INSERT IGNORE INTO v4_carts (fridge_id, user_id, ingredient_id, quantity, unit) VALUES (?, ?, ?, ?, ?)', [fridgeID, userID, ingredientID, quantity, unit])
+            .then((results) => {
               if (results.affectedRows > 0) {
-                const results = await connection.query('SELECT cart_id, added_ts FROM v4_carts WHERE user_id=? ORDER BY cart_id  LIMIT 1', [userID])
-                res.json({
-                  ...results[0],
-                }).end();
+                res.json({ cartID: results.insertId }).end();
               } else {
                 res.sendStatus(406).end();
               }
