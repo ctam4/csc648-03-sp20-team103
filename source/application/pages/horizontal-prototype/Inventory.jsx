@@ -70,7 +70,7 @@ export default () => {
   };
 
   const load = async () => {
-    await fetch(apiUrl + '/v3/inventory/list/all?session=' + cookies.session, {
+    await fetch(apiUrl + '/v4/inventory/list/all?session=' + cookies.session, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -93,7 +93,7 @@ export default () => {
         data.forEach((item) => ingredientIDs.push(item.ingredientID));
         if (ingredientIDs.length > 0) {
           ingredientIDs = [...new Set(ingredientIDs)];
-          await fetch(apiUrl + '/v3/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
+          await fetch(apiUrl + '/v4/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
             method: 'get',
             headers: {
               'Accept': 'application/json',
@@ -174,7 +174,7 @@ export default () => {
       switch (action) {
         case 'consume':
         case 'discard':
-          await fetch(apiUrl + '/v3/inventory/' + action, {
+          await fetch(apiUrl + '/v4/inventory/' + action, {
             method: 'post',
             headers: {
               'Accept': 'application/json',

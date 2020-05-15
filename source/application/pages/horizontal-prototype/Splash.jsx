@@ -46,7 +46,7 @@ export default () => {
 
   const load = async () => {
     // for dummy fridge
-    await fetch(apiUrl + '/v3/register', {
+    await fetch(apiUrl + '/v4/register', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -67,7 +67,7 @@ export default () => {
   };
 
   const handleAuth = async () => {
-    await fetch(apiUrl + '/v3/login', {
+    await fetch(apiUrl + '/v4/login', {
       method: 'post',
       headers: {
         'Accept': 'application/json',
@@ -90,7 +90,7 @@ export default () => {
         // httpOnly: true,
         expires: new Date(data.expires_ts),
       });
-      await fetch(apiUrl + '/v3/users?session=' + data.session, {
+      await fetch(apiUrl + '/v4/users?session=' + data.session, {
         method: 'get',
         headers: {
           'Accept': 'application/json',

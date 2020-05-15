@@ -56,7 +56,7 @@ export default () => {
   };
 
   const load = async () => {
-    await fetch(apiUrl + '/v3/users?session=' + cookies.session, {
+    await fetch(apiUrl + '/v4/users?session=' + cookies.session, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
@@ -102,7 +102,7 @@ export default () => {
   const handleSubmission = async (value) => {
     toggleDialog();
     if (value === 'confirm') {
-      await fetch(apiUrl + '/v3/users', {
+      await fetch(apiUrl + '/v4/users', {
         method: 'post',
         headers: {
           'Accept': 'application/json',

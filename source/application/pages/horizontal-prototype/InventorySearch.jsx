@@ -46,7 +46,7 @@ export default () => {
   const handleSearch = async (keywords) => {
     dispatch(setKeywords(keywords));
     if (state.keywords.length > 0) {
-      await fetch(apiUrl + '/v3/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+      await fetch(apiUrl + '/v4/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
         method: 'get',
         headers: {
           'Accept': 'application/json',
@@ -73,26 +73,6 @@ export default () => {
   };
 
   const handleAutoComplete = async (value) => {
-    // add to ingredients, prototype
-    await fetch(apiUrl + '/v3/ingredients', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        session: cookies.session,
-        ingredientID: state.autoComplete[value].ingredient.ingredientID,
-        name: state.autoComplete[value].ingredient.name,
-        image: state.autoComplete[value].ingredient.image,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status + ' ' + res.statusText);
-        }
-      })
-      .catch((error) => setToast(error.toString()));
     window.location.href = '../view/?id=' + state.autoComplete[value].key;
   };
 
