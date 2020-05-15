@@ -124,15 +124,17 @@ ingredients.get('/search', async (req, res) => {
             })
             .then((data) => {
               if (data.length > 0) {
-                let ingredients = [];
-                data.forEach((item) => {
-                  ingredients.push({
+                const ingredients = data.map((item) => {
+                  return {
                     ingredientID: item.id,
                     name: item.name,
                     image: `https://spoonacular.com/cdn/ingredients_500x500/${item.image}`,
-                  });
+                  };
                 });
-                const ingredientIDs = importIngredients(connection, ingredients);
+                const ingredientIDs = ingredients.map((item) => {
+                  return item.ingredientID;
+                });
+                importIngredients(connection, ingredients);
                 selectIngredients(connection, ingredientIDs, page, limit)
                   .then((rows) => {
                     if (rows.length > 0) {

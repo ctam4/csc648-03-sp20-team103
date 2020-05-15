@@ -85,42 +85,55 @@ const insertRecipe = async (connection, recipeID, title, image, servings, cookin
 
 const importRecipes = async (connection, recipeIDs) => {
   if (recipeIDs.length > 0) {
-    await fetch('https://api.spoonacular.com/recipes/informationBulk?ids=' + recipeIDs.join(',') + '&includeNutrition=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('error ' + res.status);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (data.length > 0) {
-          data.forEach((item) => {
-            insertRecipe(
-              connection,
-              item.id,
-              item.title,
-              item.image,
-              item.servings,
-              item.readyInMinutes,
-              item.instructions,
-              item.extendedIngredients.map((item2) => {
-                return {
-                  ingredientID: item2.id,
-                  name: item2.name,
-                  image: `https://spoonacular.com/cdn/ingredients_500x500/${item2.image}`,
-                  quantity: item2.amount,
-                  unit: item2.unit,
-                };
-              }),
-            );
+    // remove existing
+    await connection.query('SELECT DISTINCT recipe_id AS recipeID FROM v4_recipes WHERE recipe_id IN (?)', [recipeIDs])
+      .then((rows) => {
+        if (rows.length > 0) {
+          rows.forEach((recipe, index) => {
+            if (index !== 'meta') {
+              recipeIDs.pop(recipe.recipeID);
+            }
           });
         }
       });
+    if (recipeIDs.length > 0) {
+      await fetch('https://api.spoonacular.com/recipes/informationBulk?ids=' + recipeIDs.join(',') + '&includeNutrition=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
+        method: 'get',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('error ' + res.status);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data.length > 0) {
+            data.forEach((item) => {
+              insertRecipe(
+                connection,
+                item.id,
+                item.title,
+                item.image,
+                item.servings,
+                item.readyInMinutes,
+                item.instructions,
+                item.extendedIngredients.map((item2) => {
+                  return {
+                    ingredientID: item2.id,
+                    name: item2.name,
+                    image: `https://spoonacular.com/cdn/ingredients_500x500/${item2.image}`,
+                    quantity: item2.amount,
+                    unit: item2.unit,
+                  };
+                }),
+              );
+            });
+          }
+        });
+    }
   }
 };
 

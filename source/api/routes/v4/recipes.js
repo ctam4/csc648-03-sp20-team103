@@ -74,7 +74,7 @@ recipes.get('/search', async (req, res) => {
             .then((data) => {
               if (data.results.length > 0) {
                 const recipeIDs = data.results.map((item) => {
-                  return item.id
+                  return item.id;
                 });
                 importRecipes(connection, recipeIDs);
                 selectRecipes(connection, recipeIDs, page, limit, 'recipe_id', false)

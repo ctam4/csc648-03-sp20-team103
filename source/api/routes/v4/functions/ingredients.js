@@ -8,18 +8,33 @@ const insertIngredient = async (connection, ingredientID, name, image) => {
 
 const importIngredients = (connection, ingredients) => {
   if (ingredients.length > 0) {
-    const ingredientIDs = ingredients.map((item) => {
-      insertIngredient(
-        connection,
-        item.ingredientID,
-        item.name,
-        item.image
-      );
+    let ingredientIDs = ingredients.map((item) => {
       return item.ingredientID;
     });
-    return ingredientIDs;
+    // remove existing
+    await connection.query('SELECT DISTINCT ingredient_id AS ingredientID FROM v4_ingredients WHERE ingredient_id IN (?)', [ingredientIDs])
+      .then((rows) => {
+        if (rows.length > 0) {
+          rows.forEach((ingredient, index) => {
+            if (index !== 'meta') {
+              ingredientIDs.pop(ingredient.ingredientID);
+            }
+          });
+        }
+      });
+    if (ingredientIDs.length > 0) {
+      ingredients.forEach((item) => {
+        if (ingredientIDs.includes(item.ingredientID)) {
+          insertIngredient(
+            connection,
+            item.ingredientID,
+            item.name,
+            item.image
+          );
+        }
+      });
+    }
   }
-  return [];
 };
 
 module.exports = {
