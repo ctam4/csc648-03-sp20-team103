@@ -41,7 +41,7 @@ ingredients.get('/', async (req, res) => {
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
-          selectIngredients(connection, ingredientIDs)
+          selectIngredients(connection, ingredientIDs, 1, ingredientIDs.length)
             .then(async (rows2) => {
               if (rows2.length > 0) {
                 res.json(rows2.filter((ingredient, index) => index !== 'meta')).end();
@@ -132,7 +132,7 @@ ingredients.get('/search', async (req, res) => {
                   });
                 });
                 const ingreidentIDs = importIngredients(ingredients);
-                selectIngredients(connection, ingreidentIDs)
+                selectIngredients(connection, ingreidentIDs, 1, ingreidentIDs.length)
                   .then((res2) => {
                     if (!res2.ok) {
                       throw new Error('error ' + res2.status);

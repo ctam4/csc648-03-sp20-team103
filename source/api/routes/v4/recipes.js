@@ -70,7 +70,7 @@ recipes.get('/search', async (req, res) => {
                   return item.id
                 });
                 importRecipes(connection, recipeIDs);
-                selectRecipes(connection, recipeIDs)
+                selectRecipes(connection, recipeIDs, page, limit)
                   .then((res2) => {
                     if (!res2.ok) {
                       throw new Error('error ' + res2.status);
@@ -156,7 +156,7 @@ recipes.get('/', async (req, res) => {
     await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
-          selectRecipes(connection, recipeIDs)
+          selectRecipes(connection, recipeIDs, 1, recipeIDs.length)
             .then((rows2) => {
               if (rows2.length > 0) {
                 // console.log(rows2);

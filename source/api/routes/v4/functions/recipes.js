@@ -1,7 +1,7 @@
 const { insertIngredient } = require('./ingredients.js');
 
-const selectRecipes = async (connection, recipeIDs) => {
-  return await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(', ')]);
+const selectRecipes = async (connection, recipeIDs, page, limit) => {
+  return await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes WHERE recipe_id IN (?) ORDER BY recipe_id LIMIT ? OFFSET ?', [recipeIDs.join(', '), limit, (page - 1) * limit]);
 };
 
 const selectRecipeIngredients = async (connection, recipeID) => {
