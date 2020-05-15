@@ -5,7 +5,14 @@ const fetch = require("node-fetch");
 const pool = require('../../database.js');
 let connection;
 
-const { selectRecipes, selectRecipeIngredients, importRecipes } = require('./functions/recipes.js');
+const {
+  selectRecipes,
+  selectRecipeIngredients,
+  selectRecipeFavorites,
+  insertRecipeFavorite,
+  deleteRecipeFavorite,
+  importRecipes,
+} = require('./functions/recipes.js');
 
 /**
  * GET /v4/recipes/search
@@ -152,9 +159,11 @@ recipes.get('/', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
+          // @todo handle possible duplicate sessions
+          const fridgeID = rows[0].fridge_id;
           selectRecipes(connection, recipeIDs, 1, recipeIDs.length)
             .then((rows2) => {
               if (rows2.length > 0) {
@@ -165,11 +174,14 @@ recipes.get('/', async (req, res) => {
                       .then((rows3) => {
                         if (rows3.length > 0) {
                           recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
-                          // console.log(recipe.ingredients);
                         }
-                        // console.log(recipe, "HEREE");
                       });
-
+                    selectRecipeFavorites(connection, recipe.recipeID, fridgeID)
+                      .then((rows3) => {
+                        if (rows3.length > 0) {
+                          recipe.favorites = rows3.filter((favorite, index2) => index2 !== 'meta');
+                        }
+                      });
                     return recipe;
                   }
                 });
@@ -224,9 +236,9 @@ recipes.post('/favorite', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
-          await connection.query('INSERT IGNORE INTO v4_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [userID, recipeID])
+          insertRecipeFavorite(connection, userID, recipeID)
             .then((results) => {
               if (results.affectedRows > 0) {
                 res.json({ recipeFavoriteID: results.insertId }).end();
@@ -276,9 +288,9 @@ recipes.delete('/favorite', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
-          await connection.query('DELETE FROM v4_recipe_favorites WHERE recipe_favorite_id=?', [recipeFavoriteID])
+          deleteRecipeFavorite(connection, recipeFavoriteID)
             .then((results) => {
               if (results.affectedRows > 0) {
                 res.sendStatus(200).end();

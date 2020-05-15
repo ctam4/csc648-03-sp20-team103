@@ -12,6 +12,18 @@ const insertRecipeIngredient = async (connection, recipeID, ingredientID, quanti
   return await connection.query('INSERT IGNORE INTO v4_recipe_ingredients (recipe_id, ingredient_id, quantity, unit) VALUES (?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
 };
 
+const selectRecipeFavorites = async (connection, recipeID, fridgeID) => {
+  return await connection.query('SELECT recipe_favorite_id AS recipeFavoriteID, user_id AS userID, favorited_ts AS favoritedTS FROM v4_recipe_favorites WHERE recipe_id=? AND user_id IN (SELECT DISTINCT user_id FROM v4_fridges WHERE fridge_id=?) ORDER BY user_id ASC', [recipeID, fridgeID])
+};
+
+const insertRecipeFavorite = async (connection, userID, recipeID) => {
+  return await connection.query('INSERT IGNORE INTO v4_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [userID, recipeID]);
+};
+
+const deleteRecipeFavorite = async (connection, recipeFavoriteID) => {
+  return await connection.query('DELETE FROM v4_recipe_favorites WHERE recipe_favorite_id=?', [recipeFavoriteID]);
+};
+
 const insertRecipe = async (connection, recipeID, title, image, servings, cookingTime, instructions, ingredients) => {
   return await connection.query('INSERT IGNORE INTO v4_recipes (recipe_id, title, image, servings, cooking_time, instructions) VALUES (?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions])
     .then(async (results) => {
@@ -84,6 +96,9 @@ module.exports = {
   selectRecipes,
   selectRecipeIngredients,
   insertRecipeIngredient,
+  selectRecipeFavorites,
+  insertRecipeFavorite,
+  deleteRecipeFavorite,
   insertRecipe,
   importRecipes,
 };
