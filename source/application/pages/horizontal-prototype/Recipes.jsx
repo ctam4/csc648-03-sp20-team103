@@ -21,7 +21,8 @@ import { apiUrl } from '../../url';
 let strings = new LocalizedStrings({
   en: {
     recipes: 'Recipes',
-    calories: ' calories',
+    servings: 'servings',
+    minutes: 'minutes',
     toast_created: 'Recipe created.',
     toast_edited: 'Recipe edited.',
     toast_favorited: 'Recipe favorited.',
@@ -36,7 +37,7 @@ export default () => {
   const [recipes, setRecipes] = useState([]);
 
   useEffect(() => {
-    dummySetup();
+    // dummySetup();
     load();
   }, []);
 
@@ -57,15 +58,65 @@ export default () => {
   };
 
   const load = async () => {
-    // TODO: fetch
+    //await fetch(apiUrl + '/v4/recipes/list/favoried?session=' + cookies.session + '&userID=' + cookies.userID, {
+    await fetch(apiUrl + '/v4/recipes/list/all?session=' + cookies.session, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+    .then((res) => {
+      if (!res.ok) {
+        if (res.status !== 406) {
+          throw new Error(res.status + ' ' + res.statusText);
+        } else {
+          return null;
+        }
+      }
+      return res.json();
+    })
+    .then(async (data) => {
+      if (data !== null) {
+        let recipes = data.map((item) => {
+          return {
+            key: item.recipeID,
+            title: item.title,
+            subtitle: item.servings + ' ' + strings.servings + ' | ' + item.cookingTime + ' ' + strings.minutes,
+            image: item.image,
+          };
+        });
+        setRecipes(recipes);
+      }
+    })
+    .catch((error) => setToast(error.toString()));
   };
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handleFavorite = async () => {
-    // TODO: fetch
+  const handleFavorite = async (value) => {
+    await fetch(apiUrl + '/v3/recipes/favorite', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session: cookies.session,
+        userID: cookies.userID,
+        recipeID: value,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(res.status + ' ' + res.statusText);
+        }
+      })
+      .catch((error) => setToast(error.toString()));
+    setToast(strings.toast_favorited);
+    window.location.reload();
   };
 
   const handleHistory = async () => {
@@ -97,9 +148,9 @@ export default () => {
               <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
                 <RecipesCard
                   mainText1={item.title}
-                  mainText2={item.subtitle + strings.calories}
-                  onClickMain={() => { window.location.href = 'view/?id=' }}
-                  onClickAction1={handleFavorite}
+                  mainText2={item.subtitle}
+                  onClickMain={() => { window.location.href = 'view/?id=' + item.key }}
+                  onClickAction1={() => handleFavorite(item.key)}
                   onClickAction2={handleHistory}
                   onClickAction3={handleAddToCart}
                   mainImage={item.image}
