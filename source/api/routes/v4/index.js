@@ -12,6 +12,7 @@ index.use('/ingredients', require('./ingredients.js'));
 index.use('/recipes', require('./recipes.js'));
 index.use('/carts', require('./carts.js'));
 index.use('/convert', require('./convert.js'));
+index.use('/mealplans', require('./mealplans.js'));
 
 //console.log('index.stack');
 //console.log(index.stack);
