@@ -134,12 +134,6 @@ ingredients.get('/search', async (req, res) => {
                 });
                 const ingreidentIDs = importIngredients(ingredients);
                 selectIngredients(connection, ingreidentIDs, 1, ingreidentIDs.length)
-                  .then((res2) => {
-                    if (!res2.ok) {
-                      throw new Error('error ' + res2.status);
-                    }
-                    return res2.json();
-                  })
                   .then((rows) => {
                     if (rows.length > 0) {
                       res.json(rows.filter((ingredient, index) => index !== 'meta')).end();

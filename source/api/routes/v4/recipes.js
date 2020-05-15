@@ -77,12 +77,6 @@ recipes.get('/search', async (req, res) => {
                 });
                 importRecipes(connection, recipeIDs);
                 selectRecipes(connection, recipeIDs, page, limit)
-                  .then((res2) => {
-                    if (!res2.ok) {
-                      throw new Error('error ' + res2.status);
-                    }
-                    return res2.json();
-                  })
                   .then((rows) => {
                     if (rows.length > 0) {
                       res.json(rows.filter((recipe, index) => index !== 'meta')).end();
@@ -185,7 +179,6 @@ recipes.get('/', async (req, res) => {
                     return recipe;
                   }
                 });
-                // console.log(recipes);
                 res.json(recipes).end();
               } else {
                 res.sendStatus(406).end();
