@@ -47,7 +47,7 @@ async function handleRecipes() {
           instructions = data.instructions;
         }
 
-        connection.query('INSERT IGNORE INTO v3_recipes(recipe_id,  title, image, servings, cooking_time, instructions) VALUES(?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions]);
+        connection.query('INSERT IGNORE INTO v4_recipes(recipe_id,  title, image, servings, cooking_time, instructions) VALUES(?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions]);
         // console.log(data);
         let ingredientInfo = [];
         //getting the ingredients
@@ -57,8 +57,8 @@ async function handleRecipes() {
             let quantity = parseInt(item.amount);
             let unit = (item.unit);
             let name = item.name
-            connection.query('INSERT IGNORE INTO v3_recipe_ingredients(recipe_id,  ingredient_id, quantity, unit) VALUES(?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
-            connection.query('INSERT IGNORE INTO v3_ingredients(ingredient_id,  name, image) VALUES(?, ?, ?)', [ingredientID, name, image]);
+            connection.query('INSERT IGNORE INTO v4_recipe_ingredients(recipe_id,  ingredient_id, quantity, unit) VALUES(?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
+            connection.query('INSERT IGNORE INTO v4_ingredients(ingredient_id,  name, image) VALUES(?, ?, ?)', [ingredientID, name, image]);
             ingredientInfo.push({
               ingredientID: ingredientID,
               quantity: quantity,
@@ -166,24 +166,24 @@ recipes.get('/search', async (req, res) => {
   }
 });
 
-// recipes.get('/', async (req, res) => {
-//     try {
-//         connection = await pool.getConnection();
-//         let sql = 'SELECT * FROM v3_ingredients';
-//         await connection.query(sql)
-//             .then((results) => {
-//                 res.send(JSON.stringify(results)).end();
-//                 // res.json(results).end();
-//             });
-//     } catch (error) {
-//         res.sendStatus(500).end();
-//         throw error;
-//     } finally {
-//         if (connection) {
-//             connection.release(); // release to pool
-//         }
-//     }
-// });
+recipes.get('/', async (req, res) => {
+    try {
+        connection = await pool.getConnection();
+        let sql = 'SELECT * FROM v4_recipes';
+        await connection.query(sql)
+            .then((results) => {
+                res.send(JSON.stringify(results)).end();
+                // res.json(results).end();
+            });
+    } catch (error) {
+        res.sendStatus(500).end();
+        throw error;
+    } finally {
+        if (connection) {
+            connection.release(); // release to pool
+        }
+    }
+});
 
 /**
  * GET /v4/recipes
@@ -191,72 +191,72 @@ recipes.get('/search', async (req, res) => {
  * @param {integer(,integer)} recipeIDs
  * @returns {object[]} recipes
  */
-recipes.get('/', async (req, res) => {
-  // check correct params
-  if (Object.keys(req.query).length !== 2 || !('session' in req.query) || !('recipeIDs' in req.query)) {
-    res.sendStatus(400).end();
-    return;
-  }
-  // check params data type
-  let session, recipeIDs;
-  try {
-    if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
-      throw new TypeError();
-    }
-    session.req.query.session;
-    recipeIDs = req.query.recipeIDs.split(',').map(value => parseInt(value));
-  } catch (error) {
-    res.sendStatus(400).end();
-    throw error;
-  }
-  // check params data range
-  if (session.length !== 36 || recipeIDs.length === 0 || !recipeIDs.every(value => !isNaN(value) && value > 0)) {
-    res.sendStatus(400).end();
-    return;
-  }
-  // run query to mariadb
-  try {
-    connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
-      .then(async (rows) => {
-        if (rows.length > 0) {
-          await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(', ')])
-            .then(async (rows2) => {
-              if (rows2.length > 0) {
-                // console.log(rows2);
-                const recipes = await Promise.all(rows2.map(async (recipe, index) => {
-                  if (index !== 'meta') {
-                    await connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v3_recipe_ingredients WHERE recipe_id=?', [recipe.recipeID])
-                      .then(async (rows3) => {
-                        if (rows3.length > 0) {
-                          recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
-                          // console.log(recipe.ingredients);
-                        }
-                        // console.log(recipe, "HEREE");
-                      });
-                    return recipe
+// recipes.get('/', async (req, res) => {
+//   // check correct params
+//   if (Object.keys(req.query).length !== 2 || !('session' in req.query) || !('recipeIDs' in req.query)) {
+//     res.sendStatus(400).end();
+//     return;
+//   }
+//   // check params data type
+//   let session, recipeIDs;
+//   try {
+//     if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
+//       throw new TypeError();
+//     }
+//     session.req.query.session;
+//     recipeIDs = req.query.recipeIDs.split(',').map(value => parseInt(value));
+//   } catch (error) {
+//     res.sendStatus(400).end();
+//     throw error;
+//   }
+//   // check params data range
+//   if (session.length !== 36 || recipeIDs.length === 0 || !recipeIDs.every(value => !isNaN(value) && value > 0)) {
+//     res.sendStatus(400).end();
+//     return;
+//   }
+//   // run query to mariadb
+//   try {
+//     connection = await pool.getConnection();
+//     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+//       .then(async (rows) => {
+//         if (rows.length > 0) {
+//           await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(', ')])
+//             .then(async (rows2) => {
+//               if (rows2.length > 0) {
+//                 // console.log(rows2);
+//                 const recipes = await Promise.all(rows2.map(async (recipe, index) => {
+//                   if (index !== 'meta') {
+//                     await connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', [recipe.recipeID])
+//                       .then(async (rows3) => {
+//                         if (rows3.length > 0) {
+//                           recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
+//                           // console.log(recipe.ingredients);
+//                         }
+//                         // console.log(recipe, "HEREE");
+//                       });
+//                     return recipe
 
-                  }
-                }));
-                // console.log(recipes);
-                res.json(recipes).end();
-              } else {
-                res.sendStatus(406).end();
-              }
-            });
-        } else {
-          res.sendStatus(401).end();
-        }
-      });
-  } catch (error) {
-    res.sendStatus(500).end();
-    throw error;
-  } finally {
-    if (connection) {
-      connection.release(); // release to pool
-    }
-  }
-});
+//                   }
+//                 }));
+//                 // console.log(recipes);
+//                 res.json(recipes).end();
+//               } else {
+//                 res.sendStatus(406).end();
+//               }
+//             });
+//         } else {
+//           res.sendStatus(401).end();
+//         }
+//       });
+//   } catch (error) {
+//     res.sendStatus(500).end();
+//     throw error;
+//   } finally {
+//     if (connection) {
+//       connection.release(); // release to pool
+//     }
+//   }
+// });
 
 /**
  * POST /v4/recipes/favorite
@@ -280,10 +280,10 @@ recipes.post('/favorites', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await connection.query('INSERT INTO v3_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [user_id, recipe_id])
+          await connection.query('INSERT INTO v4_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [user_id, recipe_id])
             .then((results) => {
               res.send({
                 ...results,
@@ -329,10 +329,10 @@ recipes.delete('/favorites', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await connection.query('DELETE FROM v3_recipe_favorites WHERE user_id=?', [user_id])
+          await connection.query('DELETE FROM v4_recipe_favorites WHERE user_id=?', [user_id])
             .then((results) => {
               res.send({
                 ...results,
@@ -393,10 +393,10 @@ recipes.get('/favorites', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 AS fridgeID FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 AS fridgeID FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          let sql = 'SELECT recipe_id AS recipeID FROM v3_recipe_favorites WHERE user_id=?';
+          let sql = 'SELECT recipe_id AS recipeID FROM v4_recipe_favorites WHERE user_id=?';
           await connection.query(sql + ' LIMIT ? OFFSET ?', [userID, limit, (page - 1) * limit])
             .then((rows) => {
               if (rows.length > 0) {
@@ -422,23 +422,23 @@ recipes.get('/favorites', async (req, res) => {
 });
 
 //for testing
-// recipes.get('/favorites', async (req, res) => {
-//     try {
-//         connection = await pool.getConnection();
-//         let sql = 'SELECT * FROM v3_recipe_favorites';
-//         await connection.query(sql)
-//             .then((results) => {
-//                 res.send(JSON.stringify(results)).end();
-//                 // res.json(results).end();
-//             });
-//     } catch (error) {
-//         res.sendStatus(500).end();
-//         throw error;
-//     } finally {
-//         if (connection) {
-//             connection.release(); // release to pool
-//         }
-//     }
-// });
+recipes.get('/favorites', async (req, res) => {
+    try {
+        connection = await pool.getConnection();
+        let sql = 'SELECT * FROM v4_recipe_ingredients';
+        await connection.query(sql)
+            .then((results) => {
+                res.send(JSON.stringify(results)).end();
+                // res.json(results).end();
+            });
+    } catch (error) {
+        res.sendStatus(500).end();
+        throw error;
+    } finally {
+        if (connection) {
+            connection.release(); // release to pool
+        }
+    }
+});
 
 module.exports = recipes
