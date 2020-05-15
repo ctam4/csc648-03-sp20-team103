@@ -260,37 +260,44 @@ recipes.get('/', async (req, res) => {
 
 /**
  * POST /v4/recipes/favorite
- * @description Insert inventory for current fridges with session.
- * @param {integer} user_id
- * @param {integer} recipe_id
- * @returns {interger} inventoryID
+ * @description Insert favorited recipe for current user.
+ * @param {string} session
+ * @param {integer} userID
+ * @param {integer} recipeID
+ * @returns {interger} recipeFavoriteID
  */
-recipes.post('/favorites', async (req, res) => {
-
+recipes.post('/favorite', async (req, res) => {
   // check params data type
-  let session, ingredientID, expirationDate, quantity, unit, price, state;
+  let session, userID, recipeID;
   try {
-    user_id = parseInt(req.body.user_id);
-    recipe_id = parseInt(req.body.recipe_id);
-    session = req.query.session;
+    if (typeof req.body.session !== 'string') {
+      throw new TypeError();
+    }
+    session = req.body.session;
+    userID = parseInt(req.body.userID);
+    recipeID = parseInt(req.body.recipeID);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
+  // check params data range
+  if (session.length !== 36 || userID <= 0 || recipeID <= 0) {
+    res.sendStatus(400).end();
+    return;
+  }
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await connection.query('INSERT INTO v3_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [user_id, recipe_id])
+          await connection.query('INSERT IGNORE INTO v4_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [userID, recipeID])
             .then((results) => {
-              res.send({
-                ...results,
-                user_id: user_id,
-                recipe_id: recipe_id
-              }).end();
-              // res.json(results).end();
+              if (results.affectedRows > 0) {
+                res.json({ recipeFavoriteID: results.insertId }).end();
+              } else {
+                res.sendStatus(406).end();
+              }
             });
         } else {
           res.sendStatus(401).end();
@@ -307,39 +314,42 @@ recipes.post('/favorites', async (req, res) => {
 });
 
 /**
- * POST /v4/recipes/favorite
- * @description Insert inventory for current fridges with session.
- * @param {integer} user_id
- * @param {integer} recipe_id
- * @returns {interger} inventoryID
+ * DELETE /v4/recipes/favorite
+ * @description Delete favorited recipe for current user.
+ * @param {string} session
+ * @param {integer} recipeFavoriteID
  */
-recipes.delete('/favorites', async (req, res) => {
-
+recipes.delete('/favorite', async (req, res) => {
   // check params data type
-  let session, ingredientID, expirationDate, quantity, unit, price, state;
+  let session, recipeFavoriteID;
   try {
-    user_id = parseInt(req.body.user_id);
-    recipe_id = parseInt(req.body.recipe_id);
+    if (typeof req.query.session !== 'string') {
+      throw new TypeError();
+    }
     session = req.query.session;
+    recipeFavoriteID = req.query.recipeFavoriteID;
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
-
+  // check params data range
+  if (session.length !== 36 || recipeFavoriteID <= 0) {
+    res.sendStatus(400).end();
+    return;
+  }
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await connection.query('DELETE FROM v3_recipe_favorites WHERE user_id=?', [user_id])
+          await connection.query('DELETE FROM v4_recipe_favorites WHERE recipe_favorite_id=?', [recipeFavoriteID])
             .then((results) => {
-              res.send({
-                ...results,
-                user_id: user_id,
-                recipe_id: recipe_id
-              }).end();
-              // res.json(results).end();
+              if (results.affectedRows > 0) {
+                res.sendStatus(200).end();
+              } else {
+                res.sendStatus(406).end();
+              }
             });
         } else {
           res.sendStatus(401).end();
