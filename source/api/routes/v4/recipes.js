@@ -188,6 +188,7 @@ recipes.get('/search', async (req, res) => {
 /**
  * GET /v4/recipes
  * @description Retreives recipe information given their IDs.
+ * @param {string} session
  * @param {integer(,integer)} recipeIDs
  * @returns {object[]} recipes
  */
@@ -217,7 +218,7 @@ recipes.get('/', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
           await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v3_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(', ')])
