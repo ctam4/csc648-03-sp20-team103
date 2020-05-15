@@ -14,7 +14,7 @@ let connection;
 inventory.get('/', async (req, res) => {
   // check param types
   const session = req.query.session;
-  const inventoryID = Number.parseInt(req.query.inventoryID);
+  const inventoryID = Number.parseInt(req.query.inventoryID, 10);
   if (typeof session !== 'string' || Number.isNaN(inventoryID) || session.length !== 36
     || inventoryID < 0) {
     res.sendStatus(400).end();
@@ -22,16 +22,16 @@ inventory.get('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?',[session])
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
           await connection.query('SELECT ingredient_id as ingredientID, expiration_date as expirationDate, total_quantity as totalQuantity, unit, price FROM v4_inventory WHERE inventory_id=?', [inventoryID])
-            .then(async (rows) => {
-              if (rows.length > 0) {
-                const item = rows[0];
+            .then(async (rows2) => {
+              if (rows2.length > 0) {
+                const item = rows2[0];
                 await connection.query('SELECT user_id as userID, quantity, unit, action, action_ts as actionTS FROM v4_inventory_log WHERE inventory_id=? ORDER BY action_ts DESC', [inventoryID])
-                  .then(async (rows2) => {
-                    item.history = rows2.filter((_, index) => index !== 'meta');
+                  .then(async (rows3) => {
+                    item.history = rows3.filter((_, index) => index !== 'meta');
                   });
                 res.json(item).end();
               } else {
@@ -46,11 +46,11 @@ inventory.get('/', async (req, res) => {
     res.sendStatus(500).end();
     throw error;
   } finally {
-    if (conection) {
+    if (connection) {
       connection.release(); // release to pool
     }
   }
-})
+});
 
 /**
  * GET /v4/inventory/list:state
