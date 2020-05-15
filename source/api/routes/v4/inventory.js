@@ -4,6 +4,13 @@ const inventory = express.Router();
 const pool = require('../../database.js');
 let connection;
 
+const {
+  selectInventory,
+  insertInventoryLog,
+  insertInventory,
+  updateInventory,
+} = require('./functions/inventory.js');
+
 /**
  * GET /v4/inventory/list:state
  * @description Retrieve inventory list of current fridges with session.
@@ -23,9 +30,9 @@ inventory.get('/list/:state', async (req, res) => {
   }
   // check correct params
   if ((Object.keys(req.query).length == 1 ||
-  (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
-  (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
-  !('session' in req.query)) {
+    (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
+    (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
+    !('session' in req.query)) {
     res.sendStatus(400).end();
     return;
   }
@@ -54,35 +61,15 @@ inventory.get('/list/:state', async (req, res) => {
     connection = await pool.getConnection();
     // retrieve fridge_id
     await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
-          let sql = 'SELECT inventory_id AS inventoryID, ingredient_id AS ingredientID, expiration_date AS expirationDate, total_quantity AS totalQuantity, unit, price FROM v4_inventory WHERE fridge_id=?';
-          switch (state) {
-            case 'stored':
-              sql += ' AND total_quantity > 0';
-              break;
-            case 'expired':
-              sql += ' AND total_quantity > 0 AND expiration_date IS NOT NULL AND expiration_date <= CURRENT_TIMESTAMP';
-              break;
-          }
-          switch (sort) {
-            case 'expiration_date':
-              sql += ' ORDER BY ' + sort;
-              if (!descending) {
-                sql += ' ASC';
-              } else {
-                sql += ' DESC';
-              }
-              break;
-          }
-          await connection.query(sql + ' LIMIT ? OFFSET ?', [fridgeID, limit, (page - 1) * limit])
+          selectInventory(connection, fridgeID, null, state, page, limit, sort, descending)
             .then((rows) => {
               if (rows.length > 0) {
-                // res.send(JSON.stringify(rows)).end();
-                res.json(rows.filter((inventory, index) => index !== 'meta')).end();
+                res.json(rows.filter((_, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -168,15 +155,15 @@ inventory.post('/add/manual', async (req, res) => {
     connection = await pool.getConnection();
     // retrieve fridge_id
     await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          await connection.query('INSERT IGNORE INTO v4_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, price) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price])
-            .then(async (results) => {
+          insertInventory(connection, fridgeID, ingredientID, expirationDate, totalQuantity, unit, price)
+            .then((results) => {
               if (results.affectedRows > 0) {
-                await connection.query('INSERT IGNORE INTO v4_inventory_log (inventory_id, quantity, user_id, action, action_ts) VALUES (?, ?, ?, \'added\', FROM_UNIXTIME(?))', [results.insertId, totalQuantity, userID, expirationDate])
+                insertInventoryLog(connection, results.insertId, userID, totalQuantity, unit, 'added')
                   .then((results2) => {
                     if (results2.affectedRows > 0) {
                       res.json({ inventoryID: results.insertId }).end();
@@ -243,17 +230,17 @@ inventory.post('/consume', async (req, res) => {
     connection = await pool.getConnection();
     // retrieve fridge_id
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           // @todo unit conversion
           // insert for endpoint
           const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v4_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0].total_quantity;
           if (totalQuantity >= 0) {
-            await connection.query('INSERT IGNORE INTO v4_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'consumed\')', [inventoryID, quantity, userID])
-              .then(async (results) => {
+            insertInventoryLog(connection, inventoryID, userID, quantity, unit, 'consumed')
+              .then((results) => {
                 if (results.affectedRows > 0) {
-                  await connection.query('UPDATE v4_inventory SET total_quantity=? WHERE inventory_id=?', [totalQuantity, inventoryID])
+                  updateInventory(connection, inventoryID, totalQuantity)
                     .then((results2) => {
                       if (results2.affectedRows > 0) {
                         res.sendStatus(200).end();
@@ -330,10 +317,10 @@ inventory.post('/discard', async (req, res) => {
           // insert for endpoint
           const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v4_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0].total_quantity;
           if (totalQuantity >= 0) {
-            await connection.query('INSERT IGNORE INTO v4_inventory_log (inventory_id, quantity, user_id, action) VALUES (?, ?, ?, \'discarded\')', [inventoryID, quantity, userID])
-              .then(async (results) => {
+            insertInventoryLog(connection, inventoryID, userID, quantity, unit, 'discarded')
+              .then((results) => {
                 if (results.affectedRows > 0) {
-                  await connection.query('UPDATE v4_inventory SET total_quantity=? WHERE inventory_id=?', [totalQuantity, inventoryID])
+                  updateInventory(connection, inventoryID, totalQuantity)
                     .then((results2) => {
                       if (results2.affectedRows > 0) {
                         res.sendStatus(200).end();
