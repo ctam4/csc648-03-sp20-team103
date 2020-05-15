@@ -6,6 +6,46 @@ const pool = require('../../database.js');
 let connection;
 
 /**
+ * PATCH /v4/carts
+ * @description Updates a cart entry.
+ * @param {string} session
+ * @param {integer} cartID
+ * @param {float} quantity
+ * @param {string} unit
+ */
+carts.patch('/', async (req, res) => {
+  const { session, unit } = req.body;
+  const cartID = Number.parseInt(req.body.cartID, 10);
+  const quantity = Number.parseFloat(req.body.quantity);
+  if (typeof session !== 'string' || session.length !== 36 || Number.isNaN(cartID) || cartID < 0
+    || Number.isNaN(quantity) || quantity <= 0 || typeof unit !== 'string' || unit.length === 0 || unit.length > 16) {
+    res.sendStatus(400).end();
+    return;
+  }
+  try {
+    connection = await pool.getConnection();
+    const rows = await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session]);
+    if (rows.length > 0) {
+      const results = await connection.query('UPDATE v4_carts SET quantity=?, unit=? WHERE cart_id=?', [quantity, unit, cartID]);
+      if (results.affectedRows === 0) {
+        res.sendStatus(400).end();
+        return;
+      }
+      res.sendStatus(200).end();
+    } else {
+      res.sendStatus(401).end();
+    }
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release();
+    }
+  }
+});
+
+/**
  * POST /v4/carts/ingredient
  * @description Insert ingredient to carts list of current fridges with session.
  * @param {string} session
@@ -119,7 +159,7 @@ carts.post('/recipe', async (req, res) => {
           await connection.query('SELECT ingredient_id as ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=? LIMIT 1', [recipeID])
             .then(async (data) => {
               console.log('here', 'datalegth', data.length);
-              if (data.length > 0) {                
+              if (data.length > 0) {
                 data.map((item)=>{
                   results.push({
                     ingredientID: item.ingredientID,
