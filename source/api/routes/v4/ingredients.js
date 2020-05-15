@@ -10,6 +10,7 @@ const { selectIngredients, insertIngredient, importIngredients } = require('./fu
 /**
  * GET /v4/ingredients
  * @description Retrieves ingredient information given their IDs.
+ * @param {string} session
  * @param {integer(,integer)} ingredientIDs
  * @return {object[]} ingredients
  */

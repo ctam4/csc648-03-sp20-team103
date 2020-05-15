@@ -141,8 +141,8 @@ users.delete('/:userID', async (req, res) => {
     if (typeof req.query.session !== 'string') {
       throw new TypeError();
     }
-    userID = parseInt(req.params.userID);
     session = req.query.session;
+    userID = parseInt(req.params.userID);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
