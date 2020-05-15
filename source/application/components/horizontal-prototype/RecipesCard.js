@@ -30,19 +30,19 @@ function RecipesCard(props) {
             aria-label='favorite'
             hasRipple
             icon='favorite'
-            onClickAction1={props.onClickAction1}
+            onClick={props.onClickAction1}
           />
           <MaterialIcon
             aria-label='history'
             hasRipple
             icon='history'
-            onClickAction1={props.onClickAction2}
+            onClick={props.onClickAction2}
           />
           <MaterialIcon
             aria-label='add_shopping_cart'
             hasRipple
             icon='add_shopping_cart'
-            onClickAction1={props.onClickAction3}
+            onClick={props.onClickAction3}
           />
         </CardActionIcons>
         )}
