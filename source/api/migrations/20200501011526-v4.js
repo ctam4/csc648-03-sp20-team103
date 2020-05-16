@@ -381,6 +381,52 @@ exports.up = (db, callback) => {
         ifNotExists: true,
       }),
 
+      db.createTable.bind(db, `${prefix}_meal_plans`, {
+        columns: {
+          meal_plan_id: {
+            type: 'int',
+            unsigned: true,
+            primaryKey: true,
+            autoIncrement: true,
+          },
+          user_id: {
+            type: 'int',
+            unsigned: true,
+            notNull: true,
+            foreignKey: {
+              name: `${prefix}_meal_plans_user_id_fk`,
+              table: `${prefix}_users`,
+              rules: {
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
+              },
+              mapping: 'user_id',
+            },
+          },
+          recipe_id: {
+            type: 'int',
+            unsigned: true,
+            notNull: true,
+            foreignKey: {
+              name: `${prefix}_meal_plans_recipe_id_fk`,
+              table: `${prefix}_users`,
+              rules: {
+                onDelete: 'CASCADE',
+                onUpdate: 'RESTRICT',
+              },
+              mapping: 'recipe_id',
+            },
+          },
+          planned_ts: {
+            type: 'timestamp',
+            notNull: true,
+          },
+        },
+        ifNotExists: true,
+      }),
+
+      db.addIndex.bind(db, `${prefix}_meal_plans`, `${prefix}_meal_plans_recipe_id_index`, ['recipe_id']),
+
       db.createTable.bind(db, `${prefix}_carts`, {
         columns: {
           cart_Id: {
