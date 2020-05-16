@@ -29,7 +29,7 @@ export default () => {
   const [price, setPrice] = useState('');
   const [state, setState] = useState('');
   const [toast, setToast] = useState('');
-  const [itemsInCart, setCarts] = useState([]);
+  const [itemsInCart, setCart] = useState([]);
 
   useEffect(() => {
     load();
