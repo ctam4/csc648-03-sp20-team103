@@ -161,28 +161,6 @@ carts.post('/recipe', async (req, res) => {
   }
 });
 
-
-
-//for testing
-// carts.get('/', async (req, res) => {
-//   try {
-//     connection = await pool.getConnection();
-//     let sql = 'SELECT * FROM v4_carts';
-//     await connection.query(sql)
-//       .then((results) => {
-//         res.send(JSON.stringify(results)).end();
-//         // res.json(results).end();
-//       });
-//   } catch (error) {
-//     res.sendStatus(500).end();
-//     throw error;
-//   } finally {
-//     if (connection) {
-//       connection.release(); // release to pool
-//     }
-//   }
-// });
-
 /**
  * DELETE /v4/carts
  * @description Delete cart for current fridges with session.
@@ -242,25 +220,5 @@ carts.delete('/', async (req, res) => {
     }
   }
 });
-
-//for testing
-// carts.delete('/', async (req, res) => {
-//   try {
-//     connection = await pool.getConnection();
-//     let sql = 'DELETE FROM v4_carts';
-//     await connection.query(sql)
-//       .then((results) => {
-//         res.send(JSON.stringify(results)).end();
-//         // res.json(results).end();
-//       });
-//   } catch (error) {
-//     res.sendStatus(500).end();
-//     throw error;
-//   } finally {
-//     if (connection) {
-//       connection.release(); // release to pool
-//     }
-//   }
-// });
 
 module.exports = carts;
