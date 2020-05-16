@@ -1,6 +1,5 @@
 const express = require('express');
 const carts = express.Router();
-const fetch = require('node-fetch');
 
 const pool = require('../../database.js');
 let connection;
@@ -135,7 +134,7 @@ carts.post('/recipe', async (req, res) => {
     if (rows.length > 0) {
       const fridgeID = rows[0].fridge_id;
       // get ingredients required to make recipe
-      const rows2 = await connection.query('SELECT ingredient_id as ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', [recipeID]);
+      const rows2 = await connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', [recipeID]);
       if (rows2.length > 0) {
         const results = await Promise.all(rows2.map(async (ingredient, index) => {
           if (index !== 'meta') {
