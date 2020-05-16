@@ -11,7 +11,7 @@ import LocalizedStrings from 'react-localization';
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MealPlansCard from '../../components/horizontal-prototype/MealPlansCard';
-
+import MealPlanDialog from '../../components/horizontal-prototype/MealPlanDialog';
 import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
@@ -30,7 +30,7 @@ export default () => {
   const [mealPlans, setMealPlans] = useState([]);
 
   useEffect(() => {
-    dummySetup();
+    //dummySetup();
     load();
   }, []);
 
@@ -84,6 +84,7 @@ export default () => {
   };
 
   return (
+    <>
     <View className='drawer-container'>
       <MaterialTopAppBar
         title={strings.meal_plans}
@@ -121,5 +122,22 @@ export default () => {
         )}
       </TopAppBarFixedAdjust>
     </View>
-  );
+    <MealPlanDialog
+    open={dialogOpen}
+    mealPlans={mealPlans}
+    information={information}
+    calories={calories}
+    date={date}
+    onChange1={(e) => setMealPlansName(e.target.value)}
+    onChange2={(e) => setInformation(e.target.value)}
+    onChange3={(e) => setCalories(e.target.value)}
+    onChange4={(e) => setDate(e.target.value)}
+    onTrailingIconSelect1={() => setMealPlanName('')}
+    onTrailingIconSelect2={() => setInformation('')}
+    onTrailingIconSelect3={() => setCalories('')}
+    onTrailingIconSelect3={() => setDate('')}
+    onClose={handleSubmission}
+  ></MealPlanDialog>
+  </>
+  ); 
 };
