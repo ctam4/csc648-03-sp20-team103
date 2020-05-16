@@ -13,6 +13,7 @@ import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnac
 import CartsCardFull from '../../components/horizontal-prototype/CartsCardFull';
 
 import { apiUrl } from '../../url';
+import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
 
 let strings = new LocalizedStrings({
   en: {
@@ -28,6 +29,7 @@ export default () => {
   const [price, setPrice] = useState('');
   const [state, setState] = useState('');
   const [toast, setToast] = useState('');
+  const [itemsInCart, setCarts] = useState([]);
 
   useEffect(() => {
     load();
@@ -48,8 +50,54 @@ export default () => {
       }
       return res.json();
     })
-    .then((data) => {
+    .then(async (data) => {
       // TODO: fetch Carts info of user
+      if (data !== null) {
+        let ingredientIDs = [];
+        data.forEach((item) => ingredientIDs.push(item.ingredientID));
+        if (ingredientIDs.length > 0) {
+          ingredientIDs = [...new Set(ingredientIDs)];
+          await fetch(apiUrl + '/v3/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
+            method: 'get',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json',
+            },
+          })
+          .then((res2) => {
+            if (!res2.ok) {
+              if (res2.status !== 406) {
+                throw new Error(res2.status + ' ' + res2.statusText);
+              } else {
+                return null;
+              }
+            }
+            return res2.json();
+          })
+          .then((data2) => {
+            if (data2 !== null) {
+              let itemsInCart = [];
+              data.forEach((item2) => {
+                let ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
+                if (ingredient) {
+                  itemsInCart.push({
+                    key: item2.inventoryID,
+                    title: ingredient.name,
+                    subtitle: (() => {
+                      let value = item2.totalQuantity + ' ' + item2.unit;
+                      if (item2.price) {
+                        value += ' | $' + item2.price;
+                      }
+                      return value;
+                    })
+                  })
+                }
+              });
+              setCart(itemsInCart);
+            }
+          });
+        }
+      }
       setQuantity(data.quantity);
       setUnit(data.unit);
       setPrice(data.price);
@@ -77,14 +125,16 @@ export default () => {
         <DrawerAppContent className='drawer-app-content'>
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
-                <CartsCardFull
-                  mainText1='Apple'
-                  mainText2='whatever'
-                  actionText1={strings.clear_cart}
-                  onClickAction1={handleClearCart}
-                ></CartsCardFull>
-              </Cell>
+              {itemsInCart.map((item) => (
+                  <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
+                    <InventoryCard
+                        mainText1={item.title}
+                        mainText2={item.subtitle}
+                        actionText1={strings.clear_cart}
+                        mainImage={item.image}
+                    ></InventoryCard>
+                  </Cell>
+              ))}
             </Row>
           </Grid>
         </DrawerAppContent>
