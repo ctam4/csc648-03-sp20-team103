@@ -6,6 +6,45 @@ const mealplans = express.Router();
 let connection;
 
 /**
+ * PATCH /mealplans
+ * @description Updates an existing meal plan entry.
+ * @param {string} session
+ * @param {integer} mealPlanID
+ * @param {integer} recipeID
+ */
+mealplans.patch('/', async (req, res) => {
+  const session = req.body.session;
+  const mealPlanID = Number.parseInt(req.body.mealPlanID, 10);
+  const recipeID = Number.parseInt(req.body.recipeID, 10);
+  if (typeof session !== 'string' || session.length !== 36 || Number.isNaN(mealPlanID)
+    || mealPlanID < 0 || Number.isNaN(recipeID) || recipeID < 0) {
+    res.sendStatus(400).end();
+    return;
+  }
+  try {
+    connection = await pool.getConnection();
+    let rows = await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session]);
+    if (rows.length > 0) {
+      rows = connection.query('UPDATE meal_plans SET recipe_id=? WHERE meal_plan_id=?', [recipeID, mealPlanID]);
+      if (rows.affectedRows > 0) {
+        res.sendStatus(200).end();
+      } else {
+        res.sendStatus(406);
+      }
+    } else {
+      res.sendStatus(401).end();
+    }
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release();
+    }
+  }
+});
+
+/**
  * GET /v4/mealplans
  * @description Returns the mealplan for a specific day (generates one if it doesn't exist).
  * @param {string} session
@@ -17,7 +56,7 @@ let connection;
 mealplans.get('/', async (req, res) => {
   const session = req.query.session;
   const userID = Number.parseInt(req.query.userID, 10);
-  let plannedDate = Number.parseInt(req.query.plannedDate, 10);
+  const plannedDate = Number.parseInt(req.query.plannedDate, 10);
   if (typeof session !== 'string' || session.length !== 36 || Number.isNaN(userID)
     || Number.isNaN(plannedDate) || userID < 0 || plannedDate < 0) {
     res.sendStatus(400).end();
