@@ -113,89 +113,50 @@ carts.post('/ingredient', async (req, res) => {
 });
 
 /**
- * POST /v4/ingredients
- * @description Insert inventory list of current fridges with session.
+ * POST /v4/carts/recipe
+ * @description Insert ingredients required to make a recipe.
  * @param {string} session
- * @param {integer} ingredientID
- * @param {string} name
- * @param {string|null} image
- * @returns {integer} ingredientID
+ * @param {integer} userID
+ * @param {integer} recipeID
+ * @returns {integer(,integer)} cartIDs
  */
-
-
 carts.post('/recipe', async (req, res) => {
-
-  let userID, ingredientID, quantity, unit;
-  try {
-    // if (typeof req.body.session !== 'string' || typeof req.body.name !== 'string' || (typeof req.body.image !== 'string' && req.body.image !== null)) {
-    //   throw new TypeError();
-    // }
-    session = req.body.session;
-    userID = parseInt(req.body.userID);
-    recipeID = parseInt(req.body.recipeID);
-    // addedTS = pasreInt(req.body.addedTS);
-  } catch (error) {
-    res.sendStatus(400).end();
-    throw error;
-  }
-  // check params data range
-  // @todo validate image is url
-  if (session.length !== 36 || recipeID <= 0) {
+  const session = req.body.session;
+  const userID = Number.parseInt(req.body.userID, 10);
+  const recipeID = Number.parseInt(req.body.recipeID, 10);
+  if (typeof session !== 'string' || session.length !== 36 || Number.isNaN(userID) || userID < 0
+    || Number.isNaN(recipeID) || recipeID < 0) {
     res.sendStatus(400).end();
     return;
   }
-  // run query to mariadb
   try {
     connection = await pool.getConnection();
-    // retrieve fridge_id
-    let results = [];
-    let fridgeID = 1;
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
-        if (rows.length > 0) {
-          fridgeID = rows[0].fridge_id;
-          // insert for endpoint
-          // await connection.query('INSERT IGNORE INTO v4_carts (user_id, ingredient_id, quantity, unit, added_ts) VALUES ( ?, ?, ?, ?, FROM_UNIXTIME(?))', [userID, ingredientID, quantity, unit, addedTS])
-          await connection.query('SELECT ingredient_id as ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=? LIMIT 1', [recipeID])
-            .then(async (data) => {
-              console.log('here', 'datalegth', data.length);
-              if (data.length > 0) {
-                data.map((item)=>{
-                  results.push({
-                    ingredientID: item.ingredientID,
-                    quantity: item.quantity,
-                    unit: item.unit,
-                  });
-                })
-              } else {
-                res.sendStatus(406).end();
-              }
-            });
-        } else {
-          res.sendStatus(401).end();
-        }
-      });
-    // console.log(results[0].ingredientID, "result")
-    await connection.query('INSERT INTO v4_carts (fridge_id, user_id, ingredient_id, quantity, unit) VALUES(?, ?, ?, ?,?)', [fridgeID, userID, results[0].ingredientID, results[0].quantity, results[0].unit])
-      .then(async()=>{
-        await connection.query('SELECT ingredient_id as ingredientID, quantity, unit, added_ts AS addedTS FROM v4_carts ORDER BY cart_id DESC  LIMIT 1', [recipeID])
-          .then((results2)=>{
-            res.send({
-              ingredientID: results2[0].ingredientID,
-              quantity: results2[0].quantity,
-              unit: results2[0].unit,
-              addedTS: results2[0].addedTS
-            }).end();
-          });
-      });
-
-
+    const rows = await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session]);
+    if (rows.length > 0) {
+      const fridgeID = rows[0].fridge_id;
+      // get ingredients required to make recipe
+      const rows2 = await connection.query('SELECT ingredient_id as ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', [recipeID]);
+      if (rows2.length > 0) {
+        const results = await Promise.all(rows2.map(async (ingredient, index) => {
+          if (index !== 'meta') {
+            await connection.query('INSERT IGNORE INTO v4_carts (fridge_id, user_id, ingredient_id, quantity, unit) VALUES (?, ?, ?, ?, ?)', [fridgeID, userID, ingredient.ingredientID, ingredient.quantity, ingredient.unit]);
+            return ingredient.ingredientID;
+          }
+          return undefined;
+        }));
+        res.json(results).end();
+      } else {
+        res.sendStatus(406).end();
+      }
+    } else {
+      res.sendStatus(401).end();
+    }
   } catch (error) {
     res.sendStatus(500).end();
     throw error;
   } finally {
     if (connection) {
-      connection.release(); // release to pool
+      connection.release();
     }
   }
 });
