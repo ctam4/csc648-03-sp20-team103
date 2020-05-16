@@ -265,7 +265,6 @@ recipes.get('/', async (req, res) => {
  * @param {string} session
  * @param {integer} userID
  * @param {integer} recipeID
- * @returns {interger} recipeFavoriteID
  */
 recipes.post('/favorite', async (req, res) => {
   // check params data type
@@ -295,7 +294,7 @@ recipes.post('/favorite', async (req, res) => {
           await connection.query('INSERT IGNORE INTO v4_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [userID, recipeID])
             .then((results) => {
               if (results.affectedRows > 0) {
-                res.json({ recipeFavoriteID: results.insertId }).end();
+                res.sendStatus(200).end();
               } else {
                 res.sendStatus(406).end();
               }
