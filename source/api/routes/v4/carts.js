@@ -138,8 +138,12 @@ carts.post('/recipe', async (req, res) => {
       if (rows2.length > 0) {
         const results = await Promise.all(rows2.map(async (ingredient, index) => {
           if (index !== 'meta') {
-            await connection.query('INSERT IGNORE INTO v4_carts (fridge_id, user_id, ingredient_id, quantity, unit) VALUES (?, ?, ?, ?, ?)', [fridgeID, userID, ingredient.ingredientID, ingredient.quantity, ingredient.unit]);
-            return ingredient.ingredientID;
+            const rows = await connection.query('INSERT INTO v4_carts (fridge_id, user_id, ingredient_id, quantity, unit) VALUES (?, ?, ?, ?, ?)', [fridgeID, userID, ingredient.ingredientID, ingredient.quantity, ingredient.unit]);
+            if (rows.affectedRows > 0) {
+              return rows.insertId;
+            } else {
+              throw new Error('could not insert into v4_carts');
+            }
           }
           return undefined;
         }));
