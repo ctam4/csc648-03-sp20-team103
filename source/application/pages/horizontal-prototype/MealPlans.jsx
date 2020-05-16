@@ -10,6 +10,7 @@ import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
+import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MealPlansCard from '../../components/horizontal-prototype/MealPlansCard';
 import MealPlanDialog from '../../components/horizontal-prototype/MealPlanDialog';
 import { apiUrl } from '../../url';
