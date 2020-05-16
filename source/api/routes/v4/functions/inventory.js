@@ -37,8 +37,8 @@ const insertInventory = async (connection, fridgeID, ingredientID, expirationDat
   return await connection.query('INSERT IGNORE INTO v4_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, price) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price]);
 };
 
-const updateInventory = async (connection, inventoryID, totalQuantity) => {
-  return await connection.query('UPDATE v4_inventory SET total_quantity=? WHERE inventory_id=?', [totalQuantity, inventoryID]);
+const updateInventory = async (connection, inventoryID, quantity) => {
+  return await connection.query('UPDATE IGNORE v4_inventory SET total_quantity=total_quantity-? WHERE inventory_id=? AND total_quantity-? >= 0', [quantity, inventoryID, quantity]);
 };
 
 module.exports = {

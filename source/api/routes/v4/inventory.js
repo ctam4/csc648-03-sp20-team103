@@ -235,26 +235,21 @@ inventory.post('/consume', async (req, res) => {
           // @todo handle possible duplicate sessions
           // @todo unit conversion
           // insert for endpoint
-          const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v4_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0].total_quantity;
-          if (totalQuantity >= 0) {
-            insertInventoryLog(connection, inventoryID, userID, quantity, unit, 'consumed')
-              .then((results) => {
-                if (results.affectedRows > 0) {
-                  updateInventory(connection, inventoryID, totalQuantity)
-                    .then((results2) => {
-                      if (results2.affectedRows > 0) {
-                        res.sendStatus(200).end();
-                      } else {
-                        res.sendStatus(406).end();
-                      }
-                    });
-                } else {
-                  res.sendStatus(406).end();
-                }
-              });
-          } else {
-            res.sendStatus(400).end();
-          }
+          updateInventory(connection, inventoryID, quantity)
+            .then((results) => {
+              if (results.affectedRows > 0) {
+                insertInventoryLog(connection, inventoryID, userID, quantity, unit, 'consumed')
+                  .then((results2) => {
+                    if (results2.affectedRows > 0) {
+                      res.sendStatus(200).end();
+                    } else {
+                      res.sendStatus(406).end();
+                    }
+                  });
+              } else {
+                res.sendStatus(400).end();
+              }
+            });
         } else {
           res.sendStatus(401).end();
         }
@@ -310,31 +305,26 @@ inventory.post('/discard', async (req, res) => {
     connection = await pool.getConnection();
     // retrieve fridge_id
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           // @todo unit conversion
           // insert for endpoint
-          const totalQuantity = (await connection.query('SELECT total_quantity - ? as total_quantity FROM v4_inventory WHERE inventory_id=?', [quantity, inventoryID]))[0].total_quantity;
-          if (totalQuantity >= 0) {
-            insertInventoryLog(connection, inventoryID, userID, quantity, unit, 'discarded')
-              .then((results) => {
-                if (results.affectedRows > 0) {
-                  updateInventory(connection, inventoryID, totalQuantity)
-                    .then((results2) => {
-                      if (results2.affectedRows > 0) {
-                        res.sendStatus(200).end();
-                      } else {
-                        res.sendStatus(406).end();
-                      }
-                    });
-                } else {
-                  res.sendStatus(406).end();
-                }
-              });
-          } else {
-            res.sendStatus(400).end();
-          }
+          updateInventory(connection, inventoryID, quantity)
+            .then((results) => {
+              if (results.affectedRows > 0) {
+                insertInventoryLog(connection, inventoryID, userID, quantity, unit, 'discarded')
+                  .then((results2) => {
+                    if (results2.affectedRows > 0) {
+                      res.sendStatus(200).end();
+                    } else {
+                      res.sendStatus(406).end();
+                    }
+                  });
+              } else {
+                res.sendStatus(400).end();
+              }
+            });
         } else {
           res.sendStatus(401).end();
         }
