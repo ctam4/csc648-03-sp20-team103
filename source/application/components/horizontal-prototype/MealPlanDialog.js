@@ -13,7 +13,7 @@ let strings = new LocalizedStrings({
     information_helper: 'This is the description of your meal plan.',
     calories: 'Calories',
     calories_helper: 'This is how many calories in your meal plan.',
-    date: '',
+    date: 'Date',
     date_helper:'Date for this meal plan.',
     cancel: 'Cancel',
     okay: 'OK',

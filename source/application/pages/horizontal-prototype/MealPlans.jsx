@@ -11,6 +11,7 @@ import LocalizedStrings from 'react-localization';
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
+import MaterialIcon from '@material/react-material-icon';
 import MealPlansCard from '../../components/horizontal-prototype/MealPlansCard';
 import MealPlanDialog from '../../components/horizontal-prototype/MealPlanDialog';
 import { apiUrl } from '../../url';
@@ -30,6 +31,10 @@ export default () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [mealPlans, setMealPlans] = useState([]);
+  const [information, setInformation] = useState('');
+  const [meal_plan_name, setMealPlansName] = useState('');
+  const [date, setDate] = useState('');
+  const [calories, setCalories] = useState('');
 
   useEffect(() => {
     //dummySetup();
@@ -89,6 +94,40 @@ export default () => {
     setDialogOpen(!dialogOpen);
   };
 
+  const handleSubmission = async (value) => {
+    toggleDialog();
+    if (value === 'confirm') {
+      await fetch(apiUrl + '/v3/users', {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session: cookies.session,
+          name: name,
+          role: role,
+          intolerances: intolerances,
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(res.status + ' ' + res.statusText);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setCookie('userID', data.userID, {
+            path: '/horizontal-prototype/',
+            // httpOnly: true,
+            // expires: new Date(data.expires_ts),
+          });
+        })
+        .catch((error) => setToast(error.toString()));
+      setToast(strings.toast_created);
+      load();
+    }
+  };
 
   return (
     <>
@@ -128,7 +167,7 @@ export default () => {
         <MaterialSnackbar message={toast} onClose={() => setToast('')} />
         )}
         <MaterialFab
-            icon={<MaterialIcon icon='person_add'/>}
+            icon={<MaterialIcon icon='library_add'/>}
             style={{ position: 'absolute', right: 16, bottom: 16 }}
             onClick={toggleDialog}
           ></MaterialFab>
@@ -136,7 +175,7 @@ export default () => {
     </View>
     <MealPlanDialog
     open={dialogOpen}
-    mealPlans={mealPlans}
+    meal_plan_name={meal_plan_name}
     information={information}
     calories={calories}
     date={date}
