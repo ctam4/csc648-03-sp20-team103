@@ -26,6 +26,7 @@ let strings = new LocalizedStrings({
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [mealPlans, setMealPlans] = useState([]);
 
@@ -83,6 +84,11 @@ export default () => {
     setDrawerOpen(!drawerOpen);
   };
 
+  const toggleDialog = () => {
+    setDialogOpen(!dialogOpen);
+  };
+
+
   return (
     <>
     <View className='drawer-container'>
@@ -120,6 +126,11 @@ export default () => {
         {toast && (
         <MaterialSnackbar message={toast} onClose={() => setToast('')} />
         )}
+        <MaterialFab
+            icon={<MaterialIcon icon='person_add'/>}
+            style={{ position: 'absolute', right: 16, bottom: 16 }}
+            onClick={toggleDialog}
+          ></MaterialFab>
       </TopAppBarFixedAdjust>
     </View>
     <MealPlanDialog
