@@ -10,6 +10,7 @@ import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import CartsCard from '../../components/horizontal-prototype/CartsCard';
 
 import { apiUrl } from '../../url';
@@ -33,7 +34,7 @@ export default () => {
   const [carts, setCarts] = useState([]);
 
   useEffect(() => {
-    dummySetup();
+    //dummySetup();
     load();
   }, []);
 
@@ -50,6 +51,37 @@ export default () => {
 
   const load = async () => {
     // TODO: fetch
+    await fetch(apiUrl + '/v3/carts/list/all?session=' + cookies.session, {
+      method: 'get',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+    })
+        .then((res) => {
+          if (!res.ok) {
+            if (res.status !== 406) {
+              throw new Error(res.status + ' ' + res.statusText);
+            } else {
+              return null;
+            }
+          }
+          return res.json();
+        })
+        .then(async (data) => {
+          if (data !== null) {
+            let carts = data.map((item) => {
+              return {
+                key: item.recipeID,
+                title: item.title,
+                subtitle: item.servings, // need to have date last edited here, not servings
+                image: item.image,
+              };
+            });
+            setCarts(carts);
+          }
+        })
+        .catch((error) => setToast(error.toString()));
   };
 
   const toggleDrawer = () => {
@@ -82,7 +114,6 @@ export default () => {
                 <CartsCard
                   mainText1={item.title + strings.user_cart}
                   mainText2={strings.last_updated + item.subtitle}
-                  bodyText={item.content}
                   actionText1={strings.edit}
                   actionText2={strings.clear_cart}
                   onClickAction1={() => { window.location.href = 'view/?id=' }}
