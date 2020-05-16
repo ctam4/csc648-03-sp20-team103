@@ -6,7 +6,7 @@ const insertIngredient = async (connection, ingredientID, name, image) => {
   return await connection.query('INSERT IGNORE INTO v4_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image]);
 };
 
-const importIngredients = (connection, ingredients) => {
+const importIngredients = async (connection, ingredients) => {
   if (ingredients.length > 0) {
     let ingredientIDs = ingredients.map((item) => {
       return item.ingredientID;
