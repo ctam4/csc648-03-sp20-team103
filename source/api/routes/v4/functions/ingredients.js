@@ -1,4 +1,4 @@
-const selectIngredients = async (connection, ingredientIDs, page, limit) => {
+const selectIngredients = (connection, ingredientIDs, page, limit) => {
   let sql = 'SELECT ingredient_id AS ingredientID, name, image FROM v4_ingredients WHERE (';
   ingredientIDs.forEach((_, index) => {
     if (index > 0) {
@@ -10,11 +10,11 @@ const selectIngredients = async (connection, ingredientIDs, page, limit) => {
   return connection.query(sql, [...ingredientIDs, limit, (page - 1) * limit]);
 };
 
-const insertIngredient = async (connection, ingredientID, name, image) => {
+const insertIngredient = (connection, ingredientID, name, image) => {
   return connection.query('INSERT IGNORE INTO v4_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image]);
 };
 
-const importIngredients = async (connection, ingredients) => {
+const importIngredients = (connection, ingredients) => {
   if (ingredients.length > 0) {
     let ingredientIDs = ingredients.map((item) => {
       return item.ingredientID;
@@ -27,8 +27,8 @@ const importIngredients = async (connection, ingredients) => {
       }
       sql += 'ingredient_id=?';
     });
-    await connection.query(sql, [...ingredientIDs])
-      .then((rows) => {
+    connection.query(sql, [...ingredientIDs])
+      .then(async (rows) => {
         if (rows.length > 0) {
           rows.forEach((ingredient, index) => {
             if (index !== 'meta') {
@@ -36,19 +36,19 @@ const importIngredients = async (connection, ingredients) => {
             }
           });
         }
-      });
-    if (ingredientIDs.length > 0) {
-      ingredients.forEach((item) => {
-        if (ingredientIDs.includes(item.ingredientID)) {
-          insertIngredient(
-            connection,
-            item.ingredientID,
-            item.name,
-            item.image
-          );
+        if (ingredientIDs.length > 0) {
+          await Promise.all(ingredients.forEach(async (item) => {
+            if (ingredientIDs.includes(item.ingredientID)) {
+              await insertIngredient(
+                connection,
+                item.ingredientID,
+                item.name,
+                item.image
+              );
+            }
+          }));
         }
       });
-    }
   }
 };
 

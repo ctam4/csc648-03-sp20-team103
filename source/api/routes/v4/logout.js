@@ -30,10 +30,10 @@ logout.post('/', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
         if (rows.length > 0) {
-          await connection.query('DELETE FROM v4_sessions WHERE session=?', [session])
+          connection.query('DELETE FROM v4_sessions WHERE session=?', [session])
             .then((results) => {
               if (results.affectedRows > 0) {
                 res.sendStatus(200).end();

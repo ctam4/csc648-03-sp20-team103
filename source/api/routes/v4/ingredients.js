@@ -39,11 +39,11 @@ ingredients.get('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           selectIngredients(connection, ingredientIDs, 1, ingredientIDs.length)
-            .then(async (rows2) => {
+            .then((rows2) => {
               if (rows2.length > 0) {
                 res.json(rows2.filter((_, index) => index !== 'meta')).end();
               } else {
@@ -104,13 +104,13 @@ ingredients.get('/search', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           // @todo page
           // retrieve for endpoint
-          await fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&metaInformation=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
+          fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&metaInformation=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
             method: 'get',
             headers: {
               'Content-Type': 'application/json',
@@ -200,7 +200,7 @@ ingredients.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // insert for endpoint
