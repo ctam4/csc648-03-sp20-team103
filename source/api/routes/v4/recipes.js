@@ -71,12 +71,12 @@ recipes.get('/search', async (req, res) => {
               }
               return res.json();
             })
-            .then((data) => {
+            .then(async (data) => {
               if (data.results.length > 0) {
                 const recipeIDs = data.results.map((item) => {
                   return item.id;
                 });
-                importRecipes(connection, recipeIDs);
+                await importRecipes(connection, recipeIDs);
                 selectRecipes(connection, recipeIDs, page, limit, 'recipe_id', false)
                   .then((rows) => {
                     if (rows.length > 0) {
