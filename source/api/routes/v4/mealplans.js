@@ -1,6 +1,7 @@
 const express = require('express');
 const fetch = require('node-fetch');
 const pool = require('../../database.js');
+const recipesHelper = require('./functions/recipes.js');
 
 const mealplans = express.Router();
 let connection;
@@ -51,7 +52,6 @@ mealplans.patch('/', async (req, res) => {
  * @param {integer} userID
  * @param {integer} plannedDate must be midnight
  * @returns {object[]} mealplans
- * @todo Add generated recipes to the database.
  */
 mealplans.get('/', async (req, res) => {
   const session = req.query.session;
@@ -104,7 +104,20 @@ mealplans.get('/', async (req, res) => {
             recipes = data.map((recipe) => recipe.id);
           });
         if (recipes.length > 0) {
-          // @todo add recipes to database
+          await recipesHelper.importRecipes(connection, recipes);
+          recipes = await Promise.all(recipes.map(async (recipeID, index) => {
+            if (index !== 'meta') {
+              const results = await connection.query('INSERT INTO v4_meal_plans (user_id, recipe_id, planned_ts) VALUES (?, ?, ?)', [userID, recipeID, plannedDate]);
+              if (results.affectedRows > 0) {
+                return {
+                  mealPlanID: results.insertId,
+                  recipeID,
+                };
+              }
+              throw new Error('could not insert into meal_plans');
+            }
+            return undefined;
+          }));
           res.json(recipes).end();
         } else {
           res.sendStatus(406).end();
