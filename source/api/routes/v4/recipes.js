@@ -145,7 +145,7 @@ recipes.get('/', async (req, res) => {
               if (rows2.length > 0) {
                 const recipes = await Promise.all(rows2.map(async (recipe, index) => {
                   if (index !== 'meta') {
-                    await Promise.all(
+                    await Promise.all([
                       selectRecipeIngredients(connection, recipe.recipeID)
                         .then((rows3) => {
                           if (rows3.length > 0) {
@@ -158,7 +158,7 @@ recipes.get('/', async (req, res) => {
                             recipe.favorites = rows3.filter((_, index2) => index2 !== 'meta');
                           }
                         }),
-                    );
+                    ]);
                     return recipe;
                   }
                 }));
