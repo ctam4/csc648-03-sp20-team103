@@ -25,16 +25,16 @@ test.before(async (t) => {
     output: 'silent',
     timeout: 5,
   })
-    .then(async () => {
+    .then(() => {
       t.context.baseUrl = 'http://localhost:10002';
     });
 });
 
 test('/register | POST | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/register', {
+  await fetch(`${t.context.baseUrl}/v4/register`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
