@@ -25,7 +25,7 @@ const importIngredients = async (connection, ingredients) => {
         if (rows.length > 0) {
           rows.forEach((ingredient, index) => {
             if (index !== 'meta') {
-              ingredientIDs.pop(ingredient.ingredientID);
+              ingredientIDs.filter((item) => item !== ingredient.ingredientID);
             }
           });
         }

@@ -105,7 +105,7 @@ const importRecipes = async (connection, recipeIDs) => {
         if (rows.length > 0) {
           rows.forEach((recipe, index) => {
             if (index !== 'meta') {
-              recipeIDs.pop(recipe.recipeID);
+              recipeIDs.filter((item) => item !== recipe.recipeID);
             }
           });
         }
