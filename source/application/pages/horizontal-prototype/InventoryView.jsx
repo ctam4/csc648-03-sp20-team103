@@ -49,10 +49,6 @@ export default () => {
   const [state, dispatch] = useReducer(inventoryViewReducer, initialState);
   const [toast, setToast] = useState('');
 
-  useEffect(() => {
-    load();
-  }, []);
-
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(`${apiUrl}/v4/inventory?session=${cookies.session}&inventoryID=${urlParams.get('id')}`, {
@@ -131,11 +127,15 @@ export default () => {
                   return value;
                 });
                 dispatch(setHistory(history));
-              })
+              });
           });
       })
       .catch((error) => setToast(error.toString()));
   };
+
+  useEffect(() => {
+    load();
+  }, []);
 
   const handleGoBack = () => {
     if (history.length > 0) {

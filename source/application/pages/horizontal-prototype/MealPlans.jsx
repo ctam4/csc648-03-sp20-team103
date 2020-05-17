@@ -29,11 +29,6 @@ export default () => {
   const [toast, setToast] = useState('');
   const [mealPlans, setMealPlans] = useState([]);
 
-  useEffect(() => {
-    dummySetup();
-    load();
-  }, []);
-
   const dummySetup = () => {
     // TODO: hard code mealPlans array
     setMealPlans([
@@ -78,6 +73,11 @@ export default () => {
   const load = async () => {
     // TODO: fetch
   };
+
+  useEffect(() => {
+    dummySetup();
+    load();
+  }, []);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);

@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 import LocalizedStrings from 'react-localization';
 
@@ -30,9 +30,6 @@ const strings = new LocalizedStrings({
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [state, dispatch] = useReducer(inventorySearchReducer, initialState);
-
-  useEffect(() => {
-  });
 
   const toggleSearch = () => {
     dispatch(setSearchOpen(!state.searchOpen));

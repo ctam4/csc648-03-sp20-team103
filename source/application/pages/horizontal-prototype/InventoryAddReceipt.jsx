@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
 
 import { StyleSheet, View, useWindowDimensions } from 'react-native';

@@ -36,14 +36,6 @@ export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [state, dispatch] = useReducer(splashReducer, initialState);
 
-  useEffect(() => {
-    load();
-  }, []);
-
-  const toggleDialog = () => {
-    dispatch(setDialogOpen(!state.dialogOpen));
-  };
-
   const load = async () => {
     // for dummy fridge
     await fetch(`${apiUrl}/v4/register`, {
@@ -64,6 +56,14 @@ export default () => {
         dispatch(setPIN(data.pin));
       })
       .catch(console.log);
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const toggleDialog = () => {
+    dispatch(setDialogOpen(!state.dialogOpen));
   };
 
   const handleAuth = async () => {

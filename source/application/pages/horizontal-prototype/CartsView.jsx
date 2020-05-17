@@ -29,10 +29,6 @@ export default () => {
   const [state, setState] = useState('');
   const [toast, setToast] = useState('');
 
-  useEffect(() => {
-    load();
-  }, []);
-
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(`${apiUrl}/v2/carts?carts_id=${urlParams.get('id')}`, {
@@ -57,6 +53,10 @@ export default () => {
       })
       .catch((error) => setToast(error.toString()));
   };
+
+  useEffect(() => {
+    load();
+  }, []);
 
   const handleGoBack = () => {
     if (history.length > 0) {

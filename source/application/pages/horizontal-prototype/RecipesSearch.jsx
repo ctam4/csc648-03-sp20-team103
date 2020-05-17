@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 import LocalizedStrings from 'react-localization';
 
@@ -69,9 +69,6 @@ export default () => {
     { id: '10_less', label: strings.grams_10_less },
     { id: '10_20', label: strings.grams_10_20 },
   ];
-
-  useEffect(() => {
-  });
 
   const toggleSearch = () => {
     dispatch(setSearchOpen(!state.searchOpen));

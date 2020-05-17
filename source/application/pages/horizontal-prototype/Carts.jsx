@@ -31,11 +31,6 @@ export default () => {
   const [toast, setToast] = useState('');
   const [carts, setCarts] = useState([]);
 
-  useEffect(() => {
-    dummySetup();
-    load();
-  }, []);
-
   const dummySetup = () => {
     // TODO: hard code carts array
     setCarts([
@@ -50,6 +45,11 @@ export default () => {
   const load = async () => {
     // TODO: fetch
   };
+
+  useEffect(() => {
+    dummySetup();
+    load();
+  }, []);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);

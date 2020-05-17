@@ -36,11 +36,6 @@ export default () => {
   const [toast, setToast] = useState('');
   const [recipes, setRecipes] = useState([]);
 
-  useEffect(() => {
-    // dummySetup();
-    load();
-  }, []);
-
   const dummySetup = () => {
     // TODO: hard code recipes array
     setRecipes([
@@ -78,17 +73,22 @@ export default () => {
       })
       .then(async (data) => {
         if (data !== null) {
-          const recipes = data.map((item) => ({
+          const recipes2 = data.map((item) => ({
             key: item.recipeID,
             title: item.title,
             subtitle: `${item.servings} ${strings.servings} | ${item.cookingTime} ${strings.minutes}`,
             image: item.image,
           }));
-          setRecipes(recipes);
+          setRecipes(recipes2);
         }
       })
       .catch((error) => setToast(error.toString()));
   };
+
+  useEffect(() => {
+    // dummySetup();
+    load();
+  }, []);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);

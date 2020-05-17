@@ -39,10 +39,6 @@ export default () => {
   const [state, dispatch] = useReducer(recipesViewReducer, initialState);
   const [toast, setToast] = useState('');
 
-  useEffect(() => {
-    load();
-  }, []);
-
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(`${apiUrl}/v4/recipes?session=${cookies.session}&recipeIDs=${urlParams.get('id')}`, {
@@ -59,9 +55,7 @@ export default () => {
         return res.json();
       })
       .then(async (data) => {
-        const ingredientIDs = data[0].ingredients.map((item) => {
-          return item.ingredientID;
-        });
+        const ingredientIDs = data[0].ingredients.map((item) => item.ingredientID);
         await fetch(`${apiUrl}/v4/ingredients?session=${cookies.session}&ingredientIDs=${ingredientIDs.join(',')}`, {
           method: 'get',
           headers: {
@@ -98,6 +92,10 @@ export default () => {
       })
       .catch((error) => setToast(error.toString()));
   };
+
+  useEffect(() => {
+    load();
+  }, []);
 
   const handleGoBack = () => {
     if (history.length > 0) {

@@ -26,11 +26,6 @@ export default () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [consumption, setConsumption] = useState([]);
 
-  useEffect(() => {
-    dummySetup();
-    load();
-  }, []);
-
   const dummySetup = () => {
     // TODO: hard code consumption array
     setConsumption([
@@ -46,6 +41,11 @@ export default () => {
   const load = async () => {
     // TODO: fetch
   };
+
+  useEffect(() => {
+    dummySetup();
+    load();
+  }, []);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);

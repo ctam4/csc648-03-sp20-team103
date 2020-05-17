@@ -40,15 +40,10 @@ export default () => {
   const [dialogOpen, setDialogOpen] = useState(null);
   const [inventoryID, setInventoryID] = useState(null);
   const [dialogQuantity, setDialogQuantity] = useState(0.0);
-  const [dialogUnit, setDIalogUnit] = useState('');
+  const [dialogUnit, setDialogUnit] = useState('');
   const [toast, setToast] = useState('');
   const [inventory, setInventory] = useState([]);
   const [ingredients, setIngredients] = useState([]);
-
-  useEffect(() => {
-    // dummySetup();
-    load();
-  }, []);
 
   const dummySetup = () => {
     // TODO: hard code inventory array
@@ -88,8 +83,7 @@ export default () => {
       })
       .then(async (data) => {
         if (data !== null) {
-          let ingredientIDs = [];
-          data.forEach((item) => ingredientIDs.push(item.ingredientID));
+          let ingredientIDs = data.map((item) => item.ingredientID);
           if (ingredientIDs.length > 0) {
             ingredientIDs = [...new Set(ingredientIDs)];
             await fetch(`${apiUrl}/v4/ingredients?session=${cookies.session}&ingredientIDs=${ingredientIDs.join(',')}`, {
@@ -148,6 +142,11 @@ export default () => {
       .catch((error) => setToast(error.toString()));
   };
 
+  useEffect(() => {
+    // dummySetup();
+    load();
+  }, []);
+
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -184,7 +183,7 @@ export default () => {
               userID: cookies.userID,
               inventoryID,
               quantity: dialogQuantity,
-              quantity: dialogUnit,
+              unit: dialogUnit,
             }),
           })
             .then((res) => {

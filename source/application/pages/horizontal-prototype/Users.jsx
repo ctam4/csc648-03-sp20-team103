@@ -34,11 +34,6 @@ export default () => {
   const [toast, setToast] = useState('');
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    // dummySetup();
-    load();
-  }, []);
-
   const dummySetup = () => {
     // TODO: hard code users array
     setUsers([
@@ -75,17 +70,21 @@ export default () => {
       })
       .then((data) => {
         if (data !== null) {
-          const users = [];
-          data.forEach((item) => users.push({
+          const users2 = data.map((item) => ({
             key: item.userID,
             primaryText: item.name,
             secondaryText: item.role,
           }));
-          setUsers(users);
+          setUsers(users2);
         }
       })
       .catch((error) => setToast(error.toString()));
   };
+
+  useEffect(() => {
+    // dummySetup();
+    load();
+  }, []);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);

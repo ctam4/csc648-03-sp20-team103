@@ -51,10 +51,6 @@ export default () => {
   const [inventory, setInventory] = useState([]);
   const [ingredients, setIngredients] = useState([]);
 
-  useEffect(() => {
-    // dummySetup();
-  });
-
   const dummySetup = () => {
     // TODO: hard code inventory array
     setInventory([
@@ -70,6 +66,10 @@ export default () => {
       },
     ]);
   };
+
+  useEffect(() => {
+    // dummySetup();
+  });
 
   const toggleSearch = () => {
     dispatch(setSearchOpen(!state.searchOpen));
@@ -103,12 +103,12 @@ export default () => {
         })
         .then((data) => {
           setIngredients(data);
-          const ingredients = data.map((item) => ({
+          const ingredients2 = data.map((item) => ({
             key: item.ingredientID,
             primaryText: item.name,
             ingredient: item,
           }));
-          dispatch(setAutoComplete(ingredients));
+          dispatch(setAutoComplete(ingredients2));
         })
         .catch((error) => setToast(error.toString()));
     }
@@ -167,21 +167,21 @@ export default () => {
         expirationDate: state.expirationDate,
         title: ingredient.name,
         subtitle: (() => {
-          let value = `${state.quantity} ${state.unit}`;
+          let value2 = `${state.quantity} ${state.unit}`;
           if (state.expirationDate) {
-            value += ' | ';
+            value2 += ' | ';
             const expirationDate = Moment.utc(state.expirationDate);
             if (expirationDate.unix() >= Moment.utc()) {
-              value += strings.expiring;
+              value2 += strings.expiring;
             } else {
-              value += strings.expired;
+              value2 += strings.expired;
             }
-            value += ` ${expirationDate.fromNow()}`;
+            value2 += ` ${expirationDate.fromNow()}`;
           }
           if (state.price) {
-            value += ` | $${state.price}`;
+            value2 += ` | $${state.price}`;
           }
-          return value;
+          return value2;
         })(),
         image: ingredient.image,
       });

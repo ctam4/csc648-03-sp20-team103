@@ -27,10 +27,6 @@ export default () => {
   const [price, setPrice] = useState('');
   const [state, setState] = useState('');
 
-  useEffect(() => {
-    load();
-  }, []);
-
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
     await fetch(`${apiUrl}/v2/consumption?consumption_id=${urlParams.get('id')}`, {
@@ -55,6 +51,10 @@ export default () => {
       })
       .catch(console.log);
   };
+
+  useEffect(() => {
+    load();
+  }, []);
 
   const handleGoBack = () => {
     if (history.length > 0) {

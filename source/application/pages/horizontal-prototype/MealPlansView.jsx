@@ -32,11 +32,6 @@ export default () => {
   const [toast, setToast] = useState('');
   const [recipes, setRecipes] = useState([]);
 
-  useEffect(() => {
-    dummySetup();
-    load();
-  }, []);
-
   const dummySetup = () => {
     // TODO: hard code recipes array
     setRecipes([
@@ -77,6 +72,11 @@ export default () => {
       })
       .catch((error) => setToast(error.toString()));
   };
+
+  useEffect(() => {
+    dummySetup();
+    load();
+  }, []);
 
   const handleGoBack = () => {
     if (history.length > 0) {
