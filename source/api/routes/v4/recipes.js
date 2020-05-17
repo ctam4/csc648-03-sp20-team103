@@ -121,7 +121,7 @@ recipes.get('/', async (req, res) => {
     if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
       throw new TypeError();
     }
-    session.req.query.session;
+    session = req.query.session;
     recipeIDs = req.query.recipeIDs.split(',').map(value => parseInt(value));
   } catch (error) {
     res.sendStatus(400).end();
@@ -135,32 +135,34 @@ recipes.get('/', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT fridge_id FROM v3_sessions WHERE session=?', [session])
+    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           selectRecipes(connection, recipeIDs, 1, recipeIDs.length)
-            .then((rows2) => {
+            .then(async (rows2) => {
               if (rows2.length > 0) {
                 // console.log(rows2);
-                const recipes = rows2.map((recipe, index) => {
+                const recipes = await Promise.all(rows2.map(async (recipe, index) => {
                   if (index !== 'meta') {
-                    selectRecipeIngredients(connection, recipe.recipeID)
-                      .then((rows3) => {
-                        if (rows3.length > 0) {
-                          recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
-                        }
-                      });
-                    selectRecipeFavorites(connection, recipe.recipeID, fridgeID)
-                      .then((rows3) => {
-                        if (rows3.length > 0) {
-                          recipe.favorites = rows3.filter((favorite, index2) => index2 !== 'meta');
-                        }
-                      });
+                    await Promise.all(
+                      selectRecipeIngredients(connection, recipe.recipeID)
+                        .then((rows3) => {
+                          if (rows3.length > 0) {
+                            recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
+                          }
+                        }),
+                      selectRecipeFavorites(connection, recipe.recipeID, fridgeID)
+                        .then((rows3) => {
+                          if (rows3.length > 0) {
+                            recipe.favorites = rows3.filter((favorite, index2) => index2 !== 'meta');
+                          }
+                        }),
+                    );
                     return recipe;
                   }
-                });
+                }));
                 res.json(recipes).end();
               } else {
                 res.sendStatus(406).end();
