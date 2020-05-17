@@ -27,7 +27,7 @@ function InventoryDiscardDialog(props) {
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>{strings.consume_inventory}</DialogTitle>
+      <DialogTitle>{strings.discard_inventory}</DialogTitle>
       <DialogContent>
         <MaterialFilledTextField
           label={strings.quantity}
