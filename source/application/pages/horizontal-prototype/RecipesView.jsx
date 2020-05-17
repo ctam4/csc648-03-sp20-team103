@@ -2,7 +2,6 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import LocalizedStrings from 'react-localization';
 
-
 import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
@@ -15,8 +14,8 @@ import {
   setCookingTime,
   setInstructions,
   setIngredients,
-} from '../../actions/horizontal-prototype/RecipeView';
-import { recipeViewReducer, initialState } from '../../reducers/horizontal-prototype/RecipeView';
+} from '../../actions/horizontal-prototype/RecipesView';
+import { recipesViewReducer, initialState } from '../../reducers/horizontal-prototype/RecipesView';
 import '@material/react-layout-grid/dist/layout-grid.css';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
@@ -37,7 +36,7 @@ const strings = new LocalizedStrings({
 
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
-  const [state, dispatch] = useReducer(recipeViewReducer, initialState);
+  const [state, dispatch] = useReducer(recipesViewReducer, initialState);
   const [toast, setToast] = useState('');
 
   useEffect(() => {
@@ -59,18 +58,43 @@ export default () => {
         }
         return res.json();
       })
-      .then((data) => {
-        dispatch(setRecipeID(data.recipeID));
-        dispatch(setTitle(data.title));
-        dispatch(setImage(data.image));
-        dispatch(setServings(data.servings));
-        dispatch(setCookingTime(data.cookingTime));
-        dispatch(setInstructions(data.instructions));
-        const ingredients = data.ingredients.map((item) => ({
-          primaryText: item.name,
-          secondaryText: `${item.quantity} ${item.unit}`,
-        }));
-        dispatch(setIngredients(ingredients));
+      .then(async (data) => {
+        const ingredientIDs = data[0].ingredients.map((item) => {
+          return item.ingredientID;
+        });
+        await fetch(`${apiUrl}/v4/ingredients?session=${cookies.session}&ingredientIDs=${ingredientIDs.join(',')}`, {
+          method: 'get',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((res2) => {
+            if (!res2.ok) {
+              if (res2.status !== 406) {
+                throw new Error(`${res2.status} ${res2.statusText}`);
+              } else {
+                return null;
+              }
+            }
+            return res2.json();
+          })
+          .then((data2) => {
+            dispatch(setRecipeID(data[0].recipeID));
+            dispatch(setTitle(data[0].title));
+            dispatch(setImage(data[0].image));
+            dispatch(setServings(data[0].servings));
+            dispatch(setCookingTime(data[0].cookingTime));
+            dispatch(setInstructions(data[0].instructions));
+            const ingredients = data[0].ingredients.map((item) => {
+              const ingredient = data2.find((item2) => item.ingredientID === item2.ingredientID);
+              return {
+                primaryText: ingredient.name,
+                secondaryText: `${item.quantity} ${item.unit}`,
+              };
+            });
+            dispatch(setIngredients(ingredients));
+          });
       })
       .catch((error) => setToast(error.toString()));
   };
@@ -109,7 +133,7 @@ export default () => {
                   bodyText={state.instructions}
                   onClickAction1={() => handleFavorite(state.recipeID)}
                   onClickAction2={handleHistory}
-                  onClickAction3={handleAddToCart}
+                  onClickAction3={() => handleAddToCart(state.recipeID)}
                   mainImage={state.image}
                 />
               </Cell>
@@ -123,7 +147,7 @@ export default () => {
           </Grid>
         </DrawerAppContent>
         {toast && (
-        <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+          <MaterialSnackbar message={toast} onClose={() => setToast('')} />
         )}
       </TopAppBarFixedAdjust>
     </View>
