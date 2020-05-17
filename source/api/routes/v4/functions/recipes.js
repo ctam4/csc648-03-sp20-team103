@@ -5,7 +5,14 @@ const { insertIngredient } = require('./ingredients.js');
 const selectRecipes = async (connection, recipeIDs, page, limit, sort, descending) => {
   let sql = 'SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes';
   if (recipeIDs !== null) {
-    sql += ' WHERE recipe_id IN (?)';
+    sql += ' WHERE (';
+    recipeIDs.forEach((_, index) => {
+      if (index > 0) {
+        sql += ' OR ';
+      }
+      sql += 'recipe_id=?';
+    });
+    sql += ')';
   }
   switch (sort) {
     case 'recipe_id':
@@ -21,7 +28,7 @@ const selectRecipes = async (connection, recipeIDs, page, limit, sort, descendin
   if (recipeIDs === null) {
     return connection.query(sql, [limit, (page - 1) * limit]);
   } else {
-    return connection.query(sql, [recipeIDs.join(', '), limit, (page - 1) * limit]);
+    return connection.query(sql, [recipeIDs, limit, (page - 1) * limit]);
   }
 };
 
@@ -40,8 +47,15 @@ const selectFavoritedRecipes = async (connection, userID, page, limit, sort, des
   return connection.query(sql + ' LIMIT ? OFFSET ?', [userID, limit, (page - 1) * limit]);
 };
 
-const selectRecipeIngredients = async (connection, recipeID) => {
-  return connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', [recipeID.join(', ')]);
+const selectRecipeIngredients = async (connection, recipeIDs) => {
+  let sql = 'SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE';
+  recipeIDs.forEach((_, index) => {
+    if (index > 0) {
+      sql += ' OR ';
+    }
+    sql += 'recipe_id=?';
+  });
+  return connection.query(sql, [recipeIDs]);
 };
 
 const insertRecipeIngredient = async (connection, recipeID, ingredientID, quantity, unit) => {
