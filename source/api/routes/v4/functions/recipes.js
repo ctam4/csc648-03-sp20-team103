@@ -47,15 +47,8 @@ const selectFavoritedRecipes = async (connection, userID, page, limit, sort, des
   return connection.query(sql + ' LIMIT ? OFFSET ?', [userID, limit, (page - 1) * limit]);
 };
 
-const selectRecipeIngredients = async (connection, recipeIDs) => {
-  let sql = 'SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE';
-  recipeIDs.forEach((_, index) => {
-    if (index > 0) {
-      sql += ' OR ';
-    }
-    sql += 'recipe_id=?';
-  });
-  return connection.query(sql, [...recipeIDs]);
+const selectRecipeIngredients = async (connection, recipeID) => {
+  return connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', recipeID);
 };
 
 const insertRecipeIngredient = async (connection, recipeID, ingredientID, quantity, unit) => {
