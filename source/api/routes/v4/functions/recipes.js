@@ -19,9 +19,9 @@ const selectRecipes = async (connection, recipeIDs, page, limit, sort, descendin
   }
   sql += ' LIMIT ? OFFSET ?';
   if (recipeIDs === null) {
-    return await connection.query(sql, [limit, (page - 1) * limit]);
+    return connection.query(sql, [limit, (page - 1) * limit]);
   } else {
-    return await connection.query(sql, [recipeIDs.join(', '), limit, (page - 1) * limit]);
+    return connection.query(sql, [recipeIDs.join(', '), limit, (page - 1) * limit]);
   }
 };
 
@@ -37,31 +37,31 @@ const selectFavoritedRecipes = async (connection, userID, page, limit, sort, des
       }
       break;
   }
-  return await connection.query(sql + ' LIMIT ? OFFSET ?', [userID, limit, (page - 1) * limit]);
+  return connection.query(sql + ' LIMIT ? OFFSET ?', [userID, limit, (page - 1) * limit]);
 };
 
 const selectRecipeIngredients = async (connection, recipeID) => {
-  return await connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', [recipeID.join(', ')]);
+  return connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', [recipeID.join(', ')]);
 };
 
 const insertRecipeIngredient = async (connection, recipeID, ingredientID, quantity, unit) => {
-  return await connection.query('INSERT IGNORE INTO v4_recipe_ingredients (recipe_id, ingredient_id, quantity, unit) VALUES (?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
+  return connection.query('INSERT IGNORE INTO v4_recipe_ingredients (recipe_id, ingredient_id, quantity, unit) VALUES (?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
 };
 
 const selectRecipeFavorites = async (connection, recipeID, fridgeID) => {
-  return await connection.query('SELECT recipe_favorite_id AS recipeFavoriteID, user_id AS userID, favorited_ts AS favoritedTS FROM v4_recipe_favorites WHERE recipe_id=? AND user_id IN (SELECT DISTINCT user_id FROM v4_fridges WHERE fridge_id=?) ORDER BY user_id ASC', [recipeID, fridgeID])
+  return connection.query('SELECT recipe_favorite_id AS recipeFavoriteID, user_id AS userID, favorited_ts AS favoritedTS FROM v4_recipe_favorites WHERE recipe_id=? AND user_id IN (SELECT DISTINCT user_id FROM v4_fridges WHERE fridge_id=?) ORDER BY user_id ASC', [recipeID, fridgeID])
 };
 
 const insertRecipeFavorite = async (connection, userID, recipeID) => {
-  return await connection.query('INSERT IGNORE INTO v4_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [userID, recipeID]);
+  return connection.query('INSERT IGNORE INTO v4_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [userID, recipeID]);
 };
 
 const deleteRecipeFavorite = async (connection, recipeFavoriteID) => {
-  return await connection.query('DELETE FROM v4_recipe_favorites WHERE recipe_favorite_id=?', [recipeFavoriteID]);
+  return connection.query('DELETE FROM v4_recipe_favorites WHERE recipe_favorite_id=?', [recipeFavoriteID]);
 };
 
 const insertRecipe = async (connection, recipeID, title, image, servings, cookingTime, instructions, ingredients) => {
-  return await connection.query('INSERT IGNORE INTO v4_recipes (recipe_id, title, image, servings, cooking_time, instructions) VALUES (?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions])
+  return connection.query('INSERT IGNORE INTO v4_recipes (recipe_id, title, image, servings, cooking_time, instructions) VALUES (?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions])
     .then((results) => {
       if (results.affectedRows > 0) {
         ingredients.forEach((item) => {

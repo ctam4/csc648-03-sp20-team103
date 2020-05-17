@@ -1,9 +1,9 @@
 const selectIngredients = async (connection, ingredientIDs, page, limit) => {
-  return await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v4_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id ASC LIMIT ? OFFSET ?', [ingredientIDs.join(','), limit, (page - 1) * limit]);
+  return connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v4_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id ASC LIMIT ? OFFSET ?', [ingredientIDs.join(','), limit, (page - 1) * limit]);
 };
 
 const insertIngredient = async (connection, ingredientID, name, image) => {
-  return await connection.query('INSERT IGNORE INTO v4_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image]);
+  return connection.query('INSERT IGNORE INTO v4_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image]);
 };
 
 const importIngredients = async (connection, ingredients) => {

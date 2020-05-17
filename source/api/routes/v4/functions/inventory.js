@@ -23,22 +23,22 @@ const selectInventory = async (connection, fridgeID, inventoryID, state, page, l
   }
   sql += ' LIMIT ? OFFSET ?';
   if (inventoryID === null) {
-    return await connection.query(sql, [fridgeID, limit, (page - 1) * limit]);
+    return connection.query(sql, [fridgeID, limit, (page - 1) * limit]);
   } else {
-    return await connection.query(sql, [fridgeID, inventoryID, limit, (page - 1) * limit]);
+    return connection.query(sql, [fridgeID, inventoryID, limit, (page - 1) * limit]);
   }
 };
 
 const insertInventoryLog = async (connection, invetoryID, userID, quantity, unit, action) => {
-  return await await connection.query('INSERT IGNORE INTO v4_inventory_log (inventory_id, user_id, quantity, unit, action) VALUES (?, ?, ?, ?, ?)', [invetoryID, userID, quantity, unit, action]);
+  return connection.query('INSERT IGNORE INTO v4_inventory_log (inventory_id, user_id, quantity, unit, action) VALUES (?, ?, ?, ?, ?)', [invetoryID, userID, quantity, unit, action]);
 };
 
 const insertInventory = async (connection, fridgeID, ingredientID, expirationDate, totalQuantity, unit, price) => {
-  return await connection.query('INSERT IGNORE INTO v4_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, price) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price]);
+  return connection.query('INSERT IGNORE INTO v4_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, price) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price]);
 };
 
 const updateInventory = async (connection, inventoryID, quantity) => {
-  return await connection.query('UPDATE IGNORE v4_inventory SET total_quantity=total_quantity-? WHERE inventory_id=? AND total_quantity-? >= 0', [quantity, inventoryID, quantity]);
+  return connection.query('UPDATE IGNORE v4_inventory SET total_quantity=total_quantity-? WHERE inventory_id=? AND total_quantity-? >= 0', [quantity, inventoryID, quantity]);
 };
 
 module.exports = {
