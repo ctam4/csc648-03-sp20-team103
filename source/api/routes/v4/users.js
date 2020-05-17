@@ -43,7 +43,7 @@ users.get('/', async (req, res) => {
           selectUsers(connection, fridgeID)
             .then((rows2) => {
               if (rows2.length > 0) {
-                res.json(rows2.filter((user, index) => index !== 'meta')).end();
+                res.json(rows2.filter((_, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }

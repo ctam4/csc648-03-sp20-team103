@@ -88,7 +88,6 @@ test.before(async (t) => {
                     return res4.json();
                   })
                   .then((data4) => {
-                    console.log(data4);
                     t.true(data4.length >= 2);
                     t.context.recipeID1 = data4[0].recipeID;
                     t.context.recipeID2 = data4[1].recipeID;

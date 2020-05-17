@@ -45,7 +45,7 @@ ingredients.get('/', async (req, res) => {
           selectIngredients(connection, ingredientIDs, 1, ingredientIDs.length)
             .then(async (rows2) => {
               if (rows2.length > 0) {
-                res.json(rows2.filter((ingredient, index) => index !== 'meta')).end();
+                res.json(rows2.filter((_, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -138,7 +138,7 @@ ingredients.get('/search', async (req, res) => {
                 selectIngredients(connection, ingredientIDs, page, limit)
                   .then((rows) => {
                     if (rows.length > 0) {
-                      res.json(rows.filter((ingredient, index) => index !== 'meta')).end();
+                      res.json(rows.filter((_, index) => index !== 'meta')).end();
                     } else {
                       res.sendStatus(406).end();
                     }
