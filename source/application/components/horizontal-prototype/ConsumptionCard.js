@@ -45,7 +45,7 @@ ConsumptionCard.propTypes = {
   userText1: PropTypes.string.isRequired,
   userText2: PropTypes.string.isRequired,
   onClickMain: PropTypes.func.isRequired,
-  mainImage: PropTypes.func.isRequired,
+  mainImage: PropTypes.string.isRequired,
   mainText: PropTypes.string.isRequired,
   onClickAction1: PropTypes.func.isRequired,
   onClickAction2: PropTypes.func.isRequired,

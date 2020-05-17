@@ -44,10 +44,10 @@ function MaterialTopAppBarDialog(props) {
 }
 
 MaterialTopAppBarDialog.propTypes = {
-  icon1: PropTypes.func.isRequired,
+  icon1: PropTypes.string,
   onClick1: PropTypes.func.isRequired,
-  icon2: PropTypes.func.isRequired,
-  onClick2: PropTypes.func.isRequired,
+  icon2: PropTypes.string,
+  onClick2: PropTypes.func,
 };
 
 export default MaterialTopAppBarDialog;

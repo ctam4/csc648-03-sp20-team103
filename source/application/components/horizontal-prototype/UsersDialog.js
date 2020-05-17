@@ -57,7 +57,7 @@ function UsersDialog(props) {
 }
 
 UsersDialog.propTypes = {
-  open: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
   onChange1: PropTypes.func.isRequired,

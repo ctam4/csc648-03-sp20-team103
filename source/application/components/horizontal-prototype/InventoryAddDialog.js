@@ -73,7 +73,7 @@ function InventoryAddDialog(props) {
 }
 
 InventoryAddDialog.propTypes = {
-  open: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   quantity: PropTypes.string.isRequired,
   onChange1: PropTypes.func.isRequired,

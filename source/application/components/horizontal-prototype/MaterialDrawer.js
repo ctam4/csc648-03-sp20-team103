@@ -67,10 +67,10 @@ function MaterialDrawer(props) {
 }
 
 MaterialDrawer.propTypes = {
-  open: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
-  selectedIndex: PropTypes.func.isRequired,
+  selectedIndex: PropTypes.number.isRequired,
 };
 
 export default MaterialDrawer;

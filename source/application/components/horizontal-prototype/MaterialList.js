@@ -22,7 +22,9 @@ function MaterialList(props) {
     </List>
   );
 }
+
 MaterialList.propTypes = {
-  items: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired,
 };
+
 export default MaterialList;

@@ -44,11 +44,11 @@ function MaterialConfirmationDialog(props) {
 }
 
 MaterialConfirmationDialog.propsTypes = {
-  open: PropTypes.func.isRequired,
+  open: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   title: PropTypes.string.isRequired,
   handleSelect: PropTypes.func.isRequired,
-  choices: PropTypes.string.isRequired,
+  choices: PropTypes.array.isRequired,
 };
 
 export default MaterialConfirmationDialog;

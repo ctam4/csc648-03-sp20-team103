@@ -34,7 +34,6 @@ function MealPlansCardFull(props) {
   );
 }
 
-
 MealPlansCardFull.propTypes = {
   mainText1: PropTypes.string.isRequired,
   mainText2: PropTypes.string.isRequired,

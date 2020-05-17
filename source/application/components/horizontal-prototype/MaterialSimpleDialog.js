@@ -12,6 +12,7 @@ function MaterialSimpleDialog(props) {
   const {
     open, onClose, handleSelect, choices, title,
   } = props;
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>{title}</DialogTitle>
@@ -30,10 +31,10 @@ function MaterialSimpleDialog(props) {
 }
 
 MaterialSimpleDialog.propTypes = {
-  open: PropTypes.func.isRequired,
+  open: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   handleSelect: PropTypes.func.isRequired,
-  choices: PropTypes.func.isRequired,
+  choices: PropTypes.array.isRequired,
   title: PropTypes.string.isRequired,
 };
 

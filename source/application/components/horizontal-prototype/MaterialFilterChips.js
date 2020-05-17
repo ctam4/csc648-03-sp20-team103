@@ -18,9 +18,9 @@ function MaterialFilterChips(props) {
 }
 
 MaterialFilterChips.propTypes = {
-  selectedChipIds: PropTypes.func.isRequired,
+  selectedChipIds: PropTypes.string.isRequired,
   handleSelect: PropTypes.func.isRequired,
-  choices: PropTypes.func.isRequired,
+  choices: PropTypes.array.isRequired,
 };
 
 export default MaterialFilterChips;

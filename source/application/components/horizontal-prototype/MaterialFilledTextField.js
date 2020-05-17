@@ -31,9 +31,10 @@ MaterialFilledTextField.propTypes = {
   label: PropTypes.string.isRequired,
   helperText: PropTypes.string.isRequired,
   onTrailingIconSelect: PropTypes.func.isRequired,
-  trailingIcon: PropTypes.func.isRequired,
+  trailingIcon: PropTypes.string,
   inputType: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
+
 export default MaterialFilledTextField;

@@ -29,9 +29,9 @@ function MaterialSingleSelectionList(props) {
 }
 
 MaterialSingleSelectionList.propTypes = {
-  selectedIndex: PropTypes.func.isRequired,
+  selectedIndex: PropTypes.number.isRequired,
   handleSelect: PropTypes.func.isRequired,
-  items: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired,
 };
 
 export default MaterialSingleSelectionList;

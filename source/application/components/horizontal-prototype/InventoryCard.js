@@ -34,7 +34,7 @@ function InventoryCard(props) {
 
 InventoryCard.propTypes = {
   onClickMain: PropTypes.func.isRequired,
-  mainImage: PropTypes.func.isRequired,
+  mainImage: PropTypes.string.isRequired,
   mainText1: PropTypes.string.isRequired,
   mainText2: PropTypes.string.isRequired,
   onClickAction1: PropTypes.func.isRequired,

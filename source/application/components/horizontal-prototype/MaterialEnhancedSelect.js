@@ -24,7 +24,7 @@ MaterialEnhancedSelect.propTypes = {
   label: PropTypes.string.isRequired,
   value: PropTypes.string.isRequired,
   onEnhancedChange: PropTypes.func.isRequired,
-  options: PropTypes.func.isRequired,
+  options: PropTypes.array.isRequired,
 };
 
 export default MaterialEnhancedSelect;

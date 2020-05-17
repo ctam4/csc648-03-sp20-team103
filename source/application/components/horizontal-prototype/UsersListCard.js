@@ -6,14 +6,16 @@ import MaterialSingleSelectionList from './MaterialSingleSelectionList';
 
 function UsersListCard(props) {
   const { items, handleSelect } = props;
+
   return (
     <MaterialCard className="mdc-card">
       <MaterialSingleSelectionList items={items} handleSelect={handleSelect} />
     </MaterialCard>
   );
 }
+
 UsersListCard.propTypes = {
-  items: PropTypes.string.isRequired,
+  items: PropTypes.array.isRequired,
   handleSelect: PropTypes.func.isRequired,
 };
 

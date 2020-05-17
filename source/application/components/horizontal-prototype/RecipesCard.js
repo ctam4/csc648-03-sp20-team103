@@ -60,14 +60,14 @@ function RecipesCard(props) {
 
 RecipesCard.propTypes = {
   onClickMain: PropTypes.func.isRequired,
-  mainImage: PropTypes.func.isRequired,
+  mainImage: PropTypes.string.isRequired,
   mainText1: PropTypes.string.isRequired,
   mainText2: PropTypes.string.isRequired,
-  onClickAction1: PropTypes.func.isRequired,
-  actionText1: PropTypes.string.isRequired,
-  onClickAction2: PropTypes.func.isRequired,
-  actionText2: PropTypes.string.isRequired,
-  onClickAction3: PropTypes.func.isRequired,
+  onClickAction1: PropTypes.func,
+  actionText1: PropTypes.string,
+  onClickAction2: PropTypes.func,
+  actionText2: PropTypes.string,
+  onClickAction3: PropTypes.func,
 };
 
 export default RecipesCard;

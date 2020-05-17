@@ -52,7 +52,7 @@ function MaterialTopAppBarSearchDialog(props) {
 }
 
 MaterialTopAppBarSearchDialog.propTypes = {
-  icon1: PropTypes.func.isRequired,
+  icon1: PropTypes.string,
   onClick1: PropTypes.func.isRequired,
   onTrailingIconSelect: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,

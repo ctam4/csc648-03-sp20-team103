@@ -17,6 +17,7 @@ function IngredientsListCard(props) {
   const {
     list1, list2,
   } = props;
+
   return (
     <MaterialCard className="mdc-card">
       <ListGroup>
@@ -41,8 +42,8 @@ function IngredientsListCard(props) {
 }
 
 IngredientsListCard.propTypes = {
-  list1: PropTypes.string.isRequired,
-  list2: PropTypes.string.isRequired,
+  list1: PropTypes.array,
+  list2: PropTypes.array,
 };
 
 export default IngredientsListCard;

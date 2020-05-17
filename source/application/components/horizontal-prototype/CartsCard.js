@@ -9,6 +9,7 @@ function CartsCard(props) {
   const {
     onClickMain, mainText1, mainText2, bodyText, onClickAction1, actionText1, onClickAction2, actionText2,
   } = props;
+
   return (
     <MaterialCard className="mdc-card">
       <CardPrimaryContent onClick={onClickMain} style={{ padding: 16 }}>
@@ -25,6 +26,7 @@ function CartsCard(props) {
     </MaterialCard>
   );
 }
+
 CartsCard.propTypes = {
   onClickMain: PropTypes.func.isRequired,
   mainText1: PropTypes.string.isRequired,
