@@ -20,7 +20,14 @@ const importIngredients = async (connection, ingredients) => {
       return item.ingredientID;
     });
     // remove existing
-    await connection.query('SELECT DISTINCT ingredient_id AS ingredientID FROM v4_ingredients WHERE ingredient_id IN (?)', [ingredientIDs])
+    let sql = 'SELECT DISTINCT ingredient_id AS ingredientID FROM v4_ingredients WHERE ';
+    ingredientIDs.forEach((_, index) => {
+      if (index > 0) {
+        sql += ' OR ';
+      }
+      sql += 'ingredient_id=?';
+    });
+    await connection.query(sql, [...ingredientIDs])
       .then((rows) => {
         if (rows.length > 0) {
           rows.forEach((ingredient, index) => {

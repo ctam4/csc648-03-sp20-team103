@@ -100,7 +100,14 @@ const insertRecipe = async (connection, recipeID, title, image, servings, cookin
 const importRecipes = async (connection, recipeIDs) => {
   if (recipeIDs.length > 0) {
     // remove existing
-    await connection.query('SELECT DISTINCT recipe_id AS recipeID FROM v4_recipes WHERE recipe_id IN (?)', [recipeIDs])
+    let sql = 'SELECT DISTINCT recipe_id AS recipeID FROM v4_recipes WHERE ';
+    recipeIDs.forEach((_, index) => {
+      if (index > 0) {
+        sql += ' OR ';
+      }
+      sql += 'recipe_id=?';
+    });
+    await connection.query(sql, recipeIDs)
       .then((rows) => {
         if (rows.length > 0) {
           rows.forEach((recipe, index) => {
