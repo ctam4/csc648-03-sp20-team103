@@ -63,7 +63,7 @@ const insertRecipeIngredient = async (connection, recipeID, ingredientID, quanti
 };
 
 const selectRecipeFavorites = async (connection, recipeID, fridgeID) => {
-  return connection.query('SELECT recipe_favorite_id AS recipeFavoriteID, user_id AS userID, favorited_ts AS favoritedTS FROM v4_recipe_favorites WHERE recipe_id=? AND user_id IN (SELECT DISTINCT user_id FROM v4_fridges WHERE fridge_id=?) ORDER BY user_id ASC', [recipeID, fridgeID])
+  return connection.query('SELECT user_id AS userID, recipe_id AS recipeID, favorited_ts AS favoritedTS FROM v4_recipe_favorites WHERE recipe_id=? AND user_id IN (SELECT DISTINCT user_id FROM v4_fridges WHERE fridge_id=?) ORDER BY user_id ASC', [recipeID, fridgeID])
 };
 
 const insertRecipeFavorite = async (connection, userID, recipeID) => {
