@@ -4,6 +4,7 @@ import Dialog, { DialogTitle, DialogContent } from '@material/react-dialog';
 import List, { ListItem, ListItemGraphic, ListItemText } from '@material/react-list';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-dialog/dist/dialog.css';
+import '@material/react-button/dist/button.css';
 import '@material/react-list/dist/list.css';
 import '@material/react-material-icon/dist/material-icon.css';
 

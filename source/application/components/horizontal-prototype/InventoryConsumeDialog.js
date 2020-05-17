@@ -6,6 +6,7 @@ import Dialog, {
 } from '@material/react-dialog';
 import MaterialFilledTextField from './MaterialFilledTextField';
 import '@material/react-dialog/dist/dialog.css';
+import '@material/react-button/dist/button.css';
 
 const strings = new LocalizedStrings({
   en: {
@@ -54,10 +55,10 @@ function InventoryConsumeDialog(props) {
 InventoryConsumeDialog.propTypes = {
   open: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  quantity: PropTypes.string.isRequired, 
-  onChange1: PropTypes.func.isRequired, 
-  onTrailingIconSelect1: PropTypes.func.isRequired, 
-  unit: PropTypes.string.isRequired, 
+  quantity: PropTypes.string.isRequired,
+  onChange1: PropTypes.func.isRequired,
+  onTrailingIconSelect1: PropTypes.func.isRequired,
+  unit: PropTypes.string.isRequired,
   onChange2: PropTypes.func.isRequired,
   onTrailingIconSelect2: PropTypes.func.isRequired,
 };

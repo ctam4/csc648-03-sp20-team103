@@ -6,6 +6,7 @@ import Dialog, {
 } from '@material/react-dialog';
 import MaterialFilledTextField from './MaterialFilledTextField';
 import '@material/react-dialog/dist/dialog.css';
+import '@material/react-button/dist/button.css';
 
 const strings = new LocalizedStrings({
   en: {

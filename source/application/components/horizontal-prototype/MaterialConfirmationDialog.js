@@ -7,6 +7,7 @@ import Dialog, {
 import List, { ListItem, ListItemText } from '@material/react-list';
 import MaterialCheckbox from './MaterialCheckbox';
 import '@material/react-dialog/dist/dialog.css';
+import '@material/react-button/dist/button.css';
 import '@material/react-list/dist/list.css';
 
 const strings = new LocalizedStrings({
