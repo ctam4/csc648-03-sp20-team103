@@ -70,8 +70,8 @@ const insertRecipeFavorite = async (connection, userID, recipeID) => {
   return connection.query('INSERT IGNORE INTO v4_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [userID, recipeID]);
 };
 
-const deleteRecipeFavorite = async (connection, recipeFavoriteID) => {
-  return connection.query('DELETE FROM v4_recipe_favorites WHERE recipe_favorite_id=?', [recipeFavoriteID]);
+const deleteRecipeFavorite = async (connection, userID, recipeID) => {
+  return connection.query('DELETE FROM v4_recipe_favorites WHERE user_id=? AND recipe_id=?', [userID, recipeID]);
 };
 
 const insertRecipe = async (connection, recipeID, title, image, servings, cookingTime, instructions, ingredients) => {

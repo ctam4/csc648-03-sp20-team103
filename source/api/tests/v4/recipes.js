@@ -324,16 +324,11 @@ test("/recipes/favorite | POST | 200", async (t) => {
     }),
   }).then((res) => {
     t.is(res.status, 200);
-    return res.json();
-    })
-    .then((data) => {
-        t.is(Object.keys(data).length, 1);
-        t.true("recipeFavoriteID" in data);
   });
 });
 
 test("/recipes/favorite | DELETE | 400", async (t) => {
-  await fetch(t.context.baseUrl + "/v4/recipes/favorite?session=abcd&recipeFavoriteID=1", {
+  await fetch(t.context.baseUrl + "/v4/recipes/favorite?session=abcd&userID=1", {
     method: "delete",
     headers: {
       Accept: "application/json",
@@ -345,7 +340,7 @@ test("/recipes/favorite | DELETE | 400", async (t) => {
 });
 
 test("/recipes/favorite | DELETE | 401", async (t) => {
-  await fetch(t.context.baseUrl + "/v4/recipes/favorite?session=123456789012345678901234567890123456&recipeFavoriteID=1", {
+  await fetch(t.context.baseUrl + "/v4/recipes/favorite?session=123456789012345678901234567890123456&userID=1&recipeID=1", {
     method: "delete",
     headers: {
       Accept: "application/json",
@@ -357,7 +352,7 @@ test("/recipes/favorite | DELETE | 401", async (t) => {
 });
 
 test("/recipes/favorite | DELETE | 406", async (t) => {
-  await fetch(t.context.baseUrl + "/v4/recipes/favorite?session="+t.context.session+"&recipeFavoriteID=134567", {
+  await fetch(t.context.baseUrl + "/v4/recipes/favorite?session="+t.context.session+"&userID=1&recipeID=1", {
     method: "delete",
     headers: {
       Accept: "application/json",
@@ -381,15 +376,15 @@ test("/recipes/favorite | DELETE | 200", async (t) => {
       session: t.context.session,
     }),
   })
-    .then((res) => res.json())
-    .then(async (data) => {
-      console.log(data);
+    .then(async (res) => {
       await fetch(
         t.context.baseUrl +
           "/v4/recipes/favorite?session=" +
           t.context.session +
-          "&recipeFavoriteID=" +
-          data.recipeFavoriteID,
+          "&userID=" +
+          t.context.userID +
+          "&recipeID=" +
+          t.context.recipeID2,
         {
           method: "delete",
           headers: {

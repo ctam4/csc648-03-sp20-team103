@@ -240,23 +240,25 @@ recipes.post('/favorite', async (req, res) => {
  * DELETE /v4/recipes/favorite
  * @description Delete favorited recipe for current user.
  * @param {string} session
- * @param {integer} recipeFavoriteID
+ * @param {integer} userID
+ * @param {integer} recipeID
  */
 recipes.delete('/favorite', async (req, res) => {
   // check params data type
-  let session, recipeFavoriteID;
+  let session, userID, recipeID;
   try {
     if (typeof req.query.session !== 'string') {
       throw new TypeError();
     }
     session = req.query.session;
-    recipeFavoriteID = req.query.recipeFavoriteID;
+    userID = Number.parseInt(req.query.userID, 10);
+    recipeID = Number.parseInt(req.query.recipeID, 10);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
   // check params data range
-  if (session.length !== 36 || recipeFavoriteID <= 0) {
+  if (session.length !== 36 || Number.isNaN(userID) || Number.isNaN(recipeID) || userID < 0 || recipeID < 0) {
     res.sendStatus(400).end();
     return;
   }
@@ -266,7 +268,7 @@ recipes.delete('/favorite', async (req, res) => {
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
-          deleteRecipeFavorite(connection, recipeFavoriteID)
+          deleteRecipeFavorite(connection, userID, recipeID)
             .then((results) => {
               if (results.affectedRows > 0) {
                 res.sendStatus(200).end();
