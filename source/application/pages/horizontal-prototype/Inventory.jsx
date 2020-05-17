@@ -39,8 +39,8 @@ export default () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [dialogOpen, setDialogOpen] = useState(null);
   const [inventoryID, setInventoryID] = useState(null);
-  const [quantity, setQuantity] = useState(0.0);
-  const [unit, setUnit] = useState('');
+  const [dialogQuantity, setDialogQuantity] = useState(0.0);
+  const [dialogUnit, setDIalogUnit] = useState('');
   const [toast, setToast] = useState('');
   const [inventory, setInventory] = useState([]);
   const [ingredients, setIngredients] = useState([]);
@@ -183,8 +183,8 @@ export default () => {
               session: cookies.session,
               userID: cookies.userID,
               inventoryID,
-              quantity,
-              unit,
+              quantity: dialogQuantity,
+              quantity: dialogUnit,
             }),
           })
             .then((res) => {
@@ -255,22 +255,22 @@ export default () => {
       </View>
       <InventoryConsumeDialog
         open={dialogOpen === 'consume'}
-        quantity={quantity}
-        unit={unit}
-        onChange1={(e) => setQuantity(e.target.value)}
-        onChange2={(e) => setUnit(e.target.value)}
-        onTrailingIconSelect1={() => setQuantity(1.0)}
-        onTrailingIconSelect2={() => setUnit('')}
+        quantity={dialogQuantity}
+        unit={dialogUnit}
+        onChange1={(e) => setDialogQuantity(e.target.value)}
+        onChange2={(e) => setDialogUnit(e.target.value)}
+        onTrailingIconSelect1={() => setDialogQuantity(1.0)}
+        onTrailingIconSelect2={() => setDialogUnit('')}
         onClose={handleSubmission}
       />
       <InventoryDiscardDialog
         open={dialogOpen === 'discard'}
-        quantity={quantity}
-        unit={unit}
-        onChange1={(e) => setQuantity(e.target.value)}
-        onChange2={(e) => setUnit(e.target.value)}
-        onTrailingIconSelect1={() => setQuantity(1.0)}
-        onTrailingIconSelect2={() => setUnit('')}
+        quantity={dialogQuantity}
+        unit={dialogUnit}
+        onChange1={(e) => setDialogQuantity(e.target.value)}
+        onChange2={(e) => setDialogUnit(e.target.value)}
+        onTrailingIconSelect1={() => setDialogQuantity(1.0)}
+        onTrailingIconSelect2={() => setDialogUnit('')}
         onClose={handleSubmission}
       />
     </>
