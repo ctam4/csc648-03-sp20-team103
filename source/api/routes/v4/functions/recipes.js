@@ -107,7 +107,7 @@ const importRecipes = async (connection, recipeIDs) => {
       }
       sql += 'recipe_id=?';
     });
-    await connection.query(sql, recipeIDs)
+    await connection.query(sql, [...recipeIDs])
       .then((rows) => {
         if (rows.length > 0) {
           rows.forEach((recipe, index) => {
