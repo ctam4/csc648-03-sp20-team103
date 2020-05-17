@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppRegistry } from 'react-native';
 
 import RecipesSearch from '../pages/horizontal-prototype/RecipesSearch.jsx';

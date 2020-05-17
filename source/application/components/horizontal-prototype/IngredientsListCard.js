@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
+import React, { } from 'react';
+import PropTypes from 'prop-types';
 
-import MaterialCard from './MaterialCard';
-import MaterialList from './MaterialList';
 import { ListGroup, ListGroupSubheader, ListDivider } from '@material/react-list';
 import LocalizedStrings from 'react-localization';
+import MaterialCard from './MaterialCard';
+import MaterialList from './MaterialList';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     required_ingredients: 'Ingredients (required)',
     optional_ingredients: 'Ingredients (optional)',
@@ -13,27 +14,35 @@ let strings = new LocalizedStrings({
 });
 
 function IngredientsListCard(props) {
+  const {
+    list1, list2,
+  } = props;
   return (
-    <MaterialCard className='mdc-card'>
+    <MaterialCard className="mdc-card">
       <ListGroup>
-        {props.list1 && (
+        {list1 && (
         <>
-          <ListGroupSubheader tag='h2'>{strings.required_ingredients}</ListGroupSubheader>
-          <MaterialList items={props.list1} />
+          <ListGroupSubheader tag="h2">{strings.required_ingredients}</ListGroupSubheader>
+          <MaterialList items={list1} />
         </>
         )}
-        {props.list1 && props.list2 && (
-        <ListDivider tag='div' />
+        {list1 && list2 && (
+        <ListDivider tag="div" />
         )}
-        {props.list2 && (
+        {list2 && (
         <>
-          <ListGroupSubheader tag='h2'>{strings.optional_ingredients}</ListGroupSubheader>
-          <MaterialList items={props.list2} />
+          <ListGroupSubheader tag="h2">{strings.optional_ingredients}</ListGroupSubheader>
+          <MaterialList items={list2} />
         </>
         )}
       </ListGroup>
     </MaterialCard>
   );
 }
+
+IngredientsListCard.propTypes = {
+  list1: PropTypes.string.isRequired,
+  list2: PropTypes.string.isRequired,
+};
 
 export default IngredientsListCard;

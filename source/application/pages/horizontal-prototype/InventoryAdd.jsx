@@ -1,7 +1,16 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useCookies } from 'react-cookie';
 
-import { inventoryAddReducer, initialState } from '../../reducers/horizontal-prototype/InventoryAdd';
+
+import { View, useWindowDimensions } from 'react-native';
+import { DrawerAppContent } from '@material/react-drawer';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import MaterialIcon from '@material/react-material-icon';
+import '@material/react-layout-grid/dist/layout-grid.css';
+import '@material/react-material-icon/dist/material-icon.css';
+import LocalizedStrings from 'react-localization';
+import Moment from 'moment';
 import {
   setSearchOpen,
   setDialogOpen,
@@ -13,16 +22,7 @@ import {
   setPrice,
   setExpirationDate,
 } from '../../actions/horizontal-prototype/InventoryAdd';
-
-import { View, useWindowDimensions } from 'react-native';
-import { DrawerAppContent } from '@material/react-drawer';
-import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
-import { Cell, Grid, Row } from '@material/react-layout-grid';
-import MaterialIcon from '@material/react-material-icon';
-import '@material/react-layout-grid/dist/layout-grid.css';
-import '@material/react-material-icon/dist/material-icon.css';
-import LocalizedStrings from 'react-localization';
-import Moment from 'moment';
+import { inventoryAddReducer, initialState } from '../../reducers/horizontal-prototype/InventoryAdd';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
@@ -34,7 +34,7 @@ import InventoryAddDialog from '../../components/horizontal-prototype/InventoryA
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     expiring: 'Expiring',
     expired: 'Expired',
@@ -88,28 +88,26 @@ export default () => {
   const handleSearch = async (keywords) => {
     dispatch(setKeywords(keywords));
     if (state.keywords.length > 0) {
-      await fetch(apiUrl + '/v4/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+      await fetch(`${apiUrl}/v4/ingredients/search?session=${cookies.session}&userID=${cookies.userID}&query=${state.keywords}`, {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
         .then((res) => {
           if (!res.ok) {
-            throw new Error(res.status + ' ' + res.statusText);
+            throw new Error(`${res.status} ${res.statusText}`);
           }
           return res.json();
         })
         .then((data) => {
           setIngredients(data);
-          const ingredients = data.map((item) => {
-            return {
-              key: item.ingredientID,
-              primaryText: item.name,
-              ingredient: item,
-            };
-          });
+          const ingredients = data.map((item) => ({
+            key: item.ingredientID,
+            primaryText: item.name,
+            ingredient: item,
+          }));
           dispatch(setAutoComplete(ingredients));
         })
         .catch((error) => setToast(error.toString()));
@@ -117,7 +115,7 @@ export default () => {
   };
 
   const handleAutoComplete = async (value) => {
-    dispatch(setIngredientID(state.autoComplete[value].key))
+    dispatch(setIngredientID(state.autoComplete[value].key));
     toggleDialog();
   };
 
@@ -129,10 +127,10 @@ export default () => {
   const handleSave = async () => {
     if (inventory.length > 0) {
       await Promise.all(inventory.forEach(async (item) => {
-        await fetch(apiUrl + '/v4/inventory/add/manual', {
+        await fetch(`${apiUrl}/v4/inventory/add/manual`, {
           method: 'post',
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -147,7 +145,7 @@ export default () => {
         })
           .then((res) => {
             if (!res.ok) {
-              throw new Error(res.status + ' ' + res.statusText);
+              throw new Error(`${res.status} ${res.statusText}`);
             }
           })
           .catch((error) => setToast(error.toString()));
@@ -160,7 +158,7 @@ export default () => {
   const handleSubmission = (value) => {
     toggleDialog();
     if (value === 'confirm') {
-      let ingredient = ingredients.find((item) => item.ingredientID === state.ingredientID);
+      const ingredient = ingredients.find((item) => item.ingredientID === state.ingredientID);
       inventory.push({
         ingredientID: state.ingredientID,
         quantity: state.quantity,
@@ -169,19 +167,19 @@ export default () => {
         expirationDate: state.expirationDate,
         title: ingredient.name,
         subtitle: (() => {
-          let value = state.quantity + ' ' + state.unit;
+          let value = `${state.quantity} ${state.unit}`;
           if (state.expirationDate) {
             value += ' | ';
-            let expirationDate = Moment.utc(state.expirationDate);
+            const expirationDate = Moment.utc(state.expirationDate);
             if (expirationDate.unix() >= Moment.utc()) {
               value += strings.expiring;
             } else {
               value += strings.expired;
             }
-            value += ' ' + expirationDate.fromNow();
+            value += ` ${expirationDate.fromNow()}`;
           }
           if (state.price) {
-            value += ' | $' + state.price;
+            value += ` | $${state.price}`;
           }
           return value;
         })(),
@@ -193,13 +191,13 @@ export default () => {
 
   return (
     <>
-      <View className='drawer-container'>
+      <View className="drawer-container">
         {!state.searchOpen && (
           <MaterialTopAppBarDialog
-            icon1={'arrow_back'}
+            icon1="arrow_back"
             onClick1={handleGoBack}
             onClick2={toggleSearch}
-          ></MaterialTopAppBarDialog>
+          />
         )}
         {state.searchOpen && (
           <MaterialTopAppBarSearchDialog
@@ -207,10 +205,10 @@ export default () => {
             onClick1={toggleSearch}
             onChange={(e) => handleSearch(e.target.value)}
             onTrailingIconSelect={() => dispatch(setKeywords(''))}
-          ></MaterialTopAppBarSearchDialog>
+          />
         )}
-        <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-          <DrawerAppContent className='drawer-app-content'>
+        <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+          <DrawerAppContent className="drawer-app-content">
             <Grid style={{ height: useWindowDimensions().height - 64 }}>
               {(state.searchOpen && (
               <Row>
@@ -218,7 +216,7 @@ export default () => {
                   <MaterialSingleSelectionList
                     items={state.autoComplete}
                     handleSelect={handleAutoComplete}
-                  ></MaterialSingleSelectionList>
+                  />
                 </Cell>
               </Row>
               ))}
@@ -232,7 +230,7 @@ export default () => {
                       actionText1={strings.remove}
                       onClickAction1={() => handleRemove(item.key)}
                       mainImage={item.image}
-                    ></InventoryCard>
+                    />
                   </Cell>
                 ))}
               </Row>
@@ -244,10 +242,10 @@ export default () => {
           )}
           {!state.searchOpen && (
           <MaterialFab
-            icon={<MaterialIcon icon='check' />}
+            icon={<MaterialIcon icon="check" />}
             style={{ position: 'absolute', right: 16, bottom: 16 }}
             onClick={handleSave}
-          ></MaterialFab>
+          />
           )}
         </TopAppBarFixedAdjust>
       </View>
@@ -266,7 +264,7 @@ export default () => {
         onTrailingIconSelect3={() => dispatch(setPrice(0))}
         onTrailingIconSelect4={() => dispatch(setExpirationDate(''))}
         onClose={handleSubmission}
-      ></InventoryAddDialog>
+      />
     </>
   );
 };

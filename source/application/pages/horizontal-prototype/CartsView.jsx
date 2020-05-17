@@ -14,7 +14,7 @@ import CartsCardFull from '../../components/horizontal-prototype/CartsCardFull';
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     clear_cart: 'Clear cart',
   },
@@ -35,27 +35,27 @@ export default () => {
 
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    await fetch(apiUrl + '/v2/carts?carts_id=' + urlParams.get('id'), {
+    await fetch(`${apiUrl}/v2/carts?carts_id=${urlParams.get('id')}`, {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error('error ' + res.status);
-      }
-      return res.json();
-    })
-    .then((data) => {
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`error ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
       // TODO: fetch Carts info of user
-      setQuantity(data.quantity);
-      setUnit(data.unit);
-      setPrice(data.price);
-      setState(data.state);
-    })
-    .catch((error) => setToast(error.toString()));
+        setQuantity(data.quantity);
+        setUnit(data.unit);
+        setPrice(data.price);
+        setState(data.state);
+      })
+      .catch((error) => setToast(error.toString()));
   };
 
   const handleGoBack = () => {
@@ -69,21 +69,21 @@ export default () => {
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       <MaterialTopAppBarDialog
         onClick1={handleGoBack}
-      ></MaterialTopAppBarDialog>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-        <DrawerAppContent className='drawer-app-content'>
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
               <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
                 <CartsCardFull
-                  mainText1='Apple'
-                  mainText2='whatever'
+                  mainText1="Apple"
+                  mainText2="whatever"
                   actionText1={strings.clear_cart}
                   onClickAction1={handleClearCart}
-                ></CartsCardFull>
+                />
               </Cell>
             </Row>
           </Grid>

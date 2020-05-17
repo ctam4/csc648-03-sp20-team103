@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import {
   Body1,
   Body2,

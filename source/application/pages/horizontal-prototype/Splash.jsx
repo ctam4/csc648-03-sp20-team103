@@ -1,6 +1,8 @@
 import React, { useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
+import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { splashReducer, initialState } from '../../reducers/horizontal-prototype/Splash';
 import {
   setSerialNumber,
@@ -9,9 +11,7 @@ import {
   setUsers,
 } from '../../actions/horizontal-prototype/Splash';
 
-import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
-import LocalizedStrings from 'react-localization';
 
 import { Headline1 } from '../../components/horizontal-prototype/MaterialTypography';
 import MaterialOutlinedTextField from '../../components/horizontal-prototype/MaterialOutlinedTextField';
@@ -20,7 +20,7 @@ import MaterialSimpleDialog from '../../components/horizontal-prototype/Material
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     continue: 'Continue',
     serial_number: 'Serial number',
@@ -46,31 +46,31 @@ export default () => {
 
   const load = async () => {
     // for dummy fridge
-    await fetch(apiUrl + '/v4/register', {
+    await fetch(`${apiUrl}/v4/register`, {
       method: 'post',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(res.status + ' ' + res.statusText);
-      }
-      return res.json();
-    })
-    .then((data) => {
-      dispatch(setSerialNumber(data.serialNumber));
-      dispatch(setPIN(data.pin));
-    })
-    .catch(console.log);
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`${res.status} ${res.statusText}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        dispatch(setSerialNumber(data.serialNumber));
+        dispatch(setPIN(data.pin));
+      })
+      .catch(console.log);
   };
 
   const handleAuth = async () => {
-    await fetch(apiUrl + '/v4/login', {
+    await fetch(`${apiUrl}/v4/login`, {
       method: 'post',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -78,53 +78,53 @@ export default () => {
         pin: state.pin,
       }),
     })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(res.status + ' ' + res.statusText);
-      }
-      return res.json();
-    })
-    .then(async (data) => {
-      setCookie('session', data.session, {
-        path: '/horizontal-prototype/',
-        // httpOnly: true,
-        expires: new Date(data.expires_ts),
-      });
-      await fetch(apiUrl + '/v4/users?session=' + data.session, {
-        method: 'get',
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((res2) => {
-        if (!res2.ok) {
-          if (res2.status !== 406) {
-            throw new Error(res2.status + ' ' + res2.statusText);
-          } else {
-            return null;
-          }
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`${res.status} ${res.statusText}`);
         }
-        return res2.json();
+        return res.json();
       })
-      .then((data2) => {
-        let users = [];
-        if (data2 !== null) {
-          data2.foreach((item) => users.push({
-            key: item.userID,
-            text: item.name,
-          }));
-        }
-        dispatch(setUsers(users));
+      .then(async (data) => {
+        setCookie('session', data.session, {
+          path: '/horizontal-prototype/',
+          // httpOnly: true,
+          expires: new Date(data.expires_ts),
+        });
+        await fetch(`${apiUrl}/v4/users?session=${data.session}`, {
+          method: 'get',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        })
+          .then((res2) => {
+            if (!res2.ok) {
+              if (res2.status !== 406) {
+                throw new Error(`${res2.status} ${res2.statusText}`);
+              } else {
+                return null;
+              }
+            }
+            return res2.json();
+          })
+          .then((data2) => {
+            const users = [];
+            if (data2 !== null) {
+              data2.foreach((item) => users.push({
+                key: item.userID,
+                text: item.name,
+              }));
+            }
+            dispatch(setUsers(users));
+          })
+          .finally(() => {
+            const { users } = state;
+            users.push({ text: strings.new_user });
+            dispatch(setUsers(users));
+            toggleDialog();
+          });
       })
-      .finally(() => {
-        let users = state.users;
-        users.push({ text: strings.new_user });
-        dispatch(setUsers(users));
-        toggleDialog();
-      });
-    })
-    .catch(console.log);
+      .catch(console.log);
     // @todo snackbar
   };
 
@@ -157,7 +157,7 @@ export default () => {
               value={state.serialNumber}
               onChange={(e) => dispatch(setSerialNumber(e.target.value))}
               onTrailingIconSelect={() => dispatch(setSerialNumber(''))}
-            ></MaterialOutlinedTextField>
+            />
           </Cell>
           <Cell columns={12}>
             <MaterialOutlinedTextField
@@ -166,7 +166,7 @@ export default () => {
               value={state.pin}
               onChange={(e) => dispatch(setPIN(e.target.value))}
               onTrailingIconSelect={() => dispatch(setPIN(''))}
-            ></MaterialOutlinedTextField>
+            />
           </Cell>
         </Row>
         <Row>
@@ -181,7 +181,7 @@ export default () => {
         choices={state.users}
         handleSelect={handleUserID}
         onClose={toggleDialog}
-      ></MaterialSimpleDialog>
+      />
     </>
   );
 };

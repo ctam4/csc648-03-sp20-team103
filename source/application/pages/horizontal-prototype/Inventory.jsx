@@ -21,7 +21,7 @@ import InventoryDiscardDialog from '../../components/horizontal-prototype/Invent
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     inventory: 'Inventory',
     view_log: 'View log',
@@ -69,83 +69,83 @@ export default () => {
   };
 
   const load = async () => {
-    await fetch(apiUrl + '/v4/inventory/list/all?session=' + cookies.session, {
+    await fetch(`${apiUrl}/v4/inventory/list/all?session=${cookies.session}`, {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        if (res.status !== 406) {
-          throw new Error(res.status + ' ' + res.statusText);
-        } else {
-          return null;
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status !== 406) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          } else {
+            return null;
+          }
         }
-      }
-      return res.json();
-    })
-    .then(async (data) => {
-      if (data !== null) {
-        let ingredientIDs = [];
-        data.forEach((item) => ingredientIDs.push(item.ingredientID));
-        if (ingredientIDs.length > 0) {
-          ingredientIDs = [...new Set(ingredientIDs)];
-          await fetch(apiUrl + '/v4/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
-            method: 'get',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-          })
-          .then((res2) => {
-            if (!res2.ok) {
-              if (res2.status !== 406) {
-                throw new Error(res2.status + ' ' + res2.statusText);
-              } else {
-                return null;
-              }
-            }
-            return res2.json();
-          })
-          .then((data2) => {
-            if (data2 !== null) {
-              let inventory = [];
-              data.forEach((item2) => {
-                let ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
-                if (ingredient) {
-                  inventory.push({
-                    key: item2.inventoryID,
-                    title: ingredient.name,
-                    subtitle: (() => {
-                      let value = item2.totalQuantity + ' ' + item2.unit;
-                      if (item2.expirationDate !== null) {
-                        value += ' | ';
-                        let expirationDate = Moment.utc(item2.expirationDate);
-                        if (expirationDate.unix() >= Moment.utc()) {
-                          value += strings.expiring;
-                        } else {
-                          value += strings.expired;
-                        }
-                        value += ' ' + expirationDate.fromNow();
-                      }
-                      if (item2.price) {
-                        value += ' | $' + item2.price;
-                      }
-                      return value;
-                    })(),
-                    image: ingredient.image,
+        return res.json();
+      })
+      .then(async (data) => {
+        if (data !== null) {
+          let ingredientIDs = [];
+          data.forEach((item) => ingredientIDs.push(item.ingredientID));
+          if (ingredientIDs.length > 0) {
+            ingredientIDs = [...new Set(ingredientIDs)];
+            await fetch(`${apiUrl}/v4/ingredients?session=${cookies.session}&ingredientIDs=${ingredientIDs.join(',')}`, {
+              method: 'get',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+            })
+              .then((res2) => {
+                if (!res2.ok) {
+                  if (res2.status !== 406) {
+                    throw new Error(`${res2.status} ${res2.statusText}`);
+                  } else {
+                    return null;
+                  }
+                }
+                return res2.json();
+              })
+              .then((data2) => {
+                if (data2 !== null) {
+                  const inventory = [];
+                  data.forEach((item2) => {
+                    const ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
+                    if (ingredient) {
+                      inventory.push({
+                        key: item2.inventoryID,
+                        title: ingredient.name,
+                        subtitle: (() => {
+                          let value = `${item2.totalQuantity} ${item2.unit}`;
+                          if (item2.expirationDate !== null) {
+                            value += ' | ';
+                            const expirationDate = Moment.utc(item2.expirationDate);
+                            if (expirationDate.unix() >= Moment.utc()) {
+                              value += strings.expiring;
+                            } else {
+                              value += strings.expired;
+                            }
+                            value += ` ${expirationDate.fromNow()}`;
+                          }
+                          if (item2.price) {
+                            value += ` | $${item2.price}`;
+                          }
+                          return value;
+                        })(),
+                        image: ingredient.image,
+                      });
+                    }
                   });
+                  setInventory(inventory);
                 }
               });
-              setInventory(inventory);
-            }
-          });
+          }
         }
-      }
-    })
-    .catch((error) => setToast(error.toString()));
+      })
+      .catch((error) => setToast(error.toString()));
   };
 
   const toggleDrawer = () => {
@@ -173,23 +173,23 @@ export default () => {
       switch (action) {
         case 'consume':
         case 'discard':
-          await fetch(apiUrl + '/v4/inventory/' + action, {
+          await fetch(`${apiUrl}/v4/inventory/${action}`, {
             method: 'post',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               session: cookies.session,
               userID: cookies.userID,
-              inventoryID: inventoryID,
-              quantity: quantity,
-              unit: unit,
+              inventoryID,
+              quantity,
+              unit,
             }),
           })
             .then((res) => {
               if (!res.ok) {
-                throw new Error(res.status + ' ' + res.statusText);
+                throw new Error(`${res.status} ${res.statusText}`);
               }
             })
             .catch((error) => setToast(error.toString()));
@@ -205,39 +205,39 @@ export default () => {
           break;
       }
     }
-  }
+  };
 
   return (
     <>
-      <View className='drawer-container'>
+      <View className="drawer-container">
         <MaterialTopAppBar
           title={strings.inventory}
           onClick1={toggleDrawer}
           onClick2={() => window.location.href = 'search/'}
-        ></MaterialTopAppBar>
-        <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+        />
+        <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
           <MaterialDrawer
             open={drawerOpen}
             selectedIndex={0}
             onClose={toggleDrawer}
-          ></MaterialDrawer>
-          <DrawerAppContent className='drawer-app-content'>
+          />
+          <DrawerAppContent className="drawer-app-content">
             <Grid style={{ height: useWindowDimensions().height - 64 }}>
               {inventory.length > 0 && (
               <Row>
                 {inventory.map((item) => (
-                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                  <InventoryCard
-                    mainText1={item.title}
-                    mainText2={item.subtitle}
-                    actionText1={strings.consume}
-                    actionText2={strings.discard}
-                    onClickMain={() => { window.location.href = 'view/?id=' + item.key }}
-                    onClickAction1={() => handleConsume(item.key)}
-                    onClickAction2={() => handleDiscard(item.key)}
-                    mainImage={item.image}
-                  ></InventoryCard>
-                </Cell>
+                  <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                    <InventoryCard
+                      mainText1={item.title}
+                      mainText2={item.subtitle}
+                      actionText1={strings.consume}
+                      actionText2={strings.discard}
+                      onClickMain={() => { window.location.href = `view/?id=${item.key}`; }}
+                      onClickAction1={() => handleConsume(item.key)}
+                      onClickAction2={() => handleDiscard(item.key)}
+                      mainImage={item.image}
+                    />
+                  </Cell>
                 ))}
               </Row>
               )}
@@ -247,10 +247,10 @@ export default () => {
           <MaterialSnackbar message={toast} onClose={() => setToast('')} />
           )}
           <MaterialFab
-            icon={<MaterialIcon icon='library_add' />}
+            icon={<MaterialIcon icon="library_add" />}
             style={{ position: 'absolute', right: 16, bottom: 16 }}
             onClick={() => window.location.href = 'add/receipt/'}
-          ></MaterialFab>
+          />
         </TopAppBarFixedAdjust>
       </View>
       <InventoryConsumeDialog
@@ -262,7 +262,7 @@ export default () => {
         onTrailingIconSelect1={() => setQuantity(1.0)}
         onTrailingIconSelect2={() => setUnit('')}
         onClose={handleSubmission}
-      ></InventoryConsumeDialog>
+      />
       <InventoryDiscardDialog
         open={dialogOpen === 'discard'}
         quantity={quantity}
@@ -272,7 +272,7 @@ export default () => {
         onTrailingIconSelect1={() => setQuantity(1.0)}
         onTrailingIconSelect2={() => setUnit('')}
         onClose={handleSubmission}
-      ></InventoryDiscardDialog>
+      />
     </>
   );
 };

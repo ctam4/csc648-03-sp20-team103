@@ -11,12 +11,12 @@ import LocalizedStrings from 'react-localization';
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 
-//import Icon from 'react-icons/md';
-//import Svg { Ellipse } from 'react-native-svg';
+// import Icon from 'react-icons/md';
+// import Svg { Ellipse } from 'react-native-svg';
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     center_receipt: 'Center front of receipt inside box area',
   },
@@ -83,21 +83,21 @@ export default () => {
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       <MaterialTopAppBarDialog
-        icon2={'add'}
+        icon2="add"
         onClick1={handleGoBack}
         onClick2={() => window.location.href = '..'}
-      ></MaterialTopAppBarDialog>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-        <DrawerAppContent className='drawer-app-content'>
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
               <Cell columns={12}>
                 <View style={styles.rect1}>
                   <View style={styles.rect2Stack}>
                     <View style={styles.rect2}>
-                      {/*<Icon name='info-circle' style={styles.icon1}></Icon>*/}
+                      {/* <Icon name='info-circle' style={styles.icon1}></Icon> */}
                     </View>
                   </View>
                   {/*

@@ -14,7 +14,7 @@ import ConsumptionCard from '../../components/horizontal-prototype/ConsumptionCa
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     consumption: 'Consumption',
     view_details: 'View details',
@@ -52,36 +52,36 @@ export default () => {
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       <MaterialTopAppBar
         title={strings.consumption}
         onClick1={toggleDrawer}
-        //onClick2={() => window.location.href = './' }
-        icon2='view_week'
-      ></MaterialTopAppBar>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+        // onClick2={() => window.location.href = './' }
+        icon2="view_week"
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer
           open={drawerOpen}
           selectedIndex={3}
           onClose={toggleDrawer}
-        ></MaterialDrawer>
-        <DrawerAppContent className='drawer-app-content'>
+        />
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             {consumption.length > 0 && (
             <Row>
               {consumption.map((item) => (
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <ConsumptionCard
-                  userText1={item.title}
-                  userText2={item.subtitle}
-                  mainText={item.content}
-                  actionText1={strings.view_details}
-                  //onClickUser={() => alert('user')}
-                  onClickMain={() => { window.location.href = 'view/?id=' }}
-                  onClickAction1={() => { window.location.href = 'view/?id=' }}
-                  mainImage={item.image}
-                ></ConsumptionCard>
-              </Cell>
+                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                  <ConsumptionCard
+                    userText1={item.title}
+                    userText2={item.subtitle}
+                    mainText={item.content}
+                    actionText1={strings.view_details}
+                  // onClickUser={() => alert('user')}
+                    onClickMain={() => { window.location.href = 'view/?id='; }}
+                    onClickAction1={() => { window.location.href = 'view/?id='; }}
+                    mainImage={item.image}
+                  />
+                </Cell>
               ))}
             </Row>
             )}

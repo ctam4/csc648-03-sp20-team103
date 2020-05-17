@@ -1,19 +1,20 @@
 import React, { useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
-import { inventorySearchReducer, initialState } from '../../reducers/horizontal-prototype/InventorySearch';
-import {
-  setSearchOpen,
-  setKeywords,
-  setAutoComplete,
-} from '../../actions/horizontal-prototype/InventorySearch';
 
 import { View, useWindowDimensions } from 'react-native';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import {
+  setSearchOpen,
+  setKeywords,
+  setAutoComplete,
+} from '../../actions/horizontal-prototype/InventorySearch';
+import { inventorySearchReducer, initialState } from '../../reducers/horizontal-prototype/InventorySearch';
 import '@material/react-layout-grid/dist/layout-grid.css';
-import LocalizedStrings from 'react-localization';
+
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
@@ -21,7 +22,7 @@ import MaterialSingleSelectionList from '../../components/horizontal-prototype/M
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
   },
 });
@@ -46,44 +47,42 @@ export default () => {
   const handleSearch = async (keywords) => {
     dispatch(setKeywords(keywords));
     if (state.keywords.length > 0) {
-      await fetch(apiUrl + '/v4/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
+      await fetch(`${apiUrl}/v4/ingredients/search?session=${cookies.session}&userID=${cookies.userID}&query=${state.keywords}`, {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status + ' ' + res.statusText);
-        }
-        return res.json();
-      })
-      .then(async (data) => {
-        const ingredients = data.map((item) => {
-          return {
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          }
+          return res.json();
+        })
+        .then(async (data) => {
+          const ingredients = data.map((item) => ({
             key: item.ingredientID,
             primaryText: item.name,
             ingredient: item,
-          };
+          }));
+          dispatch(setAutoComplete(ingredients));
         });
-        dispatch(setAutoComplete(ingredients));
-      });
     }
   };
 
   const handleAutoComplete = async (value) => {
-    window.location.href = '../view/?id=' + state.autoComplete[value].key;
+    window.location.href = `../view/?id=${state.autoComplete[value].key}`;
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       {!state.searchOpen && (
       <MaterialTopAppBarDialog
-        icon1={'arrow_back'}
+        icon1="arrow_back"
         onClick1={handleGoBack}
         onClick2={toggleSearch}
-      ></MaterialTopAppBarDialog>
+      />
       )}
       {state.searchOpen && (
       <MaterialTopAppBarSearchDialog
@@ -91,17 +90,17 @@ export default () => {
         onClick1={toggleSearch}
         onChange={(e) => handleSearch(e.target.value)}
         onTrailingIconSelect={() => dispatch(setKeywords(''))}
-      ></MaterialTopAppBarSearchDialog>
+      />
       )}
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-        <DrawerAppContent className='drawer-app-content'>
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
               <Cell columns={12}>
                 <MaterialSingleSelectionList
                   items={state.autoComplete}
                   handleSelect={handleAutoComplete}
-                ></MaterialSingleSelectionList>
+                />
               </Cell>
             </Row>
           </Grid>

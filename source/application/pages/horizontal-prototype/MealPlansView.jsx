@@ -15,7 +15,7 @@ import RecipesCard from '../../components/horizontal-prototype/RecipesCard';
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     calories: ' calories',
     change: 'Change',
@@ -55,27 +55,27 @@ export default () => {
 
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    await fetch(apiUrl + '/v2/meal-plans?meal_plans_id=' + urlParams.get('id'), {
+    await fetch(`${apiUrl}/v2/meal-plans?meal_plans_id=${urlParams.get('id')}`, {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error('error ' + res.status);
-      }
-      return res.json();
-    })
-    .then((data) => {
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`error ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
       // TODO: fetch meal plans info
-      setQuantity(data.quantity);
-      setUnit(data.unit);
-      setPrice(data.price);
-      setState(data.state);
-    })
-    .catch((error) => setToast(error.toString()));
+        setQuantity(data.quantity);
+        setUnit(data.unit);
+        setPrice(data.price);
+        setState(data.state);
+      })
+      .catch((error) => setToast(error.toString()));
   };
 
   const handleGoBack = () => {
@@ -85,34 +85,34 @@ export default () => {
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       <MaterialTopAppBarDialog
         onClick1={handleGoBack}
-      ></MaterialTopAppBarDialog>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-        <DrawerAppContent className='drawer-app-content'>
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
               <Cell desktopColumns={12} phoneColumns={4} tabletColumns={8}>
                 <MealPlansCardFull
-                  mainText1='3 Meal a Day'
-                  mainText2='2000 Calories'
-                  bodyText={'Per day weight loss meal plan structured towards a healthy balanced diet. All Meals are designed to serve 1. Recipes create delicious meals with half the amount of calories you would expect. Shopping List included. 3 Meals per day.'}>
-                </MealPlansCardFull>
+                  mainText1="3 Meal a Day"
+                  mainText2="2000 Calories"
+                  bodyText="Per day weight loss meal plan structured towards a healthy balanced diet. All Meals are designed to serve 1. Recipes create delicious meals with half the amount of calories you would expect. Shopping List included. 3 Meals per day."
+                />
               </Cell>
               {recipes.map((item) => (
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
-                <RecipesCard
-                  mainText1={item.title}
-                  mainText2={item.subtitle + strings.calories}
-                  actionText1={strings.change}
+                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
+                  <RecipesCard
+                    mainText1={item.title}
+                    mainText2={item.subtitle + strings.calories}
+                    actionText1={strings.change}
                   // onClickMain={() => { window.location.href = 'view/?id=' }}
                   // onClickAction1={handleFavorite}
                   // onClickAction2={handleHistory}
                   // onClickAction3={handleAddToCart}
-                  mainImage={item.image}
-                ></RecipesCard>
-              </Cell>
+                    mainImage={item.image}
+                  />
+                </Cell>
               ))}
             </Row>
           </Grid>

@@ -11,10 +11,10 @@ import LocalizedStrings from 'react-localization';
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MealPlansCard from '../../components/horizontal-prototype/MealPlansCard';
-
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     meal_plans: 'Meal Plans',
     calories: ' calories',
@@ -84,33 +84,32 @@ export default () => {
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       <MaterialTopAppBar
         title={strings.meal_plans}
         onClick1={toggleDrawer}
-        //onClick2={() => window.location.href = './' }
-      ></MaterialTopAppBar>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer
           open={drawerOpen}
           selectedIndex={4}
           onClose={toggleDrawer}
-        ></MaterialDrawer>
-        <DrawerAppContent className='drawer-app-content'>
+        />
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             { mealPlans.length > 0 && (
             <Row>
               {mealPlans.map((item) => (
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <MealPlansCard
-                  mainText1={item.date}
-                  mainText2={item.cal_per_day + strings.calories}
-                  bodyText={item.description}
-                  actionText1={strings.view}
-                  onClickMain={() => { window.location.href = 'view/?id=' }}
-                  onClickAction1={() => { window.location.href = 'view/?id=' }}
-                ></MealPlansCard>
-              </Cell>
+                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                  <MealPlansCard
+                    mainText1={item.date}
+                    mainText2={item.cal_per_day + strings.calories}
+                    bodyText={item.description}
+                    actionText1={strings.view}
+                    onClickMain={() => { window.location.href = 'view/?id='; }}
+                    onClickAction1={() => { window.location.href = 'view/?id='; }}
+                  />
+                </Cell>
               ))}
             </Row>
             )}

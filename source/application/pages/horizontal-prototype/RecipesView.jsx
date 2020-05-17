@@ -1,7 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
-import { recipeViewReducer, initialState } from '../../reducers/horizontal-prototype/RecipeView';
+
+import { View, useWindowDimensions } from 'react-native';
+import { DrawerAppContent } from '@material/react-drawer';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
 import {
   setRecipeID,
   setTitle,
@@ -11,13 +16,8 @@ import {
   setInstructions,
   setIngredients,
 } from '../../actions/horizontal-prototype/RecipeView';
-
-import { View, useWindowDimensions } from 'react-native';
-import { DrawerAppContent } from '@material/react-drawer';
-import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
-import { Cell, Grid, Row } from '@material/react-layout-grid';
+import { recipeViewReducer, initialState } from '../../reducers/horizontal-prototype/RecipeView';
 import '@material/react-layout-grid/dist/layout-grid.css';
-import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
@@ -26,7 +26,7 @@ import IngredientsListCard from '../../components/horizontal-prototype/Ingredien
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     servings: 'servings',
     minutes: 'minutes',
@@ -46,35 +46,33 @@ export default () => {
 
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    await fetch(apiUrl + '/v4/recipes?session=' + cookies.session + '&recipeIDs=' + urlParams.get('id'), {
+    await fetch(`${apiUrl}/v4/recipes?session=${cookies.session}&recipeIDs=${urlParams.get('id')}`, {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error('error ' + res.status);
-      }
-      return res.json();
-    })
-    .then((data) => {
-      dispatch(setRecipeID(data.recipeID));
-      dispatch(setTitle(data.title));
-      dispatch(setImage(data.image));
-      dispatch(setServings(data.servings));
-      dispatch(setCookingTime(data.cookingTime));
-      dispatch(setInstructions(data.instructions));
-      const ingredients = data.ingredients.map((item) => {
-        return {
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`error ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        dispatch(setRecipeID(data.recipeID));
+        dispatch(setTitle(data.title));
+        dispatch(setImage(data.image));
+        dispatch(setServings(data.servings));
+        dispatch(setCookingTime(data.cookingTime));
+        dispatch(setInstructions(data.instructions));
+        const ingredients = data.ingredients.map((item) => ({
           primaryText: item.name,
-          secondaryText: item.quantity + ' ' + item.unit,
-        };
-      });
-      dispatch(setIngredients(ingredients));
-    })
-    .catch((error) => setToast(error.toString()));
+          secondaryText: `${item.quantity} ${item.unit}`,
+        }));
+        dispatch(setIngredients(ingredients));
+      })
+      .catch((error) => setToast(error.toString()));
   };
 
   const handleGoBack = () => {
@@ -96,30 +94,30 @@ export default () => {
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       <MaterialTopAppBarDialog
         onClick1={handleGoBack}
-      ></MaterialTopAppBarDialog>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-        <DrawerAppContent className='drawer-app-content'>
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
               <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
                 <RecipesCardFull
                   mainText1={state.title}
-                  mainText2={state.servings + ' ' + strings.servings + ' | ' + state.cookingTime + ' ' + strings.minutes}
+                  mainText2={`${state.servings} ${strings.servings} | ${state.cookingTime} ${strings.minutes}`}
                   bodyText={state.instructions}
                   onClickAction1={() => handleFavorite(state.recipeID)}
                   onClickAction2={handleHistory}
                   onClickAction3={handleAddToCart}
                   mainImage={state.image}
-                ></RecipesCardFull>
+                />
               </Cell>
               <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
                 <IngredientsListCard
                   list1={state.ingredients}
                   list2={[]}
-                ></IngredientsListCard>
+                />
               </Cell>
             </Row>
           </Grid>

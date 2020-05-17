@@ -1,32 +1,40 @@
-import React, { Component } from 'react';
-import TopAppBar, { TopAppBarIcon, TopAppBarRow, TopAppBarSection, TopAppBarTitle } from '@material/react-top-app-bar';
+import React, { } from 'react';
+import PropTypes from 'prop-types';
+
+import TopAppBar, {
+  TopAppBarIcon, TopAppBarRow, TopAppBarSection, TopAppBarTitle,
+} from '@material/react-top-app-bar';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-top-app-bar/dist/top-app-bar.css';
 import '@material/react-material-icon/dist/material-icon.css';
 
 function MaterialTopAppBar(props) {
+  const {
+    icon1, onClick1, title, icon2, onClick2,
+  } = props;
+
   return (
-    <TopAppBar style={{background: 'rgba(65,117,5,1)'}}>
+    <TopAppBar style={{ background: 'rgba(65,117,5,1)' }}>
       <TopAppBarRow>
-        <TopAppBarSection align='start'>
+        <TopAppBarSection align="start">
           <TopAppBarIcon navIcon tabIndex={0}>
             <MaterialIcon
-              aria-label={props.icon1 || 'menu'}
+              aria-label={icon1 || 'menu'}
               hasRipple
-              icon={props.icon1 || 'menu'}
-              onClick={props.onClick1}
+              icon={icon1 || 'menu'}
+              onClick={onClick1}
             />
           </TopAppBarIcon>
-          <TopAppBarTitle>{props.title}</TopAppBarTitle>
+          <TopAppBarTitle>{title}</TopAppBarTitle>
         </TopAppBarSection>
-        {(props.icon2 || props.onClick2) && (
-        <TopAppBarSection align='end' role='toolbar'>
+        {(icon2 || onClick2) && (
+        <TopAppBarSection align="end" role="toolbar">
           <TopAppBarIcon actionItem tabIndex={0}>
             <MaterialIcon
-              aria-label={props.icon2}
+              aria-label={icon2}
               hasRipple
-              icon={props.icon2 || 'search'}
-              onClick={props.onClick2}
+              icon={icon2 || 'search'}
+              onClick={onClick2}
             />
           </TopAppBarIcon>
         </TopAppBarSection>
@@ -35,5 +43,11 @@ function MaterialTopAppBar(props) {
     </TopAppBar>
   );
 }
-
+MaterialTopAppBar.propTypes = {
+  icon1: PropTypes.func.isRequired,
+  onClick1: PropTypes.func.isRequired,
+  title: PropTypes.string.isRequired,
+  icon2: PropTypes.func.isRequired,
+  onClick2: PropTypes.func.isRequired,
+};
 export default MaterialTopAppBar;

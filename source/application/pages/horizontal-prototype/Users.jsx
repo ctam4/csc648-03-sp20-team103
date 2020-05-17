@@ -19,7 +19,7 @@ import UsersListCard from '../../components/horizontal-prototype/UsersListCard';
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
   },
 });
@@ -51,40 +51,40 @@ export default () => {
         key: 2,
         primaryText: 'User 2 ',
         secondaryText: 'role 2',
-      }
+      },
     ]);
   };
 
   const load = async () => {
-    await fetch(apiUrl + '/v4/users?session=' + cookies.session, {
+    await fetch(`${apiUrl}/v4/users?session=${cookies.session}`, {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        if (res.status !== 406) {
-          throw new Error(res.status + ' ' + res.statusText);
-        } else {
-          return null;
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status !== 406) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          } else {
+            return null;
+          }
         }
-      }
-      return res.json();
-    })
-    .then((data) => {
-      if (data !== null) {
-        let users = [];
-        data.forEach((item) => users.push({
-          key: item.userID,
-          primaryText: item.name,
-          secondaryText: item.role,
-        }));
-        setUsers(users);
-      }
-    })
-    .catch((error) => setToast(error.toString()));
+        return res.json();
+      })
+      .then((data) => {
+        if (data !== null) {
+          const users = [];
+          data.forEach((item) => users.push({
+            key: item.userID,
+            primaryText: item.name,
+            secondaryText: item.role,
+          }));
+          setUsers(users);
+        }
+      })
+      .catch((error) => setToast(error.toString()));
   };
 
   const toggleDrawer = () => {
@@ -102,22 +102,22 @@ export default () => {
   const handleSubmission = async (value) => {
     toggleDialog();
     if (value === 'confirm') {
-      await fetch(apiUrl + '/v4/users', {
+      await fetch(`${apiUrl}/v4/users`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           session: cookies.session,
-          name: name,
-          role: role,
-          intolerances: intolerances,
+          name,
+          role,
+          intolerances,
         }),
       })
         .then((res) => {
           if (!res.ok) {
-            throw new Error(res.status + ' ' + res.statusText);
+            throw new Error(`${res.status} ${res.statusText}`);
           }
           return res.json();
         })
@@ -136,26 +136,25 @@ export default () => {
 
   return (
     <>
-      <View className='drawer-container'>
+      <View className="drawer-container">
         <MaterialTopAppBar
           title={strings.users}
           onClick1={toggleDrawer}
-        ></MaterialTopAppBar>
-        <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+        />
+        <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
           <MaterialDrawer
             open={drawerOpen}
             selectedIndex={5}
             onClose={toggleDrawer}
-          ></MaterialDrawer>
-          <DrawerAppContent className='drawer-app-content'>
+          />
+          <DrawerAppContent className="drawer-app-content">
             <Grid style={{ height: useWindowDimensions().height - 64 }}>
               {users.length > 0 && (
               <Row>
                 <Cell columns={12}>
                   <UsersListCard
                     items={users}
-                    // handleSelect={handleDelete}
-                  ></UsersListCard>
+                  />
                 </Cell>
               </Row>
               )}
@@ -165,10 +164,10 @@ export default () => {
           <MaterialSnackbar message={toast} onClose={() => setToast('')} />
           )}
           <MaterialFab
-            icon={<MaterialIcon icon='person_add'/>}
+            icon={<MaterialIcon icon="person_add" />}
             style={{ position: 'absolute', right: 16, bottom: 16 }}
             onClick={toggleDialog}
-          ></MaterialFab>
+          />
         </TopAppBarFixedAdjust>
       </View>
       <UsersDialog
@@ -183,7 +182,7 @@ export default () => {
         onTrailingIconSelect2={() => setRole('')}
         onTrailingIconSelect3={() => setIntolerances('')}
         onClose={handleSubmission}
-      ></UsersDialog>
+      />
     </>
   );
 };
