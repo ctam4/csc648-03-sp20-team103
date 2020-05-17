@@ -74,7 +74,7 @@ test.before(async (t) => {
                     t.context.baseUrl +
                     "/v4/recipes/search?session=" +
                     t.context.session +
-                    "&query=salad&page=1&limit=1",
+                    "&query=salad&page=1&limit=2",
                   {
                     method: "get",
                     headers: {
@@ -88,9 +88,10 @@ test.before(async (t) => {
                     return res4.json();
                   })
                   .then((data4) => {
-                    t.true(data4.length >= 1);
+                    console.log(data4);
+                    t.true(data4.length >= 2);
                     t.context.recipeID1 = data4[0].recipeID;
-                    //t.context.recipeID2 = data4[1].recipeID;
+                    t.context.recipeID2 = data4[1].recipeID;
                   });
               });
           });
@@ -355,49 +356,49 @@ test("/recipes/favorite | DELETE | 401", async (t) => {
   });
 });
 
-// test("/recipes/favorite | DELETE | 406", async (t) => {
-//   await fetch(t.context.baseUrl + "/v4/recipes/favorite?session="+t.context.session+"&recipeFavoriteID=134567", {
-//     method: "delete",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//     },
-//   }).then((res) => {
-//     t.is(res.status, 406);
-//   });
-// });
+test("/recipes/favorite | DELETE | 406", async (t) => {
+  await fetch(t.context.baseUrl + "/v4/recipes/favorite?session="+t.context.session+"&recipeFavoriteID=134567", {
+    method: "delete",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  }).then((res) => {
+    t.is(res.status, 406);
+  });
+});
 
-// test("/recipes/favorite | DELETE | 200", async (t) => {
-//   await fetch(t.context.baseUrl + "/v4/recipes/favorite", {
-//     method: "post",
-//     headers: {
-//       Accept: "application/json",
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       recipeID: t.context.recipeID2,
-//       userID: t.context.userID,
-//       session: t.context.session,
-//     }),
-//   })
-//     .then((res) => res.json())
-//     .then(async (data) => {
-//       console.log(data);
-//       await fetch(
-//         t.context.baseUrl +
-//           "/v4/recipes/favorite?session=" +
-//           t.context.session +
-//           "&recipeFavoriteID=" +
-//           data.recipeFavoriteID,
-//         {
-//           method: "delete",
-//           headers: {
-//             Accept: "application/json",
-//             "Content-Type": "application/json",
-//           },
-//         }
-//       ).then((res) => {
-//         t.is(res.status, 200);
-//       });
-//     });
-// });
+test("/recipes/favorite | DELETE | 200", async (t) => {
+  await fetch(t.context.baseUrl + "/v4/recipes/favorite", {
+    method: "post",
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      recipeID: t.context.recipeID2,
+      userID: t.context.userID,
+      session: t.context.session,
+    }),
+  })
+    .then((res) => res.json())
+    .then(async (data) => {
+      console.log(data);
+      await fetch(
+        t.context.baseUrl +
+          "/v4/recipes/favorite?session=" +
+          t.context.session +
+          "&recipeFavoriteID=" +
+          data.recipeFavoriteID,
+        {
+          method: "delete",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      ).then((res) => {
+        t.is(res.status, 200);
+      });
+    });
+});
