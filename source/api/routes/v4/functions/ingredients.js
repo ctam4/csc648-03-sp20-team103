@@ -7,7 +7,7 @@ const selectIngredients = async (connection, ingredientIDs, page, limit) => {
     sql += 'ingredient_id=?';
   });
   sql += ') ORDER BY ingredient_id ASC LIMIT ? OFFSET ?';
-  return connection.query(sql, [ingredientIDs, limit, (page - 1) * limit]);
+  return connection.query(sql, [...ingredientIDs, limit, (page - 1) * limit]);
 };
 
 const insertIngredient = async (connection, ingredientID, name, image) => {

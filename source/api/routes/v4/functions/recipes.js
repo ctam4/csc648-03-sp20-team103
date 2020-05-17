@@ -28,7 +28,7 @@ const selectRecipes = async (connection, recipeIDs, page, limit, sort, descendin
   if (recipeIDs === null) {
     return connection.query(sql, [limit, (page - 1) * limit]);
   } else {
-    return connection.query(sql, [recipeIDs, limit, (page - 1) * limit]);
+    return connection.query(sql, [...recipeIDs, limit, (page - 1) * limit]);
   }
 };
 
@@ -55,7 +55,7 @@ const selectRecipeIngredients = async (connection, recipeIDs) => {
     }
     sql += 'recipe_id=?';
   });
-  return connection.query(sql, [recipeIDs]);
+  return connection.query(sql, [...recipeIDs]);
 };
 
 const insertRecipeIngredient = async (connection, recipeID, ingredientID, quantity, unit) => {
