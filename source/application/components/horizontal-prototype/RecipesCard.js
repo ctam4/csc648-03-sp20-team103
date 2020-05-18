@@ -25,13 +25,12 @@ function RecipesCard(props) {
         </View>
       </CardPrimaryContent>
       <CardActions>
-        {(actionText1 || actionText2) && (
+        {actionText1 && (
         <CardActionButtons>
           <MaterialButton onClick={onClickAction1}>{actionText1}</MaterialButton>
-          <MaterialButton onClick={onClickAction2}>{actionText2}</MaterialButton>
         </CardActionButtons>
         )}
-        {!(actionText1 || actionText2) && (
+        {!actionText1 && (
         <CardActionIcons>
           <MaterialIcon
             aria-label="favorite"
@@ -59,14 +58,13 @@ function RecipesCard(props) {
 }
 
 RecipesCard.propTypes = {
-  onClickMain: PropTypes.func.isRequired,
+  onClickMain: PropTypes.func,
   mainImage: PropTypes.string.isRequired,
   mainText1: PropTypes.string.isRequired,
   mainText2: PropTypes.string.isRequired,
-  onClickAction1: PropTypes.func,
+  onClickAction1: PropTypes.func.isRequired,
   actionText1: PropTypes.string,
   onClickAction2: PropTypes.func,
-  actionText2: PropTypes.string,
   onClickAction3: PropTypes.func,
 };
 
