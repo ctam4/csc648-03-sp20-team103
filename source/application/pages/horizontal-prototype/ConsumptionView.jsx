@@ -38,7 +38,7 @@ export default () => {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error(`error ${res.status}`);
+          throw new Error(`${res.status} ${res.statusText}`);
         }
         return res.json();
       })

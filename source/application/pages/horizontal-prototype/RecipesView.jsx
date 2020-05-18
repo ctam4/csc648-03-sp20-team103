@@ -116,15 +116,33 @@ export default () => {
     }
   };
 
-  const handleFavorite = async () => {
-    // TODO: fetch
+  const handleFavorite = async (value) => {
+    await fetch(`${apiUrl}/v4/recipes/favorite`, {
+      method: 'post',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session: cookies.session,
+        userID: cookies.userID,
+        recipeID: value,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`${res.status} ${res.statusText}`);
+        }
+      })
+      .catch((error) => setToast(error.toString()));
+    setToast(strings.toast_favorited);
   };
 
   const handleHistory = async () => {
     // TODO: fetch
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (value) => {
     // TODO: fetch
   };
 

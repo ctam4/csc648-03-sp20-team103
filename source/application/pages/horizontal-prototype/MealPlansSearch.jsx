@@ -129,7 +129,7 @@ export default () => {
       body: JSON.stringify({
         session: cookies.session,
         mealPlanID: state.mealPlanID,
-        recipeID: value,
+        recipeID: state.autoComplete[value].key,
       }),
     })
       .then((res) => {

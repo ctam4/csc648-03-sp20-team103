@@ -124,7 +124,7 @@ export default () => {
     // TODO: fetch
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (value) => {
     // TODO: fetch
   };
 
@@ -153,7 +153,7 @@ export default () => {
                     onClickMain={() => { window.location.href = `view/?id=${item.key}`; }}
                     onClickAction1={() => handleFavorite(item.key)}
                     onClickAction2={handleHistory}
-                    onClickAction3={handleAddToCart}
+                    onClickAction3={() => handleAddToCart(item.key)}
                     mainImage={item.image}
                   />
                 </Cell>
