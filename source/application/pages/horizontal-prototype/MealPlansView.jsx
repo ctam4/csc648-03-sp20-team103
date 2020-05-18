@@ -97,11 +97,11 @@ export default () => {
               })
               .then((data2) => {
                 if (data2 !== null) {
-                  const mealPlans = data.map((item) => {
+                  const mealPlans = data.map((item, index) => {
                     const recipe = data2.find((item2) => item.recipeID === item2.recipeID);
                     return {
                       key: item.mealPlanID,
-                      title: recipe.title,
+                      title: `#${index}: ${recipe.title}`,
                       subtitle: `${recipe.servings} ${strings.servings} | ${recipe.cookingTime} ${strings.minutes}`,
                       image: recipe.image,
                     };
@@ -118,7 +118,7 @@ export default () => {
           setToast(strings.toast_missing);
         }
       })
-      .catch(console.log);
+      .catch((error) => setToast(error.toString()));
   };
 
   useEffect(() => {
@@ -133,7 +133,7 @@ export default () => {
   };
 
   const handleReplace = (key) => {
-    windown.location.href = `replace/?id=${key}`;
+    windown.location.href = `../replace/?id=${key}`;
   };
 
   return (
