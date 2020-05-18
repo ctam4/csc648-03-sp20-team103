@@ -171,7 +171,7 @@ export default () => {
 
   const handleSubmission = async (value) => {
     const action = state.dialogOpen;
-    toggleDialog(null);
+    toggleDialog(initialState.dialogOpen);
     if (value === 'confirm') {
       switch (action) {
         case 'consume':
@@ -260,8 +260,8 @@ export default () => {
         unit={state.dialogUnit}
         onChange1={(e) => dispatch(setDialogQuantity(e.target.value))}
         onChange2={(e) => dispatch(setDialogUnit(e.target.value))}
-        onTrailingIconSelect1={() => dispatch(setDialogQuantity(1.0))}
-        onTrailingIconSelect2={() => dispatch(setDialogUnit(''))}
+        onTrailingIconSelect1={() => dispatch(setDialogQuantity(initialState.dialogQuantity))}
+        onTrailingIconSelect2={() => dispatch(setDialogUnit(initialState.dialogUnit))}
         onClose={handleSubmission}
       />
       <InventoryDiscardDialog
@@ -270,8 +270,8 @@ export default () => {
         unit={state.dialogUnit}
         onChange1={(e) => dispatch(setDialogQuantity(e.target.value))}
         onChange2={(e) => dispatch(setDialogUnit(e.target.value))}
-        onTrailingIconSelect1={() => dispatch(setDialogQuantity(1.0))}
-        onTrailingIconSelect2={() => dispatch(setDialogUnit(''))}
+        onTrailingIconSelect1={() => dispatch(setDialogQuantity(initialState.dialogQuantity))}
+        onTrailingIconSelect2={() => dispatch(setDialogUnit(initialState.dialogUnit))}
         onClose={handleSubmission}
       />
     </>

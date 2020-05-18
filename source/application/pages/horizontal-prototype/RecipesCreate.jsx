@@ -61,7 +61,7 @@ export default () => {
                   helperText={strings.name_helper}
                   value={state.name}
                   onChange={(e) => dispatch(setName(e.target.value))}
-                  onTrailingIconSelect={() => dispatch(setName(''))}
+                  onTrailingIconSelect={() => dispatch(setName(initialState.name))}
                 />
               </Cell>
               <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
@@ -70,7 +70,7 @@ export default () => {
                   helperText={strings.servings_helper}
                   value={state.servings}
                   onChange={(e) => dispatch(setServings(e.target.value))}
-                  onTrailingIconSelect={() => dispatch(setServings(''))}
+                  onTrailingIconSelect={() => dispatch(setServings(initialState.servings))}
                 />
               </Cell>
               <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
@@ -79,7 +79,7 @@ export default () => {
                   helperText={strings.cooking_time_helper}
                   value={state.cooking_time}
                   onChange={(e) => dispatch(setCookingTime(e.target.value))}
-                  onTrailingIconSelect={() => dispatch(setCookingTime(''))}
+                  onTrailingIconSelect={() => dispatch(setCookingTime(initialState.cookingTime))}
                 />
               </Cell>
             </Row>

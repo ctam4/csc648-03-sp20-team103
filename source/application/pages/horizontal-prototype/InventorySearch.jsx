@@ -86,7 +86,7 @@ export default () => {
         value={state.keywords}
         onClick1={toggleSearch}
         onChange={(e) => handleSearch(e.target.value)}
-        onTrailingIconSelect={() => dispatch(setKeywords(''))}
+        onTrailingIconSelect={() => dispatch(setKeywords(initialState.keywords))}
       />
       )}
       <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">

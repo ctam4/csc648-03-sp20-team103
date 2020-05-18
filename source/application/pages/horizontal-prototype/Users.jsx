@@ -180,9 +180,9 @@ export default () => {
         onChange1={(e) => setName(e.target.value)}
         onChange2={(e) => setRole(e.target.value)}
         onChange3={(e) => setIntolerances(e.target.value)}
-        onTrailingIconSelect1={() => setName('')}
-        onTrailingIconSelect2={() => setRole('')}
-        onTrailingIconSelect3={() => setIntolerances('')}
+        onTrailingIconSelect1={() => setName(initialState.name)}
+        onTrailingIconSelect2={() => setRole(initialState.role)}
+        onTrailingIconSelect3={() => setIntolerances(initialState.intolerances)}
         onClose={handleSubmission}
       />
     </>

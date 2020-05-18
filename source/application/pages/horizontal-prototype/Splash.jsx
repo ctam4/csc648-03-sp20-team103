@@ -155,7 +155,7 @@ export default () => {
               helperText={strings.serial_number_helper}
               value={state.serialNumber}
               onChange={(e) => dispatch(setSerialNumber(e.target.value))}
-              onTrailingIconSelect={() => dispatch(setSerialNumber(''))}
+              onTrailingIconSelect={() => dispatch(setSerialNumber(initialState.serialNumber))}
             />
           </Cell>
           <Cell columns={12}>
@@ -164,7 +164,7 @@ export default () => {
               helperText={strings.pin_helper}
               value={state.pin}
               onChange={(e) => dispatch(setPIN(e.target.value))}
-              onTrailingIconSelect={() => dispatch(setPIN(''))}
+              onTrailingIconSelect={() => dispatch(setPIN(initialState.pin))}
             />
           </Cell>
         </Row>

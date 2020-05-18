@@ -203,7 +203,7 @@ export default () => {
             value={state.keywords}
             onClick1={toggleSearch}
             onChange={(e) => handleSearch(e.target.value)}
-            onTrailingIconSelect={() => dispatch(setKeywords(''))}
+            onTrailingIconSelect={() => dispatch(setKeywords(initialState.keywords))}
           />
         )}
         <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
@@ -258,10 +258,10 @@ export default () => {
         onChange2={(e) => dispatch(setUnit(e.target.value))}
         onChange3={(e) => dispatch(setPrice(e.target.value))}
         onChange4={(e) => dispatch(setExpirationDate(e.target.value))}
-        onTrailingIconSelect1={() => dispatch(setQuantity(1.0))}
-        onTrailingIconSelect2={() => dispatch(setUnit(''))}
-        onTrailingIconSelect3={() => dispatch(setPrice(0))}
-        onTrailingIconSelect4={() => dispatch(setExpirationDate(''))}
+        onTrailingIconSelect1={() => dispatch(setQuantity(initialState.quantity))}
+        onTrailingIconSelect2={() => dispatch(setUnit(initialState.unit))}
+        onTrailingIconSelect3={() => dispatch(setPrice(initialState.price))}
+        onTrailingIconSelect4={() => dispatch(setExpirationDate(initialState.expirationDate))}
         onClose={handleSubmission}
       />
     </>
