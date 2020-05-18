@@ -98,7 +98,7 @@ export default () => {
   };
 
   const handleFavorite = async (value) => {
-    await fetch(`${apiUrl}/v3/recipes/favorite`, {
+    await fetch(`${apiUrl}/v4/recipes/favorite`, {
       method: 'post',
       headers: {
         Accept: 'application/json',

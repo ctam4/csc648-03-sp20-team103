@@ -31,7 +31,7 @@ export default () => {
 
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    await fetch(`${apiUrl}/v2/carts?carts_id=${urlParams.get('id')}`, {
+    await fetch(`${apiUrl}/v4/carts?carts_id=${urlParams.get('id')}`, {
       method: 'get',
       headers: {
         Accept: 'application/json',

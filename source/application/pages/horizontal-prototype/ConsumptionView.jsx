@@ -29,7 +29,7 @@ export default () => {
 
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    await fetch(`${apiUrl}/v2/consumption?consumption_id=${urlParams.get('id')}`, {
+    await fetch(`${apiUrl}/v4/consumption?consumption_id=${urlParams.get('id')}`, {
       method: 'get',
       headers: {
         Accept: 'application/json',
