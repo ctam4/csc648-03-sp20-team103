@@ -23,6 +23,7 @@ const strings = new LocalizedStrings({
     recipes: 'Recipes',
     servings: 'servings',
     minutes: 'minutes',
+    toast_missing: 'Oops. Information is missing.',
     toast_created: 'Recipe created.',
     toast_edited: 'Recipe edited.',
     toast_favorited: 'Recipe favorited.',
@@ -80,6 +81,8 @@ export default () => {
             image: item.image,
           }));
           setRecipes(recipes2);
+        } else {
+          setToast(strings.toast_missing);
         }
       })
       .catch((error) => setToast(error.toString()));

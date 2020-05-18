@@ -21,6 +21,7 @@ import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({
   en: {
+    toast_missing: 'Oops. Information is missing.',
   },
 });
 
@@ -76,6 +77,8 @@ export default () => {
             secondaryText: item.role,
           }));
           setUsers(users2);
+        } else {
+          setToast(strings.toast_missing);
         }
       })
       .catch((error) => setToast(error.toString()));

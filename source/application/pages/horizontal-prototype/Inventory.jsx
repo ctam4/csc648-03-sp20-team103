@@ -29,6 +29,7 @@ const strings = new LocalizedStrings({
     discard: 'Discard',
     expiring: 'Expiring',
     expired: 'Expired',
+    toast_missing: 'Oops. Information is missing.',
     toast_consumed: 'Item consumed from inventory.',
     toast_discarded: 'Item discarded from inventory.',
   },
@@ -134,9 +135,15 @@ export default () => {
                     }
                   });
                   setInventory(inventory);
+                } else {
+                  setToast(strings.toast_missing);
                 }
               });
+          } else {
+            setToast(strings.toast_missing);
           }
+        } else {
+          setToast(strings.toast_missing);
         }
       })
       .catch((error) => setToast(error.toString()));
