@@ -97,7 +97,7 @@ export default () => {
         />
         <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
-            { mealPlans.length > 0 && (
+            {mealPlans.length > 0 && (
             <Row>
               {mealPlans.map((item) => (
                 <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
@@ -106,8 +106,8 @@ export default () => {
                     mainText2={item.cal_per_day + strings.calories}
                     bodyText={item.description}
                     actionText1={strings.view}
-                    onClickMain={() => { window.location.href = 'view/?id='; }}
-                    onClickAction1={() => { window.location.href = 'view/?id='; }}
+                    onClickMain={() => { window.location.href = 'view/?plannedTS='; }}
+                    onClickAction1={() => { window.location.href = 'view/?plannedTS='; }}
                   />
                 </Cell>
               ))}
