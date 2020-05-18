@@ -3,7 +3,7 @@ const selectMealPlans = (connection, userID, plannedTS) => {
 };
 
 const insertMealPlan = (connection, userID, recipeID, plannedTS) => {
-  return connection.query('INSERT INTO v4_meal_plans (user_id, recipe_id, planned_ts) VALUES (?, ?, ?)', [userID, recipeID, plannedTS]);
+  return connection.query('INSERT IGNORE INTO v4_meal_plans (user_id, recipe_id, planned_ts) VALUES (?, ?, ?)', [userID, recipeID, plannedTS]);
 };
 
 const updateMealPlan = (connection, mealPlanID, recipeID) => {
