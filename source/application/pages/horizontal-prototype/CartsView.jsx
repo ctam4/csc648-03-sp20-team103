@@ -13,7 +13,7 @@ import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnac
 import CartsCardFull from '../../components/horizontal-prototype/CartsCardFull';
 
 import { apiUrl } from '../../url';
-import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
+import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
 
 const strings = new LocalizedStrings({
   en: {
@@ -23,13 +23,8 @@ const strings = new LocalizedStrings({
 
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
-  const [expirationDate, setExpirationDate] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [unit, setUnit] = useState('');
-  const [price, setPrice] = useState('');
-  const [state, setState] = useState('');
   const [toast, setToast] = useState('');
-  const [itemsInCart, setCart] = useState([]);
+  const [carts, setCarts] = useState([]);
 
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -40,66 +35,62 @@ export default () => {
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error('error ' + res.status);
-      }
-      return res.json();
-    })
-    .then(async (data) => {
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`error ${res.status}`);
+        }
+        return res.json();
+      })
+      .then(async (data) => {
       // TODO: fetch Carts info of user
-      if (data !== null) {
-        let ingredientIDs = [];
-        data.forEach((item) => ingredientIDs.push(item.ingredientID));
-        if (ingredientIDs.length > 0) {
-          ingredientIDs = [...new Set(ingredientIDs)];
-          await fetch(apiUrl + '/v3/ingredients?session=' + cookies.session + '&ingredientIDs=' + ingredientIDs.join(','), {
-            method: 'get',
-            headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json',
-            },
-          })
-          .then((res2) => {
-            if (!res2.ok) {
-              if (res2.status !== 406) {
-                throw new Error(res2.status + ' ' + res2.statusText);
-              } else {
-                return null;
-              }
-            }
-            return res2.json();
-          })
-          .then((data2) => {
-            if (data2 !== null) {
-              let itemsInCart = [];
-              data.forEach((item2) => {
-                let ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
-                if (ingredient) {
-                  itemsInCart.push({
-                    key: item2.inventoryID,
-                    title: ingredient.name,
-                    subtitle: (() => {
-                      let value = item2.totalQuantity + ' ' + item2.unit;
-                      if (item2.price) {
-                        value += ' | $' + item2.price;
-                      }
-                      return value;
-                    })
-                  })
+        if (data !== null) {
+          let ingredientIDs = [];
+          data.forEach((item) => ingredientIDs.push(item.ingredientID));
+          if (ingredientIDs.length > 0) {
+            ingredientIDs = [...new Set(ingredientIDs)];
+            await fetch(`${apiUrl}/v3/ingredients?session=${cookies.session}&ingredientIDs=${ingredientIDs.join(',')}`, {
+              method: 'get',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+            })
+              .then((res2) => {
+                if (!res2.ok) {
+                  if (res2.status !== 406) {
+                    throw new Error(`${res2.status} ${res2.statusText}`);
+                  } else {
+                    return null;
+                  }
+                }
+                return res2.json();
+              })
+              .then((data2) => {
+                if (data2 !== null) {
+                  const carts2 = [];
+                  data.forEach((item2) => {
+                    const ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
+                    if (ingredient) {
+                      carts2.push({
+                        key: item2.inventoryID,
+                        title: ingredient.name,
+                        subtitle: (() => {
+                          let value = `${item2.totalQuantity} ${item2.unit}`;
+                          if (item2.price) {
+                            value += ` | $${item2.price}`;
+                          }
+                          return value;
+                        }),
+                      });
+                    }
+                  });
+                  setCarts(carts2);
                 }
               });
-              setCart(itemsInCart);
-            }
-          });
+          }
         }
-      }
-      setQuantity(data.quantity);
-      setUnit(data.unit);
-      setPrice(data.price);
-      setState(data.state);
-    })
-    .catch((error) => setToast(error.toString()));
+      })
+      .catch((error) => setToast(error.toString()));
   };
 
   useEffect(() => {
@@ -125,15 +116,15 @@ export default () => {
         <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
-              {itemsInCart.map((item) => (
-                  <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
-                    <InventoryCard
-                        mainText1={item.title}
-                        mainText2={item.subtitle}
-                        actionText1={strings.clear_cart}
-                        mainImage={item.image}
-                    ></InventoryCard>
-                  </Cell>
+              {carts.map((item) => (
+                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
+                  <InventoryCard
+                    mainText1={item.title}
+                    mainText2={item.subtitle}
+                    actionText1={strings.clear_cart}
+                    mainImage={item.image}
+                  />
+                </Cell>
               ))}
             </Row>
           </Grid>

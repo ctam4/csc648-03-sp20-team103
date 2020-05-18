@@ -12,7 +12,8 @@ import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTop
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import CartsCard from '../../components/horizontal-prototype/CartsCard';
-import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
+
+import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({
   en: {
@@ -45,37 +46,35 @@ export default () => {
 
   const load = async () => {
     // TODO: fetch
-    await fetch(apiUrl + '/v3/carts/list/all?session=' + cookies.session, {
+    await fetch(`${apiUrl}/v3/carts/list/all?session=${cookies.session}`, {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-        .then((res) => {
-          if (!res.ok) {
-            if (res.status !== 406) {
-              throw new Error(res.status + ' ' + res.statusText);
-            } else {
-              return null;
-            }
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status !== 406) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          } else {
+            return null;
           }
-          return res.json();
-        })
-        .then(async (data) => {
-          if (data !== null) {
-            let carts = data.map((item) => {
-              return {
-                key: item.recipeID,
-                title: item.title,
-                subtitle: item.servings, // need to have date last edited here, not servings
-                image: item.image,
-              };
-            });
-            setCarts(carts);
-          }
-        })
-        .catch((error) => setToast(error.toString()));
+        }
+        return res.json();
+      })
+      .then(async (data) => {
+        if (data !== null) {
+          const carts2 = data.map((item) => ({
+            key: item.recipeID,
+            title: item.title,
+            subtitle: item.servings, // need to have date last edited here, not servings
+            image: item.image,
+          }));
+          setCarts(carts2);
+        }
+      })
+      .catch((error) => setToast(error.toString()));
   };
 
   useEffect(() => {
