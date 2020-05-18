@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import LocalizedStrings from 'react-localization';
+import Moment from 'moment';
 
 import { View, useWindowDimensions } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
@@ -18,12 +19,11 @@ import { apiUrl } from '../../url';
 const strings = new LocalizedStrings({
   en: {
     carts: 'Carts',
-    last_updated: 'last updated ',
-    user_cart: ' \'s cart',
-    edit: 'Edit',
-    clear_cart: 'Clear cart',
-    toast_edited: 'Cart edited.',
-    toast_cleared: 'Cart cleared.',
+    added_by: 'Added by',
+    update: 'Update',
+    remove: 'Remove',
+    toast_updated: 'Item updated from cart.',
+    toast_removed: 'Item removed from cart.',
   },
 });
 
@@ -37,16 +37,16 @@ export default () => {
     // TODO: hard code carts array
     setCarts([
       {
-        title: 'user 1',
-        subtitle: '21 days ago',
-        content: 'This is the preview of the cart. It may shows up to 10 lines of items with quantity.',
+        title: 'ingredient name',
+        subtitle: '10 count',
+        content: `${strings.added_by} user name 10 days ago`,
+        image: 'test.jpg',
       },
     ]);
   };
 
   const load = async () => {
-    // TODO: fetch
-    await fetch(`${apiUrl}/v3/carts/list/all?session=${cookies.session}`, {
+    await fetch(`${apiUrl}/v4/carts?session=${cookies.session}`, {
       method: 'get',
       headers: {
         Accept: 'application/json',
@@ -65,13 +65,72 @@ export default () => {
       })
       .then(async (data) => {
         if (data !== null) {
-          const carts2 = data.map((item) => ({
-            key: item.recipeID,
-            title: item.title,
-            subtitle: item.servings, // need to have date last edited here, not servings
-            image: item.image,
-          }));
-          setCarts(carts2);
+          let ingredientIDs = data.map((item) => item.ingredientID);
+          if (ingredientIDs.length > 0) {
+            ingredientIDs = [...new Set(ingredientIDs)];
+            await fetch(`${apiUrl}/v4/ingredients?session=${cookies.session}&ingredientIDs=${ingredientIDs.join(',')}`, {
+              method: 'get',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+            })
+              .then((res2) => {
+                if (!res2.ok) {
+                  if (res2.status !== 406) {
+                    throw new Error(`${res2.status} ${res2.statusText}`);
+                  } else {
+                    return null;
+                  }
+                }
+                return res2.json();
+              })
+              .then(async (data2) => {
+                if (data2 !== null) {
+                  await fetch(`${apiUrl}/v4/users?session=${cookies.session}`, {
+                    method: 'get',
+                    headers: {
+                      Accept: 'application/json',
+                      'Content-Type': 'application/json',
+                    },
+                  })
+                    .then((res3) => {
+                      if (!res3.ok) {
+                        if (res3.status !== 406) {
+                          throw new Error(`${res3.status} ${res3.statusText}`);
+                        } else {
+                          return null;
+                        }
+                      }
+                      return res3.json();
+                    })
+                    .then((data3) => {
+                      if (data3 !== null) {
+                        const carts2 = data.map((item) => {
+                          const ingredient = data2.find((item2) => item.ingredientID === item2.ingredientID);
+                          const user = data3.find((item2) => item.userID === item2.userID);
+                          return {
+                            key: item.cartID,
+                            title: ingredient.name,
+                            subtitle: `${item.quantity} ${item.unit}`,
+                            content: `${strings.added_by} ${user.name} ${Moment.UTC(item.addedTS).fromNow()}`,
+                            image: ingredient.image,
+                          };
+                        });
+                        setCarts(carts2);
+                      } else {
+                        setToast(strings.toast_missing);
+                      }
+                    });
+                } else {
+                  setToast(strings.toast_missing);
+                }
+              });
+          } else {
+            setToast(strings.toast_missing);
+          }
+        } else {
+          setToast(strings.toast_missing);
         }
       })
       .catch((error) => setToast(error.toString()));
@@ -86,7 +145,11 @@ export default () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handleClearCart = async () => {
+  const handleUpdate = async () => {
+    // TODO: fetch
+  };
+
+  const handleRemove = async () => {
     // TODO: fetch
   };
 
@@ -109,13 +172,14 @@ export default () => {
               {carts.map((item) => (
                 <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
                   <CartsCard
-                    mainText1={item.title + strings.user_cart}
-                    mainText2={strings.last_updated + item.subtitle}
+                    mainText1={item.title}
+                    mainText2={item.subtitle}
                     bodyText={item.content}
-                    actionText1={strings.edit}
-                    actionText2={strings.clear_cart}
-                    onClickAction1={() => { window.location.href = 'view/?id='; }}
-                    onClickAction2={handleClearCart}
+                    actionText1={strings.update}
+                    actionText2={strings.remove}
+                    onClickAction1={() => handleUpdate(item.key)}
+                    onClickAction2={() => handleRemove(item.key)}
+                    mainImage={item.image}
                   />
                 </Cell>
               ))}
