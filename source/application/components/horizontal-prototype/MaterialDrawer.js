@@ -18,6 +18,7 @@ const strings = new LocalizedStrings({
     consumption: 'Consumption',
     meal_plans: 'Meal Plans',
     users: 'Users',
+    logout: 'Logout',
   },
 });
 
@@ -59,6 +60,10 @@ function MaterialDrawer(props) {
           <ListItem onClick={() => window.location.href = '../users/'}>
             <ListItemGraphic graphic={<MaterialIcon icon="people" />} />
             <ListItemText primaryText={strings.users} />
+          </ListItem>
+          <ListItem onClick={() => window.location.href = '../'}>
+            <ListItemGraphic graphic={<MaterialIcon icon="exit_to_app" />} />
+            <ListItemText primaryText={strings.logout} />
           </ListItem>
         </List>
       </DrawerContent>
