@@ -10,7 +10,7 @@ const mealPlans = express.Router();
 let connection;
 
 /**
- * PATCH /mealplans
+ * PATCH /meal-plans
  * @description Updates an existing meal plan entry.
  * @param {string} session
  * @param {integer} mealPlanID
@@ -50,23 +50,23 @@ mealPlans.patch('/', async (req, res) => {
 });
 
 /**
- * GET /v4/mealplans
+ * GET /v4/meal-plans
  * @description Returns the mealplan for a specific day (generates one if it doesn't exist).
  * @param {string} session
  * @param {integer} userID
- * @param {integer} plannedDate must be midnight
- * @returns {object[]} mealplans
+ * @param {integer} plannedTS must be midnight
+ * @returns {object[]} mealPlans
  */
 mealPlans.get('/', async (req, res) => {
   const { session } = req.query;
   const userID = Number.parseInt(req.query.userID, 10);
-  const plannedDate = Number.parseInt(req.query.plannedDate, 10);
+  const plannedTS = Number.parseInt(req.query.plannedTS, 10);
   if (typeof session !== 'string' || session.length !== 36 || Number.isNaN(userID)
-    || Number.isNaN(plannedDate) || userID <= 0) {
+    || Number.isNaN(plannedTS) || userID <= 0) {
     res.sendStatus(400).end();
     return;
   }
-  const date = new Date(plannedDate);
+  const date = new Date(plannedTS);
   if (date.getUTCSeconds() !== 0 || date.getUTCMinutes() !== 0 || date.getUTCHours() !== 0) {
     res.sendStatus(400).end();
     return;
@@ -75,7 +75,7 @@ mealPlans.get('/', async (req, res) => {
     connection = await pool.getConnection();
     const fridgeID = validateSession(connection, session);
     if (fridgeID !== null) {
-      selectMealPlans(connection, userID, plannedDate)
+      selectMealPlans(connection, userID, plannedTS)
         .then((rows) => {
           if (rows.length > 0) {
             // mealplan already generated, return it
@@ -110,9 +110,9 @@ mealPlans.get('/', async (req, res) => {
                         if (recipeIDs.length > 0) {
                           await importRecipes(connection, recipeIDs);
                           await Promise.all(recipeIDs.forEach(async (recipeID) => {
-                            insertMealPlan(connection, userID, recipeID, plannedDate);
+                            insertMealPlan(connection, userID, recipeID, plannedTS);
                           }));
-                          selectMealPlans(connection, userID, plannedDate)
+                          selectMealPlans(connection, userID, plannedTS)
                             .then((rows3) => {
                               if (rows3.length > 0) {
                                 res.json(rows3.filter((_, index) => index !== 'meta')).end();
