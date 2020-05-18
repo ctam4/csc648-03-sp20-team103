@@ -44,7 +44,6 @@ export default () => {
   const [dialogUnit, setDialogUnit] = useState('');
   const [toast, setToast] = useState('');
   const [inventory, setInventory] = useState([]);
-  const [ingredients, setIngredients] = useState([]);
 
   const dummySetup = () => {
     // TODO: hard code inventory array
@@ -106,35 +105,32 @@ export default () => {
               })
               .then((data2) => {
                 if (data2 !== null) {
-                  const inventory = [];
-                  data.forEach((item2) => {
-                    const ingredient = data2.find((item3) => item2.ingredientID === item3.ingredientID);
-                    if (ingredient) {
-                      inventory.push({
-                        key: item2.inventoryID,
-                        title: ingredient.name,
-                        subtitle: (() => {
-                          let value = `${item2.totalQuantity} ${item2.unit}`;
-                          if (item2.expirationDate !== null) {
-                            value += ' | ';
-                            const expirationDate = Moment.utc(item2.expirationDate);
-                            if (expirationDate.unix() >= Moment.utc()) {
-                              value += strings.expiring;
-                            } else {
-                              value += strings.expired;
-                            }
-                            value += ` ${expirationDate.fromNow()}`;
+                  const inventory2 = data.map((item) => {
+                    const ingredient = data2.find((item2) => item.ingredientID === item2.ingredientID);
+                    return {
+                      key: item.inventoryID,
+                      title: ingredient.name,
+                      subtitle: (() => {
+                        let value = `${item.totalQuantity} ${item.unit}`;
+                        if (item.expirationDate !== null) {
+                          value += ' | ';
+                          const expirationDate = Moment.utc(item.expirationDate);
+                          if (expirationDate.unix() >= Moment.utc()) {
+                            value += strings.expiring;
+                          } else {
+                            value += strings.expired;
                           }
-                          if (item2.price) {
-                            value += ` | $${item2.price}`;
-                          }
-                          return value;
-                        })(),
-                        image: ingredient.image,
-                      });
-                    }
+                          value += ` ${expirationDate.fromNow()}`;
+                        }
+                        if (item.price) {
+                          value += ` | $${item.price}`;
+                        }
+                        return value;
+                      })(),
+                      image: ingredient.image,
+                    };
                   });
-                  setInventory(inventory);
+                  setInventory(inventory2);
                 } else {
                   setToast(strings.toast_missing);
                 }
@@ -230,27 +226,27 @@ export default () => {
           <DrawerAppContent className="drawer-app-content">
             <Grid style={{ height: useWindowDimensions().height - 64 }}>
               {inventory.length > 0 && (
-              <Row>
-                {inventory.map((item) => (
-                  <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                    <InventoryCard
-                      mainText1={item.title}
-                      mainText2={item.subtitle}
-                      actionText1={strings.consume}
-                      actionText2={strings.discard}
-                      onClickMain={() => { window.location.href = `view/?id=${item.key}`; }}
-                      onClickAction1={() => handleConsume(item.key)}
-                      onClickAction2={() => handleDiscard(item.key)}
-                      mainImage={item.image}
-                    />
-                  </Cell>
-                ))}
-              </Row>
+                <Row>
+                  {inventory.map((item) => (
+                    <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                      <InventoryCard
+                        mainText1={item.title}
+                        mainText2={item.subtitle}
+                        actionText1={strings.consume}
+                        actionText2={strings.discard}
+                        onClickMain={() => { window.location.href = `view/?id=${item.key}`; }}
+                        onClickAction1={() => handleConsume(item.key)}
+                        onClickAction2={() => handleDiscard(item.key)}
+                        mainImage={item.image}
+                      />
+                    </Cell>
+                  ))}
+                </Row>
               )}
             </Grid>
           </DrawerAppContent>
           {toast && (
-          <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+            <MaterialSnackbar message={toast} onClose={() => setToast('')} />
           )}
           <MaterialFab
             icon={<MaterialIcon icon="library_add" />}
