@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
 import { StyleSheet, View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
-import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';

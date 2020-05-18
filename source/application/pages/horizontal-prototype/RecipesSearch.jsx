@@ -2,11 +2,19 @@ import React, { useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 import LocalizedStrings from 'react-localization';
 
-
 import { View, useWindowDimensions } from 'react-native';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import '@material/react-layout-grid/dist/layout-grid.css';
+
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
+import { Body1 } from '../../components/horizontal-prototype/MaterialTypography';
+import MaterialChoiceChips from '../../components/horizontal-prototype/MaterialChoiceChips';
+import MaterialFilterChips from '../../components/horizontal-prototype/MaterialFilterChips';
+import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
+
 import {
   setSearchOpen,
   setKeywords,
@@ -18,15 +26,6 @@ import {
   setAutoComplete,
 } from '../../actions/horizontal-prototype/RecipesSearch';
 import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
-import '@material/react-layout-grid/dist/layout-grid.css';
-
-import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
-import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
-import { Body1 } from '../../components/horizontal-prototype/MaterialTypography';
-import MaterialChoiceChips from '../../components/horizontal-prototype/MaterialChoiceChips';
-import MaterialFilterChips from '../../components/horizontal-prototype/MaterialFilterChips';
-import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
-
 import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({

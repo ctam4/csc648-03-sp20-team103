@@ -3,14 +3,6 @@ import { useCookies } from 'react-cookie';
 import LocalizedStrings from 'react-localization';
 
 import { Cell, Grid, Row } from '@material/react-layout-grid';
-import { splashReducer, initialState } from '../../reducers/horizontal-prototype/Splash';
-import {
-  setSerialNumber,
-  setPIN,
-  setDialogOpen,
-  setUsers,
-} from '../../actions/horizontal-prototype/Splash';
-
 import '@material/react-layout-grid/dist/layout-grid.css';
 
 import { Headline1 } from '../../components/horizontal-prototype/MaterialTypography';
@@ -18,6 +10,13 @@ import MaterialOutlinedTextField from '../../components/horizontal-prototype/Mat
 import MaterialButton from '../../components/horizontal-prototype/MaterialButton';
 import MaterialSimpleDialog from '../../components/horizontal-prototype/MaterialSimpleDialog';
 
+import { splashReducer, initialState } from '../../reducers/horizontal-prototype/Splash';
+import {
+  setSerialNumber,
+  setPIN,
+  setDialogOpen,
+  setUsers,
+} from '../../actions/horizontal-prototype/Splash';
 import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({

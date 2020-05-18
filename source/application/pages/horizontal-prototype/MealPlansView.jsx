@@ -7,11 +7,6 @@ import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
-import {
-  setPlannedTS,
-  setMealPlans,
-} from '../../actions/horizontal-prototype/MealPlansView';
-import { mealPlansViewReducer, initialState } from '../../reducers/horizontal-prototype/MealPlansView';
 import '@material/react-layout-grid/dist/layout-grid.css';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
@@ -19,6 +14,11 @@ import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnac
 import MealPlansCardFull from '../../components/horizontal-prototype/MealPlansCardFull';
 import RecipesCard from '../../components/horizontal-prototype/RecipesCard';
 
+import {
+  setPlannedTS,
+  setMealPlans,
+} from '../../actions/horizontal-prototype/MealPlansView';
+import { mealPlansViewReducer, initialState } from '../../reducers/horizontal-prototype/MealPlansView';
 import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({

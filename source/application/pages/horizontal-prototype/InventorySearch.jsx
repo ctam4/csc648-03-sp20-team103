@@ -2,24 +2,22 @@ import React, { useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 import LocalizedStrings from 'react-localization';
 
-
 import { View, useWindowDimensions } from 'react-native';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import '@material/react-layout-grid/dist/layout-grid.css';
+
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
+import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
+
 import {
   setSearchOpen,
   setKeywords,
   setAutoComplete,
 } from '../../actions/horizontal-prototype/InventorySearch';
 import { inventorySearchReducer, initialState } from '../../reducers/horizontal-prototype/InventorySearch';
-import '@material/react-layout-grid/dist/layout-grid.css';
-
-
-import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
-import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
-import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
-
 import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({

@@ -6,6 +6,13 @@ import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
+import '@material/react-layout-grid/dist/layout-grid.css';
+
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
+import RecipesCardFull from '../../components/horizontal-prototype/RecipesCardFull';
+import IngredientsListCard from '../../components/horizontal-prototype/IngredientsListCard';
+
 import {
   setRecipeID,
   setTitle,
@@ -16,13 +23,6 @@ import {
   setIngredients,
 } from '../../actions/horizontal-prototype/RecipesView';
 import { recipesViewReducer, initialState } from '../../reducers/horizontal-prototype/RecipesView';
-import '@material/react-layout-grid/dist/layout-grid.css';
-
-import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
-import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
-import RecipesCardFull from '../../components/horizontal-prototype/RecipesCardFull';
-import IngredientsListCard from '../../components/horizontal-prototype/IngredientsListCard';
-
 import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({

@@ -1,6 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useCookies } from 'react-cookie';
-
+import LocalizedStrings from 'react-localization';
+import Moment from 'moment';
 
 import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
@@ -9,8 +10,15 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import '@material/react-material-icon/dist/material-icon.css';
-import LocalizedStrings from 'react-localization';
-import Moment from 'moment';
+
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
+import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
+import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
+import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
+import InventoryAddDialog from '../../components/horizontal-prototype/InventoryAddDialog';
+
 import {
   setSearchOpen,
   setDialogOpen,
@@ -23,15 +31,6 @@ import {
   setExpirationDate,
 } from '../../actions/horizontal-prototype/InventoryAdd';
 import { inventoryAddReducer, initialState } from '../../reducers/horizontal-prototype/InventoryAdd';
-
-import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
-import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
-import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
-import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
-import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
-import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
-import InventoryAddDialog from '../../components/horizontal-prototype/InventoryAddDialog';
-
 import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({

@@ -7,6 +7,15 @@ import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
+import '@material/react-layout-grid/dist/layout-grid.css';
+
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
+import InventoryCardFull from '../../components/horizontal-prototype/InventoryCardFull';
+import InventoryConsumeDialog from '../../components/horizontal-prototype/InventoryConsumeDialog';
+import InventoryDiscardDialog from '../../components/horizontal-prototype/InventoryDiscardDialog';
+
+
 import {
   setInventoryID,
   setName,
@@ -21,14 +30,6 @@ import {
   setDialogUnit,
 } from '../../actions/horizontal-prototype/InventoryView';
 import { inventoryViewReducer, initialState } from '../../reducers/horizontal-prototype/InventoryView';
-import '@material/react-layout-grid/dist/layout-grid.css';
-
-import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
-import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
-import InventoryCardFull from '../../components/horizontal-prototype/InventoryCardFull';
-import InventoryConsumeDialog from '../../components/horizontal-prototype/InventoryConsumeDialog';
-import InventoryDiscardDialog from '../../components/horizontal-prototype/InventoryDiscardDialog';
-
 import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({

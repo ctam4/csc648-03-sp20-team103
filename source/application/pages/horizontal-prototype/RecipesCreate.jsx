@@ -1,6 +1,6 @@
 import React, { useReducer } from 'react';
 import { useCookies } from 'react-cookie';
-
+import LocalizedStrings from 'react-localization';
 
 import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
@@ -9,14 +9,13 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import '@material/react-material-icon/dist/material-icon.css';
-import LocalizedStrings from 'react-localization';
-import { setName, setServings, setCookingTime } from '../../actions/horizontal-prototype/RecipesCreate';
-import { recipesCreateReducer, initialState } from '../../reducers/horizontal-prototype/RecipesCreate';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialOutlinedTextField from '../../components/horizontal-prototype/MaterialOutlinedTextField';
 
+import { setName, setServings, setCookingTime } from '../../actions/horizontal-prototype/RecipesCreate';
+import { recipesCreateReducer, initialState } from '../../reducers/horizontal-prototype/RecipesCreate';
 import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({
