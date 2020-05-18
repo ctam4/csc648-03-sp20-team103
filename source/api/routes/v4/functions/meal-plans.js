@@ -7,7 +7,7 @@ const insertMealPlan = (connection, userID, recipeID, plannedTS) => {
 };
 
 const updateMealPlan = (connection, mealPlanID, recipeID) => {
-  return connection.query('UPDATE IGNORE meal_plans SET recipe_id=? WHERE meal_plan_id=?', [recipeID, mealPlanID]);
+  return connection.query('UPDATE IGNORE v4_meal_plans SET recipe_id=? WHERE meal_plan_id=?', [recipeID, mealPlanID]);
 };
 
 module.exports = {

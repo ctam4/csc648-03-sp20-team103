@@ -27,8 +27,8 @@ mealPlans.patch('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    if (validateSession(connection, session) !== null) {
-      updateMealPlan(connection, mealPlanID, recipeID)
+    if (await validateSession(connection, session) !== null) {
+      await updateMealPlan(connection, mealPlanID, recipeID)
         .then((rows2) => {
           if (rows2.affectedRows > 0) {
             res.sendStatus(200).end();
@@ -73,16 +73,16 @@ mealPlans.get('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    const fridgeID = validateSession(connection, session);
+    const fridgeID = await validateSession(connection, session);
     if (fridgeID !== null) {
-      selectMealPlans(connection, userID, plannedTS)
-        .then((rows) => {
+      await selectMealPlans(connection, userID, plannedTS)
+        .then(async (rows) => {
           if (rows.length > 0) {
             // mealplan already generated, return it
             res.json(rows.filter((_, index) => index !== 'meta')).end();
           } else {
             // generate mealplan by inventory
-            selectInventory(connection, fridgeID, null, 'stored', 1, 5000, null, null)
+            await selectInventory(connection, fridgeID, null, 'stored', 1, 5000, null, null)
               .then((rows2) => {
                 if (rows2.length > 0) {
                   const ingredientNames = rows2.map((ingredient, index) => {
