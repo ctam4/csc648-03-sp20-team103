@@ -1,10 +1,15 @@
-import React, { Component, useState } from 'react';
+import React, { useState } from 'react';
 import { View } from 'react-native';
 import LocalizedStrings from 'react-localization';
+import PropTypes from 'prop-types';
 
-import { Headline6, Subtitle1, Subtitle2, Body2 } from './MaterialTypography';
 import MaterialIcon from '@material/react-material-icon';
-import MaterialCard, { CardMedia, CardActions, CardActionButtons, CardActionIcons } from './MaterialCard';
+import {
+  Headline6, Subtitle2,
+} from './MaterialTypography';
+import MaterialCard, {
+  CardActions, CardActionButtons, CardActionIcons,
+} from './MaterialCard';
 import MaterialButton from './MaterialButton';
 import '@material/react-material-icon/dist/material-icon.css';
 
@@ -15,15 +20,19 @@ function CartsCardFull(props) {
     setCardOpen(!cardOpen);
   };
 
+  const {
+    mainText1, mainText2, onClickAction1, actionText1,
+  } = props;
+
   return (
-    <MaterialCard className='mdc-card'>
-      <View style={{padding: 16}}>
-        <Headline6 style={{margin: 0}}>{props.mainText1}</Headline6>
-        <Subtitle2 style={{margin: 0}}>{props.mainText2}</Subtitle2>
+    <MaterialCard className="mdc-card">
+      <View style={{ padding: 16 }}>
+        <Headline6 style={{ margin: 0 }}>{mainText1}</Headline6>
+        <Subtitle2 style={{ margin: 0 }}>{mainText2}</Subtitle2>
       </View>
       <CardActions>
         <CardActionButtons>
-          <MaterialButton onClick={props.onClickAction1}>{props.actionText1}</MaterialButton>
+          <MaterialButton onClick={onClickAction1}>{actionText1}</MaterialButton>
         </CardActionButtons>
         <CardActionIcons>
           <MaterialIcon
@@ -38,10 +47,17 @@ function CartsCardFull(props) {
   );
 }
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     log: 'Log',
   },
 });
+
+CartsCardFull.propTypes = {
+  mainText1: PropTypes.string.isRequired,
+  mainText2: PropTypes.string.isRequired,
+  onClickAction1: PropTypes.func.isRequired,
+  actionText1: PropTypes.string.isRequired,
+};
 
 export default CartsCardFull;

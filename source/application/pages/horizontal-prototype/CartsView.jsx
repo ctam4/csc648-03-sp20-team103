@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
 import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
-import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
@@ -15,7 +15,7 @@ import CartsCardFull from '../../components/horizontal-prototype/CartsCardFull';
 import { apiUrl } from '../../url';
 import InventoryCard from "../../components/horizontal-prototype/InventoryCard";
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     clear_cart: 'Clear cart',
   },
@@ -31,16 +31,12 @@ export default () => {
   const [toast, setToast] = useState('');
   const [itemsInCart, setCart] = useState([]);
 
-  useEffect(() => {
-    load();
-  }, []);
-
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    await fetch(apiUrl + '/v2/carts?carts_id=' + urlParams.get('id'), {
+    await fetch(`${apiUrl}/v4/carts?carts_id=${urlParams.get('id')}`, {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
@@ -106,6 +102,10 @@ export default () => {
     .catch((error) => setToast(error.toString()));
   };
 
+  useEffect(() => {
+    load();
+  }, []);
+
   const handleGoBack = () => {
     if (history.length > 0) {
       history.back();
@@ -117,12 +117,12 @@ export default () => {
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       <MaterialTopAppBarDialog
         onClick1={handleGoBack}
-      ></MaterialTopAppBarDialog>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-        <DrawerAppContent className='drawer-app-content'>
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             <Row>
               {itemsInCart.map((item) => (

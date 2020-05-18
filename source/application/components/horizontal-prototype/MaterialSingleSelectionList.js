@@ -1,26 +1,37 @@
-import React, { Component } from 'react';
+import React, { } from 'react';
+import PropTypes from 'prop-types';
 
 import List, { ListItem, ListItemText } from '@material/react-list';
 import '@material/react-list/dist/list.css';
 
 function MaterialSingleSelectionList(props) {
+  const {
+    selectedIndex, handleSelect, items,
+  } = props;
+
   return (
     <List
       singleSelection
       twoLine
-      selectedIndex={props.selectedIndex}
-      handleSelect={props.handleSelect}
+      selectedIndex={selectedIndex}
+      handleSelect={handleSelect}
     >
-      {props.items.map((item, i) => (
-      <ListItem>
-        <ListItemText
-          primaryText={item.primaryText}
-          secondaryText={item.secondaryText}
-        />
-      </ListItem>
+      {items.map((item) => (
+        <ListItem>
+          <ListItemText
+            primaryText={item.primaryText}
+            secondaryText={item.secondaryText}
+          />
+        </ListItem>
       ))}
     </List>
   );
 }
+
+MaterialSingleSelectionList.propTypes = {
+  selectedIndex: PropTypes.number.isRequired,
+  handleSelect: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired,
+};
 
 export default MaterialSingleSelectionList;

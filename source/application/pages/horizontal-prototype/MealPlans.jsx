@@ -1,22 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
 import { View, useWindowDimensions } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { DrawerAppContent } from '@material/react-drawer';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
-import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MaterialIcon from '@material/react-material-icon';
 import MealPlansCard from '../../components/horizontal-prototype/MealPlansCard';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import MealPlanDialog from '../../components/horizontal-prototype/MealPlanDialog';
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     meal_plans: 'Meal Plans',
     calories: ' calories',
@@ -35,11 +36,6 @@ export default () => {
   const [meal_plan_name, setMealPlansName] = useState('');
   const [date, setDate] = useState('');
   const [calories, setCalories] = useState('');
-
-  useEffect(() => {
-    //dummySetup();
-    load();
-  }, []);
 
   const dummySetup = () => {
     // TODO: hard code mealPlans array
@@ -85,6 +81,11 @@ export default () => {
   const load = async () => {
     // TODO: fetch
   };
+
+  useEffect(() => {
+    dummySetup();
+    load();
+  }, []);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -135,29 +136,28 @@ export default () => {
       <MaterialTopAppBar
         title={strings.meal_plans}
         onClick1={toggleDrawer}
-        //onClick2={() => window.location.href = './' }
-      ></MaterialTopAppBar>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer
           open={drawerOpen}
           selectedIndex={4}
           onClose={toggleDrawer}
-        ></MaterialDrawer>
-        <DrawerAppContent className='drawer-app-content'>
+        />
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
-            { mealPlans.length > 0 && (
+            {mealPlans.length > 0 && (
             <Row>
               {mealPlans.map((item) => (
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <MealPlansCard
-                  mainText1={item.date}
-                  mainText2={item.cal_per_day + strings.calories}
-                  bodyText={item.description}
-                  actionText1={strings.view}
-                  onClickMain={() => { window.location.href = 'view/?id=' }}
-                  onClickAction1={() => { window.location.href = 'view/?id=' }}
-                ></MealPlansCard>
-              </Cell>
+                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                  <MealPlansCard
+                    mainText1={item.date}
+                    mainText2={item.cal_per_day + strings.calories}
+                    bodyText={item.description}
+                    actionText1={strings.view}
+                    onClickMain={() => { window.location.href = 'view/?plannedTS='; }}
+                    onClickAction1={() => { window.location.href = 'view/?plannedTS='; }}
+                  />
+                </Cell>
               ))}
             </Row>
             )}
@@ -190,5 +190,5 @@ export default () => {
     onClose={handleSubmission}
   ></MealPlanDialog>
   </>
-  ); 
+  );
 };

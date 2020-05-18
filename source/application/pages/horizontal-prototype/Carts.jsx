@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
 import { View, useWindowDimensions } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { DrawerAppContent } from '@material/react-drawer';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
-import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import CartsCard from '../../components/horizontal-prototype/CartsCard';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 
-import { apiUrl } from '../../url';
-
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     carts: 'Carts',
     last_updated: 'last updated ',
@@ -32,11 +31,6 @@ export default () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [carts, setCarts] = useState([]);
-
-  useEffect(() => {
-    //dummySetup();
-    load();
-  }, []);
 
   const dummySetup = () => {
     // TODO: hard code carts array
@@ -84,6 +78,11 @@ export default () => {
         .catch((error) => setToast(error.toString()));
   };
 
+  useEffect(() => {
+    dummySetup();
+    load();
+  }, []);
+
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
@@ -93,33 +92,33 @@ export default () => {
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       <MaterialTopAppBar
         title={strings.carts}
         onClick1={toggleDrawer}
-        //onClick2={() => window.location.href = './' }
-      ></MaterialTopAppBar>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer
           open={drawerOpen}
           selectedIndex={2}
           onClose={toggleDrawer}
-        ></MaterialDrawer>
-        <DrawerAppContent className='drawer-app-content'>
+        />
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             {carts.length > 0 && (
             <Row>
               {carts.map((item) => (
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <CartsCard
-                  mainText1={item.title + strings.user_cart}
-                  mainText2={strings.last_updated + item.subtitle}
-                  actionText1={strings.edit}
-                  actionText2={strings.clear_cart}
-                  onClickAction1={() => { window.location.href = 'view/?id=' }}
-                  onClickAction2={handleClearCart}
-                ></CartsCard>
-              </Cell>
+                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                  <CartsCard
+                    mainText1={item.title + strings.user_cart}
+                    mainText2={strings.last_updated + item.subtitle}
+                    bodyText={item.content}
+                    actionText1={strings.edit}
+                    actionText2={strings.clear_cart}
+                    onClickAction1={() => { window.location.href = 'view/?id='; }}
+                    onClickAction2={handleClearCart}
+                  />
+                </Cell>
               ))}
             </Row>
             )}

@@ -48,7 +48,7 @@ router.get('/inventory/view/', async (req, res) => {
     res.sendStatus(401).end();
     return;
   }
-  // TODO: check for id exits using fetch, return 404 if not found
+  // TODO: check for id exist using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_inventory-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -157,7 +157,7 @@ router.get('/recipes/view/', async (req, res) => {
     res.sendStatus(401).end();
     return;
   }
-  // TODO: check for id exits using fetch, return 404 if not found
+  // TODO: check for id exist using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_recipes-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -230,7 +230,7 @@ router.get('/carts/view/', async (req, res) => {
     res.sendStatus(401).end();
     return;
   }
-  // TODO: check for id exits using fetch, return 404 if not found
+  // TODO: check for id exist using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_carts-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -267,7 +267,7 @@ router.get('/consumption/view/', async (req, res) => {
     res.sendStatus(401).end();
     return;
   }
-  // TODO: check for id exits using fetch, return 404 if not found
+  // TODO: check for id exist using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_consumption-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
@@ -305,11 +305,30 @@ router.get('/meal-plans/view/', async (req, res) => {
     res.sendStatus(401).end();
     return;
   }
-  // TODO: check for id exits using fetch, return 404 if not found
+  // TODO: check for id exist using fetch, return 404 if not found
   const raw = fs.readFileSync('./build/horizontal-prototype_meal-plans-view.html').toString();
   const handlebarsTemplate = handlebars.compile(raw);
   const render = handlebarsTemplate({
     title: 'View - Meal Plans - Horizontal Prototype',
+  });
+  res.send(render);
+});
+
+router.get('/meal-plans/search/', async (req, res) => {
+  if ('session' in req.cookies) {
+    if (!('userID' in req.cookies)) {
+      res.redirect(307, '../../users/');
+      return;
+    }
+  } else {
+    res.sendStatus(401).end();
+    return;
+  }
+  // TODO: check for plannedTS exist, return 404 if not found
+  const raw = fs.readFileSync('./build/horizontal-prototype_meal-plans-search.html').toString();
+  const handlebarsTemplate = handlebars.compile(raw);
+  const render = handlebarsTemplate({
+    title: 'Search - Recipes - Horizontal Prototype',
   });
   res.send(render);
 });

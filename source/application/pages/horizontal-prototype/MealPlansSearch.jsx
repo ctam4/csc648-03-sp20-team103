@@ -1,4 +1,4 @@
-import React, { useReducer } from 'react';
+import React, { useEffect, useReducer } from 'react';
 import { useCookies } from 'react-cookie';
 import LocalizedStrings from 'react-localization';
 
@@ -17,6 +17,7 @@ import MaterialSingleSelectionList from '../../components/horizontal-prototype/M
 
 import {
   setSearchOpen,
+  setMealPlanID,
   setKeywords,
   setCaloriesFilter,
   setServingsFilter,
@@ -24,8 +25,8 @@ import {
   setProteinFilter,
   setCarbonhydratesFilter,
   setAutoComplete,
-} from '../../actions/horizontal-prototype/RecipesSearch';
-import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
+} from '../../actions/horizontal-prototype/MealPlansSearch';
+import { mealPlansSearchReducer, initialState } from '../../reducers/horizontal-prototype/MealPlansSearch';
 import { apiUrl } from '../../url';
 
 const strings = new LocalizedStrings({
@@ -46,7 +47,7 @@ const strings = new LocalizedStrings({
 
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
-  const [state, dispatch] = useReducer(recipesSearchReducer, initialState);
+  const [state, dispatch] = useReducer(mealPlansSearchReducer, initialState);
 
   const caloriesFilterChoices = [
     { id: '500_less', label: strings.calories_500_less },
@@ -68,6 +69,16 @@ export default () => {
     { id: '10_less', label: strings.grams_10_less },
     { id: '10_20', label: strings.grams_10_20 },
   ];
+
+  const load = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const mealPlanID = urlParams.get('id');
+    dispatch(setMealPlanID(mealPlanID));
+  };
+
+  useEffect(() => {
+    load();
+  }, []);
 
   const toggleSearch = () => {
     dispatch(setSearchOpen(!state.searchOpen));
@@ -108,26 +119,46 @@ export default () => {
     }
   };
 
-  const handleAutoComplete = (value) => {
-    window.location.href = `../view/?id=${state.autoComplete[value].key}`;
+  const handleAutoComplete = async (value) => {
+    await fetch(`${apiUrl}/v4/meal-plans`, {
+      method: 'patch',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        session: cookies.session,
+        mealPlanID: state.mealPlanID,
+        recipeID: state.autoComplete[value].key,
+      }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`${res.status} ${res.statusText}`);
+        };
+      })
+      .catch(console.log);
+    if (history.length > 0) {
+      history.back();
+    }
   };
 
   return (
     <View className="drawer-container">
       {!state.searchOpen && (
-      <MaterialTopAppBarDialog
-        icon1="arrow_back"
-        onClick1={handleGoBack}
-        onClick2={toggleSearch}
-      />
+        <MaterialTopAppBarDialog
+          icon1="arrow_back"
+          onClick1={handleGoBack}
+          onClick2={toggleSearch}
+        />
       )}
       {state.searchOpen && (
-      <MaterialTopAppBarSearchDialog
-        value={state.keywords}
-        onClick1={toggleSearch}
-        onChange={(e) => handleSearch(e.target.value)}
-        onTrailingIconSelect={() => dispatch(setKeywords(initialState.keywords))}
-      />
+        <MaterialTopAppBarSearchDialog
+          value={state.keywords}
+          onClick1={toggleSearch}
+          onChange={(e) => handleSearch(e.target.value)}
+          onTrailingIconSelect={() => dispatch(setKeywords(initialState.keywords))}
+        />
       )}
       <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <DrawerAppContent className="drawer-app-content">

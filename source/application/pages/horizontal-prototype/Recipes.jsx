@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
 import { View, useWindowDimensions } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
@@ -8,7 +9,6 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import '@material/react-material-icon/dist/material-icon.css';
-import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
@@ -18,11 +18,12 @@ import RecipesCard from '../../components/horizontal-prototype/RecipesCard';
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     recipes: 'Recipes',
     servings: 'servings',
     minutes: 'minutes',
+    toast_missing: 'Oops. Information is missing.',
     toast_created: 'Recipe created.',
     toast_edited: 'Recipe edited.',
     toast_favorited: 'Recipe favorited.',
@@ -35,11 +36,6 @@ export default () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [recipes, setRecipes] = useState([]);
-
-  useEffect(() => {
-    // dummySetup();
-    load();
-  }, []);
 
   const dummySetup = () => {
     // TODO: hard code recipes array
@@ -58,49 +54,54 @@ export default () => {
   };
 
   const load = async () => {
-    //await fetch(apiUrl + '/v4/recipes/list/favoried?session=' + cookies.session + '&userID=' + cookies.userID, {
-    await fetch(apiUrl + '/v4/recipes/list/all?session=' + cookies.session, {
+    // await fetch(apiUrl + '/v4/recipes/list/favoried?session=' + cookies.session + '&userID=' + cookies.userID, {
+    await fetch(`${apiUrl}/v4/recipes/list/all?session=${cookies.session}`, {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        if (res.status !== 406) {
-          throw new Error(res.status + ' ' + res.statusText);
-        } else {
-          return null;
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status !== 406) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          } else {
+            return null;
+          }
         }
-      }
-      return res.json();
-    })
-    .then(async (data) => {
-      if (data !== null) {
-        let recipes = data.map((item) => {
-          return {
+        return res.json();
+      })
+      .then(async (data) => {
+        if (data !== null) {
+          const recipes2 = data.map((item) => ({
             key: item.recipeID,
             title: item.title,
-            subtitle: item.servings + ' ' + strings.servings + ' | ' + item.cookingTime + ' ' + strings.minutes,
+            subtitle: `${item.servings} ${strings.servings} | ${item.cookingTime} ${strings.minutes}`,
             image: item.image,
-          };
-        });
-        setRecipes(recipes);
-      }
-    })
-    .catch((error) => setToast(error.toString()));
+          }));
+          setRecipes(recipes2);
+        } else {
+          setToast(strings.toast_missing);
+        }
+      })
+      .catch((error) => setToast(error.toString()));
   };
+
+  useEffect(() => {
+    // dummySetup();
+    load();
+  }, []);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
   };
 
   const handleFavorite = async (value) => {
-    await fetch(apiUrl + '/v3/recipes/favorite', {
+    await fetch(`${apiUrl}/v4/recipes/favorite`, {
       method: 'post',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -111,7 +112,7 @@ export default () => {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error(res.status + ' ' + res.statusText);
+          throw new Error(`${res.status} ${res.statusText}`);
         }
       })
       .catch((error) => setToast(error.toString()));
@@ -123,39 +124,39 @@ export default () => {
     // TODO: fetch
   };
 
-  const handleAddToCart = async () => {
+  const handleAddToCart = async (value) => {
     // TODO: fetch
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       <MaterialTopAppBar
         title={strings.recipes}
         onClick1={toggleDrawer}
-        onClick2={() => window.location.href = 'search/' }
-      ></MaterialTopAppBar>
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+        onClick2={() => window.location.href = 'search/'}
+      />
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <MaterialDrawer
           open={drawerOpen}
           selectedIndex={1}
           onClose={toggleDrawer}
-        ></MaterialDrawer>
-        <DrawerAppContent className='drawer-app-content'>
+        />
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
             {recipes.length > 0 && (
             <Row>
               {recipes.map((item) => (
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                <RecipesCard
-                  mainText1={item.title}
-                  mainText2={item.subtitle}
-                  onClickMain={() => { window.location.href = 'view/?id=' + item.key }}
-                  onClickAction1={() => handleFavorite(item.key)}
-                  onClickAction2={handleHistory}
-                  onClickAction3={handleAddToCart}
-                  mainImage={item.image}
-                ></RecipesCard>
-              </Cell>
+                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                  <RecipesCard
+                    mainText1={item.title}
+                    mainText2={item.subtitle}
+                    onClickMain={() => { window.location.href = `view/?id=${item.key}`; }}
+                    onClickAction1={() => handleFavorite(item.key)}
+                    onClickAction2={handleHistory}
+                    onClickAction3={() => handleAddToCart(item.key)}
+                    mainImage={item.image}
+                  />
+                </Cell>
               ))}
             </Row>
             )}
@@ -164,11 +165,13 @@ export default () => {
         {toast && (
         <MaterialSnackbar message={toast} onClose={() => setToast('')} />
         )}
+        {/*
         <MaterialFab
-          icon={<MaterialIcon icon='note_add'/>}
+          icon={<MaterialIcon icon="note_add" />}
           style={{ position: 'absolute', right: 16, bottom: 16 }}
-          onClick={() => window.location.href = 'create/' }
-        ></MaterialFab>
+          onClick={() => window.location.href = 'create/'}
+        />
+        */}
       </TopAppBarFixedAdjust>
     </View>
   );

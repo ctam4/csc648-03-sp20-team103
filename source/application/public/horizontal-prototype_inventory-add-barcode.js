@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppRegistry } from 'react-native';
 
 import InventoryAddBarcode from '../pages/horizontal-prototype/InventoryAddBarcode.jsx';

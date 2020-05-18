@@ -8,45 +8,45 @@ export const initialState = {
   ingredients: [],
 };
 
-export const recipeViewReducer = (state = initialState, action) => {
+export const recipesViewReducer = (state = initialState, action) => {
   switch (action.type) {
-    case 'RECIPEVIEW_SET_RECIPEID': {
+    case 'RECIPESVIEW_SET_RECIPEID': {
       return {
         ...state,
         recipeID: action.recipeID,
       };
     }
-    case 'RECIPEVIEW_SET_TITLE': {
+    case 'RECIPESVIEW_SET_TITLE': {
       return {
         ...state,
         title: action.title,
       };
     }
-    case 'RECIPEVIEW_SET_IMAGE': {
+    case 'RECIPESVIEW_SET_IMAGE': {
       return {
         ...state,
         image: action.image,
       };
     }
-    case 'RECIPEVIEW_SET_SERVINGS': {
+    case 'RECIPESVIEW_SET_SERVINGS': {
       return {
         ...state,
         servings: action.servings,
       };
     }
-    case 'RECIPEVIEW_SET_COOKINGTIME': {
+    case 'RECIPESVIEW_SET_COOKINGTIME': {
       return {
         ...state,
         cookingTime: action.cookingTime,
       };
     }
-    case 'RECIPEVIEW_SET_INSTRUCTIONS': {
+    case 'RECIPESVIEW_SET_INSTRUCTIONS': {
       return {
         ...state,
         instructions: action.instructions,
       };
     }
-    case 'RECIPEVIEW_SET_INGREDIENTS': {
+    case 'RECIPESVIEW_SET_INGREDIENTS': {
       return {
         ...state,
         ingredients: action.ingredients,
