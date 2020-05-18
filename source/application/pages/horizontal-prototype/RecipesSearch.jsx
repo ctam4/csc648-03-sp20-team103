@@ -132,6 +132,7 @@ export default () => {
       <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
         <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
+            {/*
             <Row>
               <Cell columns={12}>
                 <Body1>{strings.choose_calories}</Body1>
@@ -174,6 +175,7 @@ export default () => {
                 />
               </Cell>
             </Row>
+            */}
             <Row>
               <Cell columns={12}>
                 <MaterialSingleSelectionList

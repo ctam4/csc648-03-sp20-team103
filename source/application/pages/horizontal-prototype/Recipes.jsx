@@ -165,11 +165,13 @@ export default () => {
         {toast && (
         <MaterialSnackbar message={toast} onClose={() => setToast('')} />
         )}
+        {/*
         <MaterialFab
           icon={<MaterialIcon icon="note_add" />}
           style={{ position: 'absolute', right: 16, bottom: 16 }}
           onClick={() => window.location.href = 'create/'}
         />
+        */}
       </TopAppBarFixedAdjust>
     </View>
   );
