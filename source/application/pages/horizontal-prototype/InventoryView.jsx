@@ -39,6 +39,7 @@ const strings = new LocalizedStrings({
     added: 'added',
     consumed: 'consumed',
     discarded: 'discarded',
+    toast_missing: 'Oops. Information is missing.',
     toast_consumed: 'Item consumed from inventory.',
     toast_discarded: 'Item discarded from inventory.',
   },
@@ -60,75 +61,87 @@ export default () => {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error(`error ${res.status}`);
+          if (res.status !== 406) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          } else {
+            return null;
+          }
         }
         return res.json();
       })
       .then(async (data) => {
-        await fetch(`${apiUrl}/v4/ingredients?session=${cookies.session}&ingredientIDs=${data.ingredientID}`, {
-          method: 'get',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
-          .then((res2) => {
-            if (!res2.ok) {
-              if (res2.status !== 406) {
-                throw new Error(`${res2.status} ${res2.statusText}`);
-              } else {
-                return null;
-              }
-            }
-            return res2.json();
+        if (data !== null) {
+          await fetch(`${apiUrl}/v4/ingredients?session=${cookies.session}&ingredientIDs=${data.ingredientID}`, {
+            method: 'get',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
           })
-          .then(async (data2) => {
-            await fetch(`${apiUrl}/v4/users?session=${cookies.session}`, {
-              method: 'get',
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-              },
-            })
-              .then((res3) => {
-                if (!res3.ok) {
-                  if (res3.status !== 406) {
-                    throw new Error(`${res3.status} ${res3.statusText}`);
-                  } else {
-                    return null;
-                  }
+            .then((res2) => {
+              if (!res2.ok) {
+                if (res2.status !== 406) {
+                  throw new Error(`${res2.status} ${res2.statusText}`);
+                } else {
+                  return null;
                 }
-                return res3.json();
-              })
-              .then((data3) => {
-                dispatch(setInventoryID(data.inventoryID));
-                dispatch(setName(data2[0].name));
-                dispatch(setImage(data2[0].image));
-                dispatch(setTotalQuantity(data.totalQuantity));
-                dispatch(setUnit(data.unit));
-                dispatch(setPrice(data.price));
-                dispatch(setExpirationDate(data.expirationDate));
-                const history = data.history.map((item) => {
-                  const user = data3.find((item2) => item.userID === item2.userID);
-                  let value = `${user.name} `;
-                  switch (item.action) {
-                    case 'added':
-                      value += strings.added;
-                      break;
-                    case 'consumed':
-                      value += strings.consumed;
-                      break;
-                    case 'discarded':
-                      value += strings.discarded;
-                      break;
-                  }
-                  const actionTS = Moment.utc(item.actionTS);
-                  value += ` ${item.quantity} ${item.unit} on ${actionTS.fromNow()}.`;
-                  return value;
-                });
-                dispatch(setHistory(history));
-              });
-          });
+              }
+              return res2.json();
+            })
+            .then(async (data2) => {
+              if (data2 !== null) {
+                await fetch(`${apiUrl}/v4/users?session=${cookies.session}`, {
+                  method: 'get',
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json',
+                  },
+                })
+                  .then((res3) => {
+                    if (!res3.ok) {
+                      if (res3.status !== 406) {
+                        throw new Error(`${res3.status} ${res3.statusText}`);
+                      } else {
+                        return null;
+                      }
+                    }
+                    return res3.json();
+                  })
+                  .then((data3) => {
+                    dispatch(setInventoryID(data.inventoryID));
+                    dispatch(setName(data2[0].name));
+                    dispatch(setImage(data2[0].image));
+                    dispatch(setTotalQuantity(data.totalQuantity));
+                    dispatch(setUnit(data.unit));
+                    dispatch(setPrice(data.price));
+                    dispatch(setExpirationDate(data.expirationDate));
+                    const history = data.history.map((item) => {
+                      const user = data3.find((item2) => item.userID === item2.userID);
+                      let value = `${user.name} `;
+                      switch (item.action) {
+                        case 'added':
+                          value += strings.added;
+                          break;
+                        case 'consumed':
+                          value += strings.consumed;
+                          break;
+                        case 'discarded':
+                          value += strings.discarded;
+                          break;
+                      }
+                      const actionTS = Moment.utc(item.actionTS);
+                      value += ` ${item.quantity} ${item.unit} on ${actionTS.fromNow()}.`;
+                      return value;
+                    });
+                    dispatch(setHistory(history));
+                  });
+              } else {
+                setToast(strings.toast_missing);
+              }
+            });
+        } else {
+          setToast(strings.toast_missing);
+        }
       })
       .catch((error) => setToast(error.toString()));
   };

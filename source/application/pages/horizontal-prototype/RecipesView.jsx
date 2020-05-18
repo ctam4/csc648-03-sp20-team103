@@ -29,6 +29,7 @@ const strings = new LocalizedStrings({
   en: {
     servings: 'servings',
     minutes: 'minutes',
+    toast_missing: 'Oops. Information is missing.',
     toast_favorited: 'Recipe favorited.',
     toast_added_to_cart: 'Recipe added to cart.',
   },
@@ -50,45 +51,57 @@ export default () => {
     })
       .then((res) => {
         if (!res.ok) {
-          throw new Error(`error ${res.status}`);
+          if (res.status !== 406) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          } else {
+            return null;
+          }
         }
         return res.json();
       })
       .then(async (data) => {
-        const ingredientIDs = data[0].ingredients.map((item) => item.ingredientID);
-        await fetch(`${apiUrl}/v4/ingredients?session=${cookies.session}&ingredientIDs=${ingredientIDs.join(',')}`, {
-          method: 'get',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
-          .then((res2) => {
-            if (!res2.ok) {
-              if (res2.status !== 406) {
-                throw new Error(`${res2.status} ${res2.statusText}`);
-              } else {
-                return null;
-              }
-            }
-            return res2.json();
+        if (data !== null) {
+          const ingredientIDs = data[0].ingredients.map((item) => item.ingredientID);
+          await fetch(`${apiUrl}/v4/ingredients?session=${cookies.session}&ingredientIDs=${ingredientIDs.join(',')}`, {
+            method: 'get',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
           })
-          .then((data2) => {
-            dispatch(setRecipeID(data[0].recipeID));
-            dispatch(setTitle(data[0].title));
-            dispatch(setImage(data[0].image));
-            dispatch(setServings(data[0].servings));
-            dispatch(setCookingTime(data[0].cookingTime));
-            dispatch(setInstructions(data[0].instructions));
-            const ingredients = data[0].ingredients.map((item) => {
-              const ingredient = data2.find((item2) => item.ingredientID === item2.ingredientID);
-              return {
-                primaryText: ingredient.name,
-                secondaryText: `${item.quantity} ${item.unit}`,
-              };
+            .then((res2) => {
+              if (!res2.ok) {
+                if (res2.status !== 406) {
+                  throw new Error(`${res2.status} ${res2.statusText}`);
+                } else {
+                  return null;
+                }
+              }
+              return res2.json();
+            })
+            .then((data2) => {
+              if (data2 !== null) {
+                dispatch(setRecipeID(data[0].recipeID));
+                dispatch(setTitle(data[0].title));
+                dispatch(setImage(data[0].image));
+                dispatch(setServings(data[0].servings));
+                dispatch(setCookingTime(data[0].cookingTime));
+                dispatch(setInstructions(data[0].instructions));
+                const ingredients = data[0].ingredients.map((item) => {
+                  const ingredient = data2.find((item2) => item.ingredientID === item2.ingredientID);
+                  return {
+                    primaryText: ingredient.name,
+                    secondaryText: `${item.quantity} ${item.unit}`,
+                  };
+                });
+                dispatch(setIngredients(ingredients));
+              } else {
+                setToast(strings.toast_missing);
+              }
             });
-            dispatch(setIngredients(ingredients));
-          });
+        } else {
+          setToast(strings.toast_missing);
+        }
       })
       .catch((error) => setToast(error.toString()));
   };
