@@ -41,8 +41,8 @@ export default () => {
 
   const handleSearch = async (keywords) => {
     dispatch(setKeywords(keywords));
-    if (state.keywords.length > 0) {
-      await fetch(`${apiUrl}/v4/ingredients/search?session=${cookies.session}&userID=${cookies.userID}&query=${state.keywords}`, {
+    if (keywords.length > 0) {
+      await fetch(`${apiUrl}/v4/ingredients/search?session=${cookies.session}&userID=${cookies.userID}&query=${keywords}`, {
         method: 'get',
         headers: {
           Accept: 'application/json',
@@ -63,6 +63,8 @@ export default () => {
           }));
           dispatch(setAutoComplete(ingredients));
         });
+    } else {
+      dispatch(setAutoComplete(initialState.autoComplete));
     }
   };
 

@@ -81,27 +81,31 @@ export default () => {
 
   const handleSearch = async (keywords) => {
     dispatch(setKeywords(keywords));
-    await fetch(`${apiUrl}/v4/recipes/search?session=${cookies.session}&query=${state.keywords}`, {
-      method: 'get',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(`${res.status} ${res.statusText}`);
-        }
-        return res.json();
+    if (keywords.length > 0) {
+      await fetch(`${apiUrl}/v4/recipes/search?session=${cookies.session}&query=${keywords}`, {
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
       })
-      .then((data) => {
-        const recipes = data.map((item) => ({
-          key: item.recipeID,
-          primaryText: item.title,
-          recipe: item,
-        }));
-        dispatch(setAutoComplete(recipes));
-      });
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          const recipes = data.map((item) => ({
+            key: item.recipeID,
+            primaryText: item.title,
+            recipe: item,
+          }));
+          dispatch(setAutoComplete(recipes));
+        });
+    } else {
+      dispatch(setAutoComplete(initialState.autoComplete));
+    }
   };
 
   const handleAutoComplete = (value) => {
