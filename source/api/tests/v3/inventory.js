@@ -27,10 +27,10 @@ test.before(async (t) => {
   })
     .then(async () => {
       t.context.baseUrl = 'http://localhost:10005';
-      await fetch(t.context.baseUrl + '/v3/register', {
+      await fetch(`${t.context.baseUrl}/v3/register`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -38,10 +38,10 @@ test.before(async (t) => {
         .then(async (data) => {
           t.context.serialNumber = data.serialNumber;
           t.context.pin = data.pin;
-          await fetch(t.context.baseUrl + '/v3/login', {
+          await fetch(`${t.context.baseUrl}/v3/login`, {
             method: 'post',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -52,10 +52,10 @@ test.before(async (t) => {
             .then((res2) => res2.json())
             .then(async (data2) => {
               t.context.session = data2.session;
-              await fetch(t.context.baseUrl + '/v3/users', {
+              await fetch(`${t.context.baseUrl}/v3/users`, {
                 method: 'post',
                 headers: {
-                  'Accept': 'application/json',
+                  Accept: 'application/json',
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
@@ -71,10 +71,10 @@ test.before(async (t) => {
                 })
                 .then(async (data3) => {
                   t.context.userID = data3.userID;
-                  await fetch(t.context.baseUrl + '/v3/ingredients', {
+                  await fetch(`${t.context.baseUrl}/v3/ingredients`, {
                     method: 'post',
                     headers: {
-                      'Accept': 'application/json',
+                      Accept: 'application/json',
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
@@ -95,10 +95,10 @@ test.before(async (t) => {
 });
 
 test('/inventory/list/all | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=abcd&page=1&limit=10', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/list/all?session=abcd&page=1&limit=10`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -108,10 +108,10 @@ test('/inventory/list/all | GET | 400', async (t) => {
 });
 
 test('/inventory/list/all | GET | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=123456789012345678901234567890123456&page=1&limit=10', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/list/all?session=123456789012345678901234567890123456&page=1&limit=10`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -121,19 +121,19 @@ test('/inventory/list/all | GET | 401', async (t) => {
 });
 
 test('/inventory/list/all | GET | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/register', {
+  await fetch(`${t.context.baseUrl}/v3/register`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/login', {
+      await fetch(`${t.context.baseUrl}/v3/login`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -143,12 +143,12 @@ test('/inventory/list/all | GET | 406', async (t) => {
       })
         .then((res2) => res2.json())
         .then(async (data2) => {
-          await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=' + data2.session + '&page=1&limit=10', {
+          await fetch(`${t.context.baseUrl}/v3/inventory/list/all?session=${data2.session}&page=1&limit=10`, {
             method: 'get',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
-            }
+            },
           })
             .then((res3) => {
               t.is(res3.status, 406);
@@ -158,10 +158,10 @@ test('/inventory/list/all | GET | 406', async (t) => {
 });
 
 test('/inventory/list/all | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -176,10 +176,10 @@ test('/inventory/list/all | GET | 200', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/inventory/list/all?session=' + t.context.session + '&page=1&limit=10', {
+      await fetch(`${t.context.baseUrl}/v3/inventory/list/all?session=${t.context.session}&page=1&limit=10`, {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -207,10 +207,10 @@ test('/inventory/list/all | GET | 200', async (t) => {
 });
 
 test('/inventory/list/stored | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=abcd&page=1&limit=10', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/list/stored?session=abcd&page=1&limit=10`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -220,10 +220,10 @@ test('/inventory/list/stored | GET | 400', async (t) => {
 });
 
 test('/inventory/list/stored | GET | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=123456789012345678901234567890123456&page=1&limit=10', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/list/stored?session=123456789012345678901234567890123456&page=1&limit=10`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -233,19 +233,19 @@ test('/inventory/list/stored | GET | 401', async (t) => {
 });
 
 test('/inventory/list/stored | GET | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/register', {
+  await fetch(`${t.context.baseUrl}/v3/register`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/login', {
+      await fetch(`${t.context.baseUrl}/v3/login`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -255,12 +255,12 @@ test('/inventory/list/stored | GET | 406', async (t) => {
       })
         .then((res2) => res2.json())
         .then(async (data2) => {
-          await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=' + data2.session + '&page=1&limit=10', {
+          await fetch(`${t.context.baseUrl}/v3/inventory/list/stored?session=${data2.session}&page=1&limit=10`, {
             method: 'get',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
-            }
+            },
           })
             .then((res3) => {
               t.is(res3.status, 406);
@@ -270,10 +270,10 @@ test('/inventory/list/stored | GET | 406', async (t) => {
 });
 
 test('/inventory/list/stored | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -288,10 +288,10 @@ test('/inventory/list/stored | GET | 200', async (t) => {
   })
     .then((res) => t.log)
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/inventory/list/stored?session=' + t.context.session + '&page=1&limit=10', {
+      await fetch(`${t.context.baseUrl}/v3/inventory/list/stored?session=${t.context.session}&page=1&limit=10`, {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -319,10 +319,10 @@ test('/inventory/list/stored | GET | 200', async (t) => {
 });
 
 test('/inventory/list/expired | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=abcd&page=1&limit=10', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/list/expired?session=abcd&page=1&limit=10`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -332,10 +332,10 @@ test('/inventory/list/expired | GET | 400', async (t) => {
 });
 
 test('/inventory/list/expired | GET | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=123456789012345678901234567890123456&page=1&limit=10', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/list/expired?session=123456789012345678901234567890123456&page=1&limit=10`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -345,19 +345,19 @@ test('/inventory/list/expired | GET | 401', async (t) => {
 });
 
 test('/inventory/list/expired | GET | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/register', {
+  await fetch(`${t.context.baseUrl}/v3/register`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/login', {
+      await fetch(`${t.context.baseUrl}/v3/login`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -367,10 +367,10 @@ test('/inventory/list/expired | GET | 406', async (t) => {
       })
         .then((res2) => res2.json())
         .then(async (data2) => {
-          await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=' + data2.session + '&page=1&limit=10', {
+          await fetch(`${t.context.baseUrl}/v3/inventory/list/expired?session=${data2.session}&page=1&limit=10`, {
             method: 'get',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
           })
@@ -382,10 +382,10 @@ test('/inventory/list/expired | GET | 406', async (t) => {
 });
 
 test('/inventory/list/expired | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -400,10 +400,10 @@ test('/inventory/list/expired | GET | 200', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/inventory/list/expired?session=' + t.context.session + '&page=1&limit=10', {
+      await fetch(`${t.context.baseUrl}/v3/inventory/list/expired?session=${t.context.session}&page=1&limit=10`, {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -431,10 +431,10 @@ test('/inventory/list/expired | GET | 200', async (t) => {
 });
 
 test('/inventory/add/manual | POST | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -453,10 +453,10 @@ test('/inventory/add/manual | POST | 400', async (t) => {
 });
 
 test('/inventory/add/manual | POST | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -475,10 +475,10 @@ test('/inventory/add/manual | POST | 401', async (t) => {
 });
 
 test('/inventory/add/manual | POST | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -502,10 +502,10 @@ test('/inventory/add/manual | POST | 200', async (t) => {
 });
 
 test('/inventory/consume | POST | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/consume', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/consume`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -522,10 +522,10 @@ test('/inventory/consume | POST | 400', async (t) => {
 });
 
 test('/inventory/consume | POST | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/consume', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/consume`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -542,10 +542,10 @@ test('/inventory/consume | POST | 401', async (t) => {
 });
 
 test('/inventory/consume | POST | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -560,10 +560,10 @@ test('/inventory/consume | POST | 406', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/inventory/consume', {
+      await fetch(`${t.context.baseUrl}/v3/inventory/consume`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -576,15 +576,15 @@ test('/inventory/consume | POST | 406', async (t) => {
       })
         .then((res2) => {
           t.is(res2.status, 406);
-        })
+        });
     });
 });
 
 test('/inventory/consume | POST | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -599,10 +599,10 @@ test('/inventory/consume | POST | 200', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/inventory/consume', {
+      await fetch(`${t.context.baseUrl}/v3/inventory/consume`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -615,15 +615,15 @@ test('/inventory/consume | POST | 200', async (t) => {
       })
         .then((res2) => {
           t.is(res2.status, 200);
-        })
+        });
     });
 });
 
 test('/inventory/discard | POST | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/discard', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/discard`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -640,10 +640,10 @@ test('/inventory/discard | POST | 400', async (t) => {
 });
 
 test('/inventory/discard | POST | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/discard', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/discard`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -660,10 +660,10 @@ test('/inventory/discard | POST | 401', async (t) => {
 });
 
 test('/inventory/discard | POST | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -678,10 +678,10 @@ test('/inventory/discard | POST | 406', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/inventory/discard', {
+      await fetch(`${t.context.baseUrl}/v3/inventory/discard`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -694,15 +694,15 @@ test('/inventory/discard | POST | 406', async (t) => {
       })
         .then((res2) => {
           t.is(res2.status, 406);
-        })
+        });
     });
 });
 
 test('/inventory/discard | POST | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/inventory/add/manual', {
+  await fetch(`${t.context.baseUrl}/v3/inventory/add/manual`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -717,10 +717,10 @@ test('/inventory/discard | POST | 200', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/inventory/discard', {
+      await fetch(`${t.context.baseUrl}/v3/inventory/discard`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

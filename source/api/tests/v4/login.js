@@ -27,10 +27,10 @@ test.before(async (t) => {
   })
     .then(async () => {
       t.context.baseUrl = 'http://localhost:10001';
-      await fetch(t.context.baseUrl + '/v4/register', {
+      await fetch(`${t.context.baseUrl}/v4/register`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -38,10 +38,10 @@ test.before(async (t) => {
         .then(async (data) => {
           t.context.serialNumber = data.serialNumber;
           t.context.pin = data.pin;
-          await fetch(t.context.baseUrl + '/v4/login', {
+          await fetch(`${t.context.baseUrl}/v4/login`, {
             method: 'post',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -58,10 +58,10 @@ test.before(async (t) => {
 });
 
 test('/login | POST | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/login', {
+  await fetch(`${t.context.baseUrl}/v4/login`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -75,10 +75,10 @@ test('/login | POST | 400', async (t) => {
 });
 
 test('/login | POST | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/login', {
+  await fetch(`${t.context.baseUrl}/v4/login`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -92,10 +92,10 @@ test('/login | POST | 406', async (t) => {
 });
 
 test('/login | POST | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/login', {
+  await fetch(`${t.context.baseUrl}/v4/login`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -110,8 +110,8 @@ test('/login | POST | 200', async (t) => {
     .then((data) => {
       t.is(Object.keys(data).length, 3);
       t.true('session' in data);
-      t.true('logged_in_ts' in data);
-      t.true('expires_ts' in data);
+      t.true('loggedInTS' in data);
+      t.true('expiresTS' in data);
       t.is(typeof data.session, 'string');
       t.is(data.session.length, 36);
     });

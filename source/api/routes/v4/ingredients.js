@@ -5,6 +5,8 @@ const fetch = require('node-fetch');
 const pool = require('../../database.js');
 let connection;
 
+const { selectIngredients, insertIngredient, importIngredients } = require('./functions/ingredients.js');
+
 /**
  * GET /v4/ingredients
  * @description Retrieves ingredient information given their IDs.
@@ -37,13 +39,13 @@ ingredients.get('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
         if (rows.length > 0) {
-          await connection.query('SELECT ingredient_id AS ingredientID, name, image FROM v4_ingredients WHERE ingredient_id IN (?) ORDER BY ingredient_id', [ingredientIDs.join(', ')])
-            .then(async (rows2) => {
+          selectIngredients(connection, ingredientIDs, 1, ingredientIDs.length)
+            .then((rows2) => {
               if (rows2.length > 0) {
-                res.json(rows2.filter((ingredient, index) => index !== 'meta')).end();
+                res.json(rows2.filter((_, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -102,13 +104,13 @@ ingredients.get('/search', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           // @todo page
           // retrieve for endpoint
-          await fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&metaInformation=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
+          fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&metaInformation=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
             method: 'get',
             headers: {
               'Content-Type': 'application/json',
@@ -122,16 +124,25 @@ ingredients.get('/search', async (req, res) => {
             })
             .then((data) => {
               if (data.length > 0) {
-                // parse date format
-                let results = [];
-                data.map((item) => {
-                  results.push({
+                const ingredients = data.map((item) => {
+                  return {
                     ingredientID: item.id,
                     name: item.name,
                     image: `https://spoonacular.com/cdn/ingredients_500x500/${item.image}`,
-                  });
+                  };
                 });
-                res.json(results).end();
+                const ingredientIDs = ingredients.map((item) => {
+                  return item.ingredientID;
+                });
+                importIngredients(connection, ingredients);
+                selectIngredients(connection, ingredientIDs, page, limit)
+                  .then((rows) => {
+                    if (rows.length > 0) {
+                      res.json(rows.filter((_, index) => index !== 'meta')).end();
+                    } else {
+                      res.sendStatus(406).end();
+                    }
+                  });
               } else {
                 res.sendStatus(406).end();
               }
@@ -189,12 +200,17 @@ ingredients.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
         if (rows.length > 0) {
           // insert for endpoint
-          await connection.query('INSERT IGNORE INTO v4_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image])
-            .then(async (results) => {
+          insertIngredient(
+            connection,
+            ingredientID,
+            name,
+            image
+          )
+            .then((results) => {
               if (results.affectedRows > 0) {
                 res.json({ ingredientID: ingredientID }).end();
               } else {

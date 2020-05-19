@@ -4,6 +4,8 @@ const users = express.Router();
 const pool = require('../../database.js');
 let connection;
 
+const { selectUsers, insertUser, deleteUser } = require('./functions/users.js');
+
 /**
  * GET /v4/users
  * @description Retrieve users list of current fridges with session.
@@ -32,16 +34,16 @@ users.get('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+    connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
-          await connection.query('SELECT user_id AS userID, name, role, intolerances, created_ts AS createdTS FROM v4_users WHERE fridge_id=?', [fridgeID])
+          selectUsers(connection, fridgeID)
             .then((rows2) => {
               if (rows2.length > 0) {
-                res.json(rows2.filter((user, index) => index !== 'meta')).end();
+                res.json(rows2.filter((_, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -95,15 +97,15 @@ users.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+    connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           // @todo handle duplicate names
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          await connection.query('INSERT IGNORE INTO v4_users (fridge_id, name, role, intolerances) VALUES (?, ?, ?, ?)', [fridgeID, name, role, intolerances.join(',')])
-            .then(async (results) => {
+          insertUser(connection, fridgeID, name, role, intolerances)
+            .then((results) => {
               if (results.affectedRows > 0) {
                 res.json({ userID: results.insertId }).end();
               } else {
@@ -156,13 +158,13 @@ users.delete('/:userID', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+    connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          await connection.query('DELETE FROM v4_users WHERE user_id=? AND fridge_id=?', [userID, fridgeID])
+          deleteUser(connection, userID, fridgeID)
             .then((results) => {
               if (results.affectedRows > 0) {
                 res.sendStatus(200).end();

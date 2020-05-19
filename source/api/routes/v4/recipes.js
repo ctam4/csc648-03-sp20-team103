@@ -2,9 +2,18 @@ const express = require('express');
 const recipes = express.Router();
 const fetch = require("node-fetch");
 
-
 const pool = require('../../database.js');
 let connection;
+
+const {
+  selectRecipes,
+  selectFavoritedRecipes,
+  selectRecipeIngredients,
+  selectRecipeFavorites,
+  insertRecipeFavorite,
+  deleteRecipeFavorite,
+  importRecipes,
+} = require('./functions/recipes.js');
 
 /**
  * GET /v4/recipes/search
@@ -15,78 +24,6 @@ let connection;
  * @param {integer} limit (optional)
  * @returns {object[]} recipes
  */
-
-let recipeIDS = [];
-
-//function to get recipe info of each recipeID
-async function handleRecipes() {
-  let recipeInfo = [];
-  for (let i = 0; i < recipeIDS.length; i++) {
-    let results = [];
-    await fetch('https://api.spoonacular.com/recipes/' + recipeIDS[i] + '/information?includeNutrition=false' + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
-      method: 'get',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error('error ' + res.status);
-        }
-        return res.json();
-      })
-      .then((data) => {
-        let recipeID = data.id;
-        // let name = data.sourceName;
-        let title = data.title;
-        let image = data.image;
-        let servings = data.servings;
-        let cookingTime = data.readyInMinutes;
-        let instructions = 'none';
-        if (data.instructions !== null) {
-          instructions = data.instructions;
-        }
-
-        connection.query('INSERT IGNORE INTO v4_recipes(recipe_id,  title, image, servings, cooking_time, instructions) VALUES(?, ?, ?, ?, ?, ?)', [recipeID, title, image, servings, cookingTime, instructions]);
-        // console.log(data);
-        let ingredientInfo = [];
-        //getting the ingredients
-        if (data !== 'undefined') {
-          data.extendedIngredients.map((item) => {
-            let ingredientID = parseInt(item.id);
-            let quantity = parseInt(item.amount);
-            let unit = (item.unit);
-            let name = item.name
-            connection.query('INSERT IGNORE INTO v4_recipe_ingredients(recipe_id,  ingredient_id, quantity, unit) VALUES(?, ?, ?, ?)', [recipeID, ingredientID, quantity, unit]);
-            connection.query('INSERT IGNORE INTO v4_ingredients(ingredient_id,  name, image) VALUES(?, ?, ?)', [ingredientID, name, image]);
-            ingredientInfo.push({
-              ingredientID: ingredientID,
-              quantity: quantity,
-              unit: unit
-            })
-            // console.log(ingredientInfo);
-          });
-          // parse date format
-          //store recipe info
-          results = {
-            recipeID: recipeID,
-            title: title,
-            image: image,
-            servings: servings,
-            cookingTime: cookingTime,
-            instructions: instructions,
-            ingredients: ingredientInfo
-          }
-        } else {
-          res.sendStatus(406).end();
-        }
-      });
-    recipeInfo.push(results);
-  }
-  return recipeInfo
-
-}
-
 recipes.get('/search', async (req, res) => {
   // check correct params
   if ((Object.keys(req.query).length == 2 ||
@@ -98,6 +35,9 @@ recipes.get('/search', async (req, res) => {
   // check params data type
   let session, query, page, limit;
   try {
+    if (typeof req.query.session !== 'string' || (req.query.sort && typeof req.query.sort !== 'string')) {
+      throw new TypeError();
+    }
     session = req.query.session;
     query = req.query.query;
     page = (req.query.page && parseInt(req.query.page)) || 1;
@@ -107,7 +47,7 @@ recipes.get('/search', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (!session || page <= 0 || limit <= 0) {
+  if (session.length !== 36 || query.length === 0 || page <= 0 || limit <= 0) {
     res.sendStatus(400).end();
     return;
   }
@@ -115,10 +55,8 @@ recipes.get('/search', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
-        console.log("HerewwW", session)
         if (rows.length > 0) {
           // retrieve for endpoint
           await fetch('https://api.spoonacular.com/recipes/search?query=' + query + '&number=' + limit + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
@@ -133,25 +71,24 @@ recipes.get('/search', async (req, res) => {
               }
               return res.json();
             })
-            .then((data) => {
-              console.log(data.results.length);
+            .then(async (data) => {
               if (data.results.length > 0) {
-
-                data.results.map((item) => {
-                  recipeIDS.push(item.id);
-
+                const recipeIDs = data.results.map((item) => {
+                  return item.id;
                 });
-                console.log(recipeIDS);
-                // res.json(results).end();
+                await importRecipes(connection, recipeIDs);
+                selectRecipes(connection, recipeIDs, page, limit, 'recipe_id', false)
+                  .then((rows) => {
+                    if (rows.length > 0) {
+                      res.json(rows.filter((_, index) => index !== 'meta')).end();
+                    } else {
+                      res.sendStatus(406).end();
+                    }
+                  });
               } else {
                 res.sendStatus(406).end();
               }
             });
-
-          //call function to get recipe info for all recipeIDS
-          let recipeInfo = await handleRecipes();
-          res.json(recipeInfo).end();
-
         } else {
           res.sendStatus(401).end();
         }
@@ -166,98 +103,83 @@ recipes.get('/search', async (req, res) => {
   }
 });
 
-recipes.get('/', async (req, res) => {
-    try {
-        connection = await pool.getConnection();
-        let sql = 'SELECT * FROM v4_recipes';
-        await connection.query(sql)
-            .then((results) => {
-                res.send(JSON.stringify(results)).end();
-                // res.json(results).end();
-            });
-    } catch (error) {
-        res.sendStatus(500).end();
-        throw error;
-    } finally {
-        if (connection) {
-            connection.release(); // release to pool
-        }
-    }
-});
-
 /**
  * GET /v4/recipes
  * @description Retreives recipe information given their IDs.
- * @param {string} session
  * @param {integer(,integer)} recipeIDs
  * @returns {object[]} recipes
  */
-// recipes.get('/', async (req, res) => {
-//   // check correct params
-//   if (Object.keys(req.query).length !== 2 || !('session' in req.query) || !('recipeIDs' in req.query)) {
-//     res.sendStatus(400).end();
-//     return;
-//   }
-//   // check params data type
-//   let session, recipeIDs;
-//   try {
-//     if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
-//       throw new TypeError();
-//     }
-//     session.req.query.session;
-//     recipeIDs = req.query.recipeIDs.split(',').map(value => parseInt(value));
-//   } catch (error) {
-//     res.sendStatus(400).end();
-//     throw error;
-//   }
-//   // check params data range
-//   if (session.length !== 36 || recipeIDs.length === 0 || !recipeIDs.every(value => !isNaN(value) && value > 0)) {
-//     res.sendStatus(400).end();
-//     return;
-//   }
-//   // run query to mariadb
-//   try {
-//     connection = await pool.getConnection();
-//     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-//       .then(async (rows) => {
-//         if (rows.length > 0) {
-//           await connection.query('SELECT recipe_id AS recipeID, title, image, servings, cooking_time AS cookingTime, instructions FROM v4_recipes WHERE recipe_id IN (?) ORDER BY recipe_id', [recipeIDs.join(', ')])
-//             .then(async (rows2) => {
-//               if (rows2.length > 0) {
-//                 // console.log(rows2);
-//                 const recipes = await Promise.all(rows2.map(async (recipe, index) => {
-//                   if (index !== 'meta') {
-//                     await connection.query('SELECT ingredient_id AS ingredientID, quantity, unit FROM v4_recipe_ingredients WHERE recipe_id=?', [recipe.recipeID])
-//                       .then(async (rows3) => {
-//                         if (rows3.length > 0) {
-//                           recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
-//                           // console.log(recipe.ingredients);
-//                         }
-//                         // console.log(recipe, "HEREE");
-//                       });
-//                     return recipe
-
-//                   }
-//                 }));
-//                 // console.log(recipes);
-//                 res.json(recipes).end();
-//               } else {
-//                 res.sendStatus(406).end();
-//               }
-//             });
-//         } else {
-//           res.sendStatus(401).end();
-//         }
-//       });
-//   } catch (error) {
-//     res.sendStatus(500).end();
-//     throw error;
-//   } finally {
-//     if (connection) {
-//       connection.release(); // release to pool
-//     }
-//   }
-// });
+recipes.get('/', async (req, res) => {
+  // check correct params
+  if (Object.keys(req.query).length !== 2 || !('session' in req.query) || !('recipeIDs' in req.query)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let session, recipeIDs;
+  try {
+    if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
+      throw new TypeError();
+    }
+    session = req.query.session;
+    recipeIDs = req.query.recipeIDs.split(',').map(value => parseInt(value));
+  } catch (error) {
+    res.sendStatus(400).end();
+    throw error;
+  }
+  // check params data range
+  if (session.length !== 36 || recipeIDs.length === 0 || !recipeIDs.every(value => !isNaN(value) && value > 0)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // run query to mariadb
+  try {
+    connection = await pool.getConnection();
+    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
+        if (rows.length > 0) {
+          // @todo handle possible duplicate sessions
+          const fridgeID = rows[0].fridge_id;
+          selectRecipes(connection, recipeIDs, 1, recipeIDs.length)
+            .then(async (rows2) => {
+              if (rows2.length > 0) {
+                const recipes = await Promise.all(rows2.map(async (recipe, index) => {
+                  if (index !== 'meta') {
+                    await Promise.all([
+                      selectRecipeIngredients(connection, recipe.recipeID)
+                        .then((rows3) => {
+                          if (rows3.length > 0) {
+                            recipe.ingredients = rows3.filter((_, index2) => index2 !== 'meta');
+                          }
+                        }),
+                      selectRecipeFavorites(connection, recipe.recipeID, fridgeID)
+                        .then((rows3) => {
+                          if (rows3.length > 0) {
+                            recipe.favorites = rows3.filter((_, index2) => index2 !== 'meta');
+                          }
+                        }),
+                    ]);
+                    return recipe;
+                  }
+                }));
+                res.json(recipes).end();
+              } else {
+                res.sendStatus(406).end();
+              }
+            });
+        } else {
+          res.sendStatus(401).end();
+        }
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release(); // release to pool
+    }
+  }
+});
 
 /**
  * POST /v4/recipes/favorite
@@ -289,9 +211,9 @@ recipes.post('/favorite', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
-          await connection.query('INSERT IGNORE INTO v4_recipe_favorites (user_id, recipe_id) VALUES (?, ?)', [userID, recipeID])
+          insertRecipeFavorite(connection, userID, recipeID)
             .then((results) => {
               if (results.affectedRows > 0) {
                 res.sendStatus(200).end();
@@ -317,23 +239,25 @@ recipes.post('/favorite', async (req, res) => {
  * DELETE /v4/recipes/favorite
  * @description Delete favorited recipe for current user.
  * @param {string} session
- * @param {integer} recipeFavoriteID
+ * @param {integer} userID
+ * @param {integer} recipeID
  */
 recipes.delete('/favorite', async (req, res) => {
   // check params data type
-  let session, recipeFavoriteID;
+  let session, userID, recipeID;
   try {
     if (typeof req.query.session !== 'string') {
       throw new TypeError();
     }
     session = req.query.session;
-    recipeFavoriteID = req.query.recipeFavoriteID;
+    userID = Number.parseInt(req.query.userID, 10);
+    recipeID = Number.parseInt(req.query.recipeID, 10);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
   // check params data range
-  if (session.length !== 36 || recipeFavoriteID <= 0) {
+  if (session.length !== 36 || Number.isNaN(userID) || Number.isNaN(recipeID) || userID < 0 || recipeID < 0) {
     res.sendStatus(400).end();
     return;
   }
@@ -341,9 +265,9 @@ recipes.delete('/favorite', async (req, res) => {
   try {
     connection = await pool.getConnection();
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+      .then((rows) => {
         if (rows.length > 0) {
-          await connection.query('DELETE FROM v4_recipe_favorites WHERE recipe_favorite_id=?', [recipeFavoriteID])
+          deleteRecipeFavorite(connection, userID, recipeID)
             .then((results) => {
               if (results.affectedRows > 0) {
                 res.sendStatus(200).end();
@@ -366,61 +290,86 @@ recipes.delete('/favorite', async (req, res) => {
 });
 
 /**
- * GET /v4/recipes/favorites
- * @description Retrieve recipes list of current fridges with session.
+ * GET /v4/recipes/list:state
+ * @description Retrieve recipe list of current fridges with session.
  * @param {string} session
- * @param {string} query
+ * @param {integer} userID (optional)
  * @param {integer} page (optional)
  * @param {integer} limit (optional)
- * @returns {object[]} recipeID
+ * @param {string} sort (optional)
+ * @param {boolean} descending (optional)
+ * @returns {object[]} recipes
  */
-recipes.get('/favorites', async (req, res) => {
-  // check params data type
-  if ((Object.keys(req.query).length == 3 ||
-    (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
-    !('session' in req.query && 'query' in req.query)) {
+recipes.get('/list/:state', async (req, res) => {
+  // check correct ':state'
+  const state = req.params.state;
+  if (!['all', 'favorited'].includes(state)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check correct params
+  if ((Object.keys(req.query).length == 1 ||
+    (Object.keys(req.query).length == 2 && !('userID' in req.query)) ||
+    (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
+    (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query)) ||
+    (Object.keys(req.query).length == 4 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query)) ||
+    (Object.keys(req.query).length == 6 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
+    !('session' in req.query)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
-  let session, query, page, limit, userID;
+  let session, userID, page, limit, sort, descending;
   try {
+    if (typeof req.query.session !== 'string' || (req.query.sort && typeof req.query.sort !== 'string')) {
+      throw new TypeError();
+    }
     session = req.query.session;
-    query = req.query.query;
-    userID = req.query.userID;
+    userID = (req.query.userID && parseInt(req.query.userID)) || null;
     page = (req.query.page && parseInt(req.query.page)) || 1;
-    limit = (req.query.limit && parseInt(req.query.limit)) || 20;
+    limit = (req.query.limit && parseInt(req.query.limit)) || 100;
+    sort = req.query.sort || null;
+    descending = (req.query.descending && (req.query.descending == true || (req.query.descending == false && false))) || null;
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
   // check params data range
-  if (!session || page <= 0 || limit <= 0) {
+  if (session.length !== 36 || (userID != null && userID <= 0) || page <= 0 || limit <= 0 || (sort != null && !['recipe_id'].includes(sort))) {
     res.sendStatus(400).end();
     return;
   }
-
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 AS fridgeID FROM v4_sessions WHERE session=?', [session])
+    // retrieve fridge_id
+    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          let sql = 'SELECT recipe_id AS recipeID FROM v4_recipe_favorites WHERE user_id=?';
-          await connection.query(sql + ' LIMIT ? OFFSET ?', [userID, limit, (page - 1) * limit])
+          // @todo handle possible duplicate sessions
+          const fridgeID = rows[0].fridge_id;
+          // retrieve for endpoint
+          let query;
+          switch (state) {
+            case 'all':
+              query = selectRecipes(connection, null, page, limit, sort, descending);
+              break;
+            case 'favorited':
+              query = selectFavoritedRecipes(connection, userID, page, limit, sort, descending);
+              break;
+          }
+          query
             .then((rows) => {
               if (rows.length > 0) {
-                // res.send(JSON.stringify(rows)).end();
-                res.json(rows).end();
+                res.json(rows.filter((_, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
             });
-
         } else {
           res.sendStatus(401).end();
         }
-      })
+      });
   } catch (error) {
     res.sendStatus(500).end();
     throw error;
@@ -429,26 +378,6 @@ recipes.get('/favorites', async (req, res) => {
       connection.release(); // release to pool
     }
   }
-});
-
-//for testing
-recipes.get('/favorites', async (req, res) => {
-    try {
-        connection = await pool.getConnection();
-        let sql = 'SELECT * FROM v4_recipe_ingredients';
-        await connection.query(sql)
-            .then((results) => {
-                res.send(JSON.stringify(results)).end();
-                // res.json(results).end();
-            });
-    } catch (error) {
-        res.sendStatus(500).end();
-        throw error;
-    } finally {
-        if (connection) {
-            connection.release(); // release to pool
-        }
-    }
 });
 
 module.exports = recipes
