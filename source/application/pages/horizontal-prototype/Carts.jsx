@@ -15,6 +15,7 @@ import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnac
 import CartsCard from '../../components/horizontal-prototype/CartsCard';
 
 import { apiUrl } from '../../url';
+import CartsUpdateDialog from "../../components/horizontal-prototype/CartsUpdateDialog";
 
 const strings = new LocalizedStrings({
   en: {
@@ -23,6 +24,7 @@ const strings = new LocalizedStrings({
     update: 'Update',
     remove: 'Remove',
     toast_updated: 'Item updated from cart.',
+    toast_missing: 'Oops. Information is missing.',
     toast_removed: 'Item removed from cart.',
   },
 });
@@ -30,6 +32,10 @@ const strings = new LocalizedStrings({
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(null);
+  const [dialogQuantity, setDialogQuantity] = useState(0.0);
+  const [dialogUnit, setDialogUnit] = useState('');
+  const [inventoryID, setInventoryID] = useState(null);
   const [toast, setToast] = useState('');
   const [carts, setCarts] = useState([]);
 
@@ -137,7 +143,7 @@ export default () => {
   };
 
   useEffect(() => {
-    dummySetup();
+    //dummySetup();
     load();
   }, []);
 
@@ -145,12 +151,60 @@ export default () => {
     setDrawerOpen(!drawerOpen);
   };
 
-  const handleUpdate = async () => {
+  const toggleDialog = (dialogOpen) => {
+    setDialogOpen(dialogOpen);
+  };
+
+  const handleUpdate = (key) => {
     // TODO: fetch
+    setInventoryID(key);
+    toggleDialog('update')
   };
 
   const handleRemove = async () => {
     // TODO: fetch
+  };
+
+  const handleSubmission = async (value) => {
+    const action = dialogOpen;
+    toggleDialog(null);
+    if (value === 'confirm') {
+      console.log(action);
+      switch (action) {
+        case 'consume':
+        case 'remove':
+          await fetch(`${apiUrl}/v4/carts/${action}`, {
+            method: 'post',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              session: cookies.session,
+              userID: cookies.userID,
+              inventoryID,
+              quantity: dialogQuantity,
+              unit: dialogUnit,
+            }),
+          })
+              .then((res) => {
+                if (!res.ok) {
+                  throw new Error(`${res.status} ${res.statusText}`);
+                }
+              })
+              .catch((error) => setToast(error.toString()));
+          switch (action) {
+            case 'consume':
+              setToast(strings.toast_updated);
+              break;
+            case 'remove':
+              setToast(strings.toast_removed);
+              break;
+          }
+          load();
+          break;
+      }
+    }
   };
 
   return (
@@ -191,6 +245,15 @@ export default () => {
         <MaterialSnackbar message={toast} onClose={() => setToast('')} />
         )}
       </TopAppBarFixedAdjust>
+      <CartsUpdateDialog open={dialogOpen === 'update'}
+                         onClose={handleSubmission}
+                         quantity={dialogQuantity}
+                         onChange1={(e) => setDialogQuantity(e.target.value)}
+                         onTrailingIconSelect1={() => setDialogQuantity(1.0)}
+                         unit={dialogUnit}
+                         onChange2={(e) => setDialogUnit(e.target.value)}
+                         onTrailingIconSelect2={() => setDialogUnit('')}
+      />
     </View>
   );
 };
