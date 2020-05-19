@@ -87,6 +87,7 @@ test.before(async (t) => {
                     .then((res4) => res4.json())
                     .then((data4) => {
                       t.context.ingredientID = data4.ingredientID;
+                      
                     });
                 });
             });
@@ -144,7 +145,7 @@ test('/carts | GET | 406', async (t) => {
         })
         .then((res2) => res2.json())
         .then(async (data2) => {
-          await fetch(t.context.baseUrl + '/v4/carts?session=' + data2.session + '&userID=10031312312312300', {
+          await fetch(t.context.baseUrl + '/v4/carts?session=' + data2.session + '&userID=' + Math.floor(Math.random() * 10000000), {
               method: 'get',
               headers: {
                 'Accept': 'application/json',
@@ -284,3 +285,66 @@ test('/carts/ingredient | POST | 200', async (t) => {
     })
 
 });
+
+
+
+////////
+
+
+test('/carts/recipe | POST | 400', async (t) => {
+  await fetch(t.context.baseUrl + '/v4/carts/recipe', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userID: t.context.userID,
+        recipeID: 113995,
+        session: 'abcd',
+      }),
+    })
+    .then((res) => {
+      t.is(res.status, 400);
+    });
+});
+
+test('/carts/recipe | POST | 401', async (t) => {
+  await fetch(t.context.baseUrl + '/v4/carts/recipe', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userID: t.context.userID,
+        recipeID: 113995,
+        session: 'bfc1effd-bb39-41c5-b529-3d6aa35712e6',
+      }),
+    })
+    .then((res) => {
+      t.is(res.status, 401);
+    });
+});
+
+test('/carts/recipe | POST | 200', async (t) => {
+  console.log(t.context.userID, "USERID HELLO")
+  await fetch(t.context.baseUrl + '/v4/carts/recipe', {
+      method: 'post',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userID: t.context.userID,
+          recipeID: 113995,
+        session: t.context.session,
+      }),
+    })
+    .then((res) => {
+      t.is(res.status, 200);
+      return res.json();
+    })
+
+});
+
