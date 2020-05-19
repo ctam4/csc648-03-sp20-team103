@@ -236,7 +236,7 @@ carts.get('/', async (req, res) => {
     return;
   }
   // check params data type
-  let session, page, limit, sort, descending, userID;
+  let session, page, limit, sort, descending;
   try {
     if (typeof req.query.session !== 'string' || (req.query.sort && typeof req.query.sort !== 'string')) {
       throw new TypeError();
