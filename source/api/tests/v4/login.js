@@ -108,10 +108,7 @@ test('/login | POST | 200', async (t) => {
       return res.json();
     })
     .then((data) => {
-      t.is(Object.keys(data).length, 3);
       t.true('session' in data);
-      t.true('loggedInTS' in data);
-      t.true('expiresTS' in data);
       t.is(typeof data.session, 'string');
       t.is(data.session.length, 36);
     });
