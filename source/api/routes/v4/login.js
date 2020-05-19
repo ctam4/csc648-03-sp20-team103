@@ -34,15 +34,21 @@ login.post('/', async (req, res) => {
   // run query to mariadb
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT fridge_id FROM v4_fridges WHERE serial_number=? AND pin=?', [serialNumber, pin])
+    connection.query('SELECT fridge_id FROM v4_fridges WHERE serial_number=? AND pin=?', [serialNumber, pin])
       .then(async (rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           const session = uuidv4();
-          const results = (await connection.query('SELECT CURRENT_TIMESTAMP as logged_in_ts, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 MONTH) as expires_ts'))[0];
-          await connection.query('INSERT IGNORE INTO v4_sessions(session, fridge_id, logged_in_ts, expires_ts) VALUES (?, ?, ?, ?)', [session, fridgeID, results.logged_in_ts, results.expires_ts]);
-          res.json({ ...results, session: session }).end();
+          const results = (await connection.query('SELECT CURRENT_TIMESTAMP AS loggedInTS, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 1 MONTH) as expiresTS'))[0];
+          connection.query('INSERT IGNORE INTO v4_sessions (session, fridge_id, logged_in_ts, expires_ts) VALUES (?, ?, ?, ?)', [session, fridgeID, results.loggedInTS, results.expiresTS])
+            .then((results2) => {
+              if (results2.affectedRows > 0) {
+                res.json({ ...results, session: session }).end();
+              } else {
+                res.sendStatus(406).end();
+              }
+            });
         } else {
           res.sendStatus(406).end();
         }

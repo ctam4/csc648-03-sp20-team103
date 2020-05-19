@@ -1,4 +1,4 @@
-const selectInventory = async (connection, fridgeID, inventoryID, state, page, limit, sort, descending) => {
+const selectInventory = (connection, fridgeID, inventoryID, state, page, limit, sort, descending) => {
   let sql = 'SELECT inventory_id AS inventoryID, ingredient_id AS ingredientID, expiration_date AS expirationDate, total_quantity AS totalQuantity, unit, price FROM v4_inventory WHERE fridge_id=?';
   if (inventoryID !== null) {
     sql += ' AND inventory_id=?';
@@ -29,15 +29,15 @@ const selectInventory = async (connection, fridgeID, inventoryID, state, page, l
   }
 };
 
-const insertInventoryLog = async (connection, invetoryID, userID, quantity, unit, action) => {
+const insertInventoryLog = (connection, invetoryID, userID, quantity, unit, action) => {
   return connection.query('INSERT IGNORE INTO v4_inventory_log (inventory_id, user_id, quantity, unit, action) VALUES (?, ?, ?, ?, ?)', [invetoryID, userID, quantity, unit, action]);
 };
 
-const insertInventory = async (connection, fridgeID, ingredientID, expirationDate, totalQuantity, unit, price) => {
+const insertInventory = (connection, fridgeID, ingredientID, expirationDate, totalQuantity, unit, price) => {
   return connection.query('INSERT IGNORE INTO v4_inventory (fridge_id, ingredient_id, expiration_date, total_quantity, unit, price) VALUES (?, ?, FROM_UNIXTIME(?), ?, ?, ?)', [fridgeID, ingredientID, expirationDate, totalQuantity, unit, price]);
 };
 
-const updateInventory = async (connection, inventoryID, quantity) => {
+const updateInventory = (connection, inventoryID, quantity) => {
   return connection.query('UPDATE IGNORE v4_inventory SET total_quantity=total_quantity-? WHERE inventory_id=? AND total_quantity-? >= 0', [quantity, inventoryID, quantity]);
 };
 

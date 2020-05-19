@@ -27,10 +27,10 @@ test.before(async (t) => {
   })
     .then(async () => {
       t.context.baseUrl = 'http://localhost:10007';
-      await fetch(t.context.baseUrl + '/v4/register', {
+      await fetch(`${t.context.baseUrl}/v4/register`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -38,10 +38,10 @@ test.before(async (t) => {
         .then(async (data) => {
           t.context.serialNumber = data.serialNumber;
           t.context.pin = data.pin;
-          await fetch(t.context.baseUrl + '/v4/login', {
+          await fetch(`${t.context.baseUrl}/v4/login`, {
             method: 'post',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({

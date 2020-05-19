@@ -29,18 +29,18 @@ inventory.get('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then(async (rows) => {
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+      .then((rows) => {
         if (rows.length > 0) {
-          await connection.query('SELECT ingredient_id as ingredientID, expiration_date as expirationDate, total_quantity as totalQuantity, unit, price FROM v4_inventory WHERE inventory_id=?', [inventoryID])
-            .then(async (rows2) => {
+          connection.query('SELECT ingredient_id as ingredientID, expiration_date as expirationDate, total_quantity as totalQuantity, unit, price FROM v4_inventory WHERE inventory_id=?', [inventoryID])
+            .then((rows2) => {
               if (rows2.length > 0) {
                 const item = rows2[0];
-                await connection.query('SELECT user_id as userID, quantity, unit, action, action_ts as actionTS FROM v4_inventory_log WHERE inventory_id=? ORDER BY action_ts DESC', [inventoryID])
+                connection.query('SELECT user_id as userID, quantity, unit, action, action_ts as actionTS FROM v4_inventory_log WHERE inventory_id=? ORDER BY action_ts DESC', [inventoryID])
                   .then(async (rows3) => {
                     item.history = rows3.filter((_, index) => index !== 'meta');
+                    res.json(item).end();
                   });
-                res.json(item).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -108,7 +108,7 @@ inventory.get('/list/:state', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+    connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
@@ -181,7 +181,7 @@ inventory.post('/add/manual', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+    connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
@@ -256,7 +256,7 @@ inventory.post('/consume', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
@@ -331,7 +331,7 @@ inventory.post('/discard', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions

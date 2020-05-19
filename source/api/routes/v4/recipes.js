@@ -80,7 +80,7 @@ recipes.get('/search', async (req, res) => {
                 selectRecipes(connection, recipeIDs, page, limit, 'recipe_id', false)
                   .then((rows) => {
                     if (rows.length > 0) {
-                      res.json(rows.filter((recipe, index) => index !== 'meta')).end();
+                      res.json(rows.filter((_, index) => index !== 'meta')).end();
                     } else {
                       res.sendStatus(406).end();
                     }
@@ -143,23 +143,22 @@ recipes.get('/', async (req, res) => {
           selectRecipes(connection, recipeIDs, 1, recipeIDs.length)
             .then(async (rows2) => {
               if (rows2.length > 0) {
-                // console.log(rows2);
                 const recipes = await Promise.all(rows2.map(async (recipe, index) => {
                   if (index !== 'meta') {
-                    await Promise.all(
+                    await Promise.all([
                       selectRecipeIngredients(connection, recipe.recipeID)
                         .then((rows3) => {
                           if (rows3.length > 0) {
-                            recipe.ingredients = rows3.filter((ingredient, index2) => index2 !== 'meta');
+                            recipe.ingredients = rows3.filter((_, index2) => index2 !== 'meta');
                           }
                         }),
                       selectRecipeFavorites(connection, recipe.recipeID, fridgeID)
                         .then((rows3) => {
                           if (rows3.length > 0) {
-                            recipe.favorites = rows3.filter((favorite, index2) => index2 !== 'meta');
+                            recipe.favorites = rows3.filter((_, index2) => index2 !== 'meta');
                           }
                         }),
-                    );
+                    ]);
                     return recipe;
                   }
                 }));
@@ -310,12 +309,12 @@ recipes.get('/list/:state', async (req, res) => {
   }
   // check correct params
   if ((Object.keys(req.query).length == 1 ||
-  (Object.keys(req.query).length == 2 && !('userID' in req.query)) ||
-  (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
-  (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query)) ||
-  (Object.keys(req.query).length == 4 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query)) ||
-  (Object.keys(req.query).length == 6 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
-  !('session' in req.query)) {
+    (Object.keys(req.query).length == 2 && !('userID' in req.query)) ||
+    (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
+    (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query)) ||
+    (Object.keys(req.query).length == 4 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query)) ||
+    (Object.keys(req.query).length == 6 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
+    !('session' in req.query)) {
     res.sendStatus(400).end();
     return;
   }

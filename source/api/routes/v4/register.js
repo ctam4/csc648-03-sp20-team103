@@ -20,8 +20,14 @@ register.post('/', async (req, res) => {
     do {
       results = await connection.query('SELECT 1 FROM v4_fridges WHERE serial_number=?', [serialNumber = generate(10)]);
     } while (results.length > 0);
-    await connection.query('INSERT IGNORE INTO v4_fridges (serial_number, pin) VALUES (?, ?)', [serialNumber, pin]);
-    res.json({ serialNumber: serialNumber.toString(), pin: pin.toString() }).end();
+    connection.query('INSERT IGNORE INTO v4_fridges (serial_number, pin) VALUES (?, ?)', [serialNumber, pin])
+      .then((results) => {
+        if (results.affectedRows > 0) {
+          res.json({ serialNumber: serialNumber.toString(), pin: pin.toString() }).end();
+        } else {
+          res.sendStatus(406).end();
+        }
+      });
   } catch (error) {
     res.sendStatus(500).end();
     throw error;

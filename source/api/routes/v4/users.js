@@ -34,7 +34,7 @@ users.get('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+    connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
@@ -43,7 +43,7 @@ users.get('/', async (req, res) => {
           selectUsers(connection, fridgeID)
             .then((rows2) => {
               if (rows2.length > 0) {
-                res.json(rows2.filter((user, index) => index !== 'meta')).end();
+                res.json(rows2.filter((_, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -97,7 +97,7 @@ users.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+    connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
@@ -105,7 +105,7 @@ users.post('/', async (req, res) => {
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
           insertUser(connection, fridgeID, name, role, intolerances)
-            .then(async (results) => {
+            .then((results) => {
               if (results.affectedRows > 0) {
                 res.json({ userID: results.insertId }).end();
               } else {
@@ -158,7 +158,7 @@ users.delete('/:userID', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+    connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions

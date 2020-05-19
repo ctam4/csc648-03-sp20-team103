@@ -31,10 +31,10 @@ test.before(async (t) => {
 });
 
 test('/register | POST | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/register', {
+  await fetch(`${t.context.baseUrl}/v3/register`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })

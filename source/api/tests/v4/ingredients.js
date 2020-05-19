@@ -27,10 +27,10 @@ test.before(async (t) => {
   })
     .then(async () => {
       t.context.baseUrl = 'http://localhost:10004';
-      await fetch(t.context.baseUrl + '/v4/register', {
+      await fetch(`${t.context.baseUrl}/v4/register`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -38,10 +38,10 @@ test.before(async (t) => {
         .then(async (data) => {
           t.context.serialNumber = data.serialNumber;
           t.context.pin = data.pin;
-          await fetch(t.context.baseUrl + '/v4/login', {
+          await fetch(`${t.context.baseUrl}/v4/login`, {
             method: 'post',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -58,10 +58,10 @@ test.before(async (t) => {
 });
 
 test('/ingredients | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients?session=abcd&ingredientIDs=12345678', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients?session=abcd&ingredientIDs=12345678`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -71,10 +71,10 @@ test('/ingredients | GET | 400', async (t) => {
 });
 
 test('/ingredients | GET | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients?session=123456789012345678901234567890123456&ingredientIDs=12345678', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients?session=123456789012345678901234567890123456&ingredientIDs=12345678`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -84,19 +84,19 @@ test('/ingredients | GET | 401', async (t) => {
 });
 
 test('/ingredients | GET | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/register', {
+  await fetch(`${t.context.baseUrl}/v4/register`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v4/login', {
+      await fetch(`${t.context.baseUrl}/v4/login`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -106,10 +106,10 @@ test('/ingredients | GET | 406', async (t) => {
       })
         .then((res2) => res2.json())
         .then(async (data2) => {
-          await fetch(t.context.baseUrl + '/v4/ingredients?session=' + data2.session + '&ingredientIDs=12345678', {
+          await fetch(`${t.context.baseUrl}/v4/ingredients?session=${data2.session}&ingredientIDs=12345678`, {
             method: 'get',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
           })
@@ -121,10 +121,10 @@ test('/ingredients | GET | 406', async (t) => {
 });
 
 test('/ingredients | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -136,12 +136,12 @@ test('/ingredients | GET | 200', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v4/ingredients?session=' + t.context.session + '&ingredientIDs=' + data.ingredientID, {
+      await fetch(`${t.context.baseUrl}/v4/ingredients?session=${t.context.session}&ingredientIDs=${data.ingredientID}`, {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
-        }
+        },
       })
         .then((res2) => {
           t.is(res2.status, 200);
@@ -161,10 +161,10 @@ test('/ingredients | GET | 200', async (t) => {
 });
 
 test('/ingredients/search | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients/search?session=abcd&query=apple', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients/search?session=abcd&query=apple`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -174,10 +174,10 @@ test('/ingredients/search | GET | 400', async (t) => {
 });
 
 test('/ingredients/search | GET | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients/search?session=123456789012345678901234567890123456&query=apple', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients/search?session=123456789012345678901234567890123456&query=apple`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -187,10 +187,10 @@ test('/ingredients/search | GET | 401', async (t) => {
 });
 
 test('/ingredients/search | GET | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients/search?session=' + t.context.session + '&query=superbug', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients/search?session=${t.context.session}&query=superbug`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -200,10 +200,10 @@ test('/ingredients/search | GET | 406', async (t) => {
 });
 
 test('/ingredients/search | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients/search?session=' + t.context.session + '&query=apple', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients/search?session=${t.context.session}&query=apple`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -224,10 +224,10 @@ test('/ingredients/search | GET | 200', async (t) => {
 });
 
 test('/ingredients | POST | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -243,10 +243,10 @@ test('/ingredients | POST | 400', async (t) => {
 });
 
 test('/ingredients | POST | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -298,10 +298,10 @@ test('/ingredients | POST | 406', async (t) => {
 });
 
 test('/ingredients | POST | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v4/ingredients', {
+  await fetch(`${t.context.baseUrl}/v4/ingredients`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
