@@ -27,10 +27,10 @@ test.before(async (t) => {
   })
     .then(async () => {
       t.context.baseUrl = 'http://localhost:10003';
-      await fetch(t.context.baseUrl + '/v3/register', {
+      await fetch(`${t.context.baseUrl}/v3/register`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -38,10 +38,10 @@ test.before(async (t) => {
         .then(async (data) => {
           t.context.serialNumber = data.serialNumber;
           t.context.pin = data.pin;
-          await fetch(t.context.baseUrl + '/v3/login', {
+          await fetch(`${t.context.baseUrl}/v3/login`, {
             method: 'post',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
@@ -58,10 +58,10 @@ test.before(async (t) => {
 });
 
 test('/users | GET | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users?session=abcd', {
+  await fetch(`${t.context.baseUrl}/v3/users?session=abcd`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -71,10 +71,10 @@ test('/users | GET | 400', async (t) => {
 });
 
 test('/users | GET | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users?session=123456789012345678901234567890123456', {
+  await fetch(`${t.context.baseUrl}/v3/users?session=123456789012345678901234567890123456`, {
     method: 'get',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -84,19 +84,19 @@ test('/users | GET | 401', async (t) => {
 });
 
 test('/users | GET | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/register', {
+  await fetch(`${t.context.baseUrl}/v3/register`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/login', {
+      await fetch(`${t.context.baseUrl}/v3/login`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -106,10 +106,10 @@ test('/users | GET | 406', async (t) => {
       })
         .then((res2) => res2.json())
         .then(async (data2) => {
-          await fetch(t.context.baseUrl + '/v3/users?session=' + data2.session, {
+          await fetch(`${t.context.baseUrl}/v3/users?session=${data2.session}`, {
             method: 'get',
             headers: {
-              'Accept': 'application/json',
+              Accept: 'application/json',
               'Content-Type': 'application/json',
             },
           })
@@ -121,10 +121,10 @@ test('/users | GET | 406', async (t) => {
 });
 
 test('/users | GET | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users', {
+  await fetch(`${t.context.baseUrl}/v3/users`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -136,10 +136,10 @@ test('/users | GET | 200', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/users?session=' + t.context.session, {
+      await fetch(`${t.context.baseUrl}/v3/users?session=${t.context.session}`, {
         method: 'get',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -165,10 +165,10 @@ test('/users | GET | 200', async (t) => {
 });
 
 test('/users | POST | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users', {
+  await fetch(`${t.context.baseUrl}/v3/users`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -184,10 +184,10 @@ test('/users | POST | 400', async (t) => {
 });
 
 test('/users | POST | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users', {
+  await fetch(`${t.context.baseUrl}/v3/users`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -203,10 +203,10 @@ test('/users | POST | 401', async (t) => {
 });
 
 test('/users | POST | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users', {
+  await fetch(`${t.context.baseUrl}/v3/users`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -218,10 +218,10 @@ test('/users | POST | 406', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/users', {
+      await fetch(`${t.context.baseUrl}/v3/users`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -238,10 +238,10 @@ test('/users | POST | 406', async (t) => {
 });
 
 test('/users | POST | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users', {
+  await fetch(`${t.context.baseUrl}/v3/users`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -263,10 +263,10 @@ test('/users | POST | 200', async (t) => {
 });
 
 test('/users | DELETE | 400', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users', {
+  await fetch(`${t.context.baseUrl}/v3/users`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -278,10 +278,10 @@ test('/users | DELETE | 400', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/users/' + data.userID + '?session=abcd', {
+      await fetch(`${t.context.baseUrl}/v3/users/${data.userID}?session=abcd`, {
         method: 'delete',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
@@ -292,10 +292,10 @@ test('/users | DELETE | 400', async (t) => {
 });
 
 test('/users | DELETE | 401', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users/1?session=123456789012345678901234567890123456', {
+  await fetch(`${t.context.baseUrl}/v3/users/1?session=123456789012345678901234567890123456`, {
     method: 'delete',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -305,10 +305,10 @@ test('/users | DELETE | 401', async (t) => {
 });
 
 test('/users | DELETE | 406', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users/10000?session=' + t.context.session, {
+  await fetch(`${t.context.baseUrl}/v3/users/10000?session=${t.context.session}`, {
     method: 'delete',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
   })
@@ -318,10 +318,10 @@ test('/users | DELETE | 406', async (t) => {
 });
 
 test('/users | DELETE | 200', async (t) => {
-  await fetch(t.context.baseUrl + '/v3/users', {
+  await fetch(`${t.context.baseUrl}/v3/users`, {
     method: 'post',
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
@@ -333,10 +333,10 @@ test('/users | DELETE | 200', async (t) => {
   })
     .then((res) => res.json())
     .then(async (data) => {
-      await fetch(t.context.baseUrl + '/v3/users/' + data.userID + '?session=' + t.context.session, {
+      await fetch(`${t.context.baseUrl}/v3/users/${data.userID}?session=${t.context.session}`, {
         method: 'delete',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
       })
