@@ -224,4 +224,103 @@ carts.delete('/', async (req, res) => {
   }
 });
 
+
+
+carts.get('/', async (req, res) => {
+  // check correct params
+  if ((Object.keys(req.query).length == 1 ||
+      (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
+      (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
+    !('session' in req.query)) {
+    res.sendStatus(400).end();
+    return;
+  }
+  // check params data type
+  let session, page, limit, sort, descending;
+  try {
+    if (typeof req.query.session !== 'string' || (req.query.sort && typeof req.query.sort !== 'string')) {
+      throw new TypeError();
+    }
+    session = req.query.session;
+    userID = parseInt(req.query.userID);
+    page = (req.query.page && parseInt(req.query.page)) || 1;
+    limit = (req.query.limit && parseInt(req.query.limit)) || 100;
+    sort = req.query.sort || null;
+    descending = req.query.descending || null;
+  } catch (error) {
+    res.sendStatus(400).end();
+    throw error;
+  }
+  // check params data range
+  if (session.length !== 36 || page <= 0 || limit <= 0) {
+
+    res.sendStatus(400).end();
+    return;
+  }
+  // run query to mariadb
+  try {
+    connection = await pool.getConnection();
+    // retrieve fridge_id
+    await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
+      .then(async (rows) => {
+        if (rows.length > 0) {
+         
+          const fridgeID = rows[0].fridge_id;
+          // retrieve for endpoint
+          let sql = 'SELECT cart_id AS cartID, user_id AS userID, ingredient_id AS ingredientID, quantity, unit, added_ts AS addedTS FROM v4_carts WHERE user_id=' + userID;
+          switch (sort) {
+            case 'userID':
+              sql += ' ORDER BY ' + sort;
+              if (!descending) {
+                sql += ' ASC';
+              } else {
+                sql += ' DESC';
+              }
+              break;
+
+            case 'ingredientID':
+              sql += ' ORDER BY ' + sort;
+              if (!descending) {
+                sql += ' ASC';
+              } else {
+                sql += ' DESC';
+              }
+              break;
+
+            case 'addedTS':
+              sql += ' ORDER BY ' + sort;
+              if (!descending) {
+                sql += ' ASC';
+              } else {
+                sql += ' DESC';
+              }
+              break;
+            default:
+              break;
+          }
+          await connection.query(sql + ' LIMIT ? OFFSET ?', [limit, (page - 1) * limit])
+            .then((rows) => {
+              if (rows.length > 0) {
+                console.log(sql, descending);
+                // res.send(JSON.stringify(rows)).end();
+                res.json(rows.filter((inventory, index) => index !== 'meta')).end();
+              } else {
+
+                res.sendStatus(406).end();
+              }
+            });
+        } else {
+          res.sendStatus(401).end();
+        }
+      });
+  } catch (error) {
+    res.sendStatus(500).end();
+    throw error;
+  } finally {
+    if (connection) {
+      connection.release(); // release to pool
+    }
+  }
+});
+
 module.exports = carts;
