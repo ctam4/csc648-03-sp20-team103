@@ -27,8 +27,8 @@ const strings = new LocalizedStrings({
 
 function InventoryAddDialog(props) {
   const {
-    open, onClose, quantity, onChange1, onTrailingIconSelect1, unit, onChange2, price, onChange3,
-    onTrailingIconSelect3, expirationDate, onTrailingIconSelect4,
+    open, onClose, quantity, onChange1, onTrailingIconSelect1, unit, onChange2, onTrailingIconSelect2, price, onChange3,
+    onTrailingIconSelect3, expirationDate, onChange4, onTrailingIconSelect4,
   } = props;
 
   return (
@@ -80,10 +80,12 @@ InventoryAddDialog.propTypes = {
   onTrailingIconSelect1: PropTypes.func.isRequired,
   unit: PropTypes.string.isRequired,
   onChange2: PropTypes.func.isRequired,
+  onTrailingIconSelect2: PropTypes.func.isRequired,
   price: PropTypes.string.isRequired,
   onChange3: PropTypes.func.isRequired,
   onTrailingIconSelect3: PropTypes.func.isRequired,
   expirationDate: PropTypes.string.isRequired,
+  onChange4: PropTypes.func.isRequired,
   onTrailingIconSelect4: PropTypes.func.isRequired,
 };
 
