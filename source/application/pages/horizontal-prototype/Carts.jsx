@@ -52,7 +52,7 @@ export default () => {
   };
 
   const load = async () => {
-    await fetch(`${apiUrl}/v4/carts?session=${cookies.session}`, {
+    await fetch(`${apiUrl}/v4/carts?session=${cookies.session}` + '&userID=' + cookies.userID, {
       method: 'get',
       headers: {
         Accept: 'application/json',
@@ -119,7 +119,7 @@ export default () => {
                             key: item.cartID,
                             title: ingredient.name,
                             subtitle: `${item.quantity} ${item.unit}`,
-                            content: `${strings.added_by} ${user.name} ${Moment.UTC(item.addedTS).fromNow()}`,
+                            content: `${strings.added_by} ${user.name}`,
                             image: ingredient.image,
                           };
                         });
