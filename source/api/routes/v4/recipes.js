@@ -309,12 +309,12 @@ recipes.get('/list/:state', async (req, res) => {
   }
   // check correct params
   if ((Object.keys(req.query).length == 1 ||
-    (Object.keys(req.query).length == 2 && !('userID' in req.query)) ||
-    (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
-    (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query)) ||
-    (Object.keys(req.query).length == 4 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query)) ||
-    (Object.keys(req.query).length == 6 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
-    !('session' in req.query)) {
+  (Object.keys(req.query).length == 2 && !('userID' in req.query)) ||
+  (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
+  (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query)) ||
+  (Object.keys(req.query).length == 4 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query)) ||
+  (Object.keys(req.query).length == 6 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
+  !('session' in req.query)) {
     res.sendStatus(400).end();
     return;
   }

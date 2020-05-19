@@ -39,11 +39,11 @@ ingredients.get('/', async (req, res) => {
   }
   try {
     connection = await pool.getConnection();
-    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           selectIngredients(connection, ingredientIDs, 1, ingredientIDs.length)
-            .then((rows2) => {
+            .then(async (rows2) => {
               if (rows2.length > 0) {
                 res.json(rows2.filter((_, index) => index !== 'meta')).end();
               } else {
@@ -104,13 +104,13 @@ ingredients.get('/search', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
-      .then((rows) => {
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+      .then(async (rows) => {
         if (rows.length > 0) {
           // @todo handle possible duplicate sessions
           // @todo page
           // retrieve for endpoint
-          fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&metaInformation=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
+          await fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&metaInformation=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
             method: 'get',
             headers: {
               'Content-Type': 'application/json',
@@ -134,14 +134,16 @@ ingredients.get('/search', async (req, res) => {
                 const ingredientIDs = ingredients.map((item) => {
                   return item.ingredientID;
                 });
-                importIngredients(connection, ingredients);
-                selectIngredients(connection, ingredientIDs, page, limit)
-                  .then((rows) => {
-                    if (rows.length > 0) {
-                      res.json(rows.filter((_, index) => index !== 'meta')).end();
-                    } else {
-                      res.sendStatus(406).end();
-                    }
+                importIngredients(connection, ingredients)
+                  .then(() => {
+                    selectIngredients(connection, ingredientIDs, page, limit)
+                      .then((rows) => {
+                        if (rows.length > 0) {
+                          res.json(rows.filter((_, index) => index !== 'meta')).end();
+                        } else {
+                          res.sendStatus(406).end();
+                        }
+                      });
                   });
               } else {
                 res.sendStatus(406).end();
@@ -200,7 +202,7 @@ ingredients.post('/', async (req, res) => {
   try {
     connection = await pool.getConnection();
     // retrieve fridge_id
-    connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
+    await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then((rows) => {
         if (rows.length > 0) {
           // insert for endpoint

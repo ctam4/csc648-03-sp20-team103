@@ -44,7 +44,7 @@ login.post('/', async (req, res) => {
           connection.query('INSERT IGNORE INTO v4_sessions (session, fridge_id, logged_in_ts, expires_ts) VALUES (?, ?, ?, ?)', [session, fridgeID, results.loggedInTS, results.expiresTS])
             .then((results2) => {
               if (results2.affectedRows > 0) {
-                res.json({ ...results, session: session }).end();
+                res.json({ ...results, session }).end();
               } else {
                 res.sendStatus(406).end();
               }
