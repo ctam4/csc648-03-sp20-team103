@@ -409,7 +409,7 @@ exports.up = (db, callback) => {
             notNull: true,
             foreignKey: {
               name: `${prefix}_meal_plans_recipe_id_fk`,
-              table: `${prefix}_users`,
+              table: `${prefix}_recipes`,
               rules: {
                 onDelete: 'CASCADE',
                 onUpdate: 'RESTRICT',
