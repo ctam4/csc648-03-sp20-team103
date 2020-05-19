@@ -62,7 +62,7 @@ mealPlans.get('/', async (req, res) => {
   const userID = Number.parseInt(req.query.userID, 10);
   const plannedTS = Number.parseInt(req.query.plannedTS, 10);
   if (typeof session !== 'string' || session.length !== 36 || Number.isNaN(userID)
-    || Number.isNaN(plannedTS) || userID <= 0 || plannedTS % 86400 !== 0) {
+    || Number.isNaN(plannedTS) || userID <= 0 || plannedTS % (24 * 60 * 60 * 1000) !== 0) {
     res.sendStatus(400).end();
     return;
   }
