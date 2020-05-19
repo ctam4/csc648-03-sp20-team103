@@ -62,12 +62,7 @@ mealPlans.get('/', async (req, res) => {
   const userID = Number.parseInt(req.query.userID, 10);
   const plannedTS = Number.parseInt(req.query.plannedTS, 10);
   if (typeof session !== 'string' || session.length !== 36 || Number.isNaN(userID)
-    || Number.isNaN(plannedTS) || userID <= 0) {
-    res.sendStatus(400).end();
-    return;
-  }
-  const date = new Date(plannedTS);
-  if (date.getUTCSeconds() !== 0 || date.getUTCMinutes() !== 0 || date.getUTCHours() !== 0) {
+    || Number.isNaN(plannedTS) || userID <= 0 || plannedTS % 86400 !== 0) {
     res.sendStatus(400).end();
     return;
   }
