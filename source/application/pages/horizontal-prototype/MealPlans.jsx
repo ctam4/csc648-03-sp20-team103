@@ -8,10 +8,13 @@ import { DrawerAppContent } from '@material/react-drawer';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
 
+import MaterialIcon from '@material/react-material-icon';
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
+import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
 import MealPlansCard from '../../components/horizontal-prototype/MealPlansCard';
 import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
+import MealPlanDialog from '../../components/horizontal-prototype/MealPlanDialog';
 
 import { apiUrl } from '../../url';
 
@@ -27,8 +30,13 @@ const strings = new LocalizedStrings({
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
   const [toast, setToast] = useState('');
   const [mealPlans, setMealPlans] = useState([]);
+  const [information, setInformation] = useState('');
+  const [mealPlanName, setMealPlanName] = useState('');
+  const [date, setDate] = useState('');
+  const [calories, setCalories] = useState('');
 
   const dummySetup = () => {
     // TODO: hard code mealPlans array
@@ -84,42 +92,106 @@ export default () => {
     setDrawerOpen(!drawerOpen);
   };
 
+  const toggleDialog = () => {
+    setDialogOpen(!dialogOpen);
+  };
+
+  const handleSubmission = async (value) => {
+    toggleDialog();
+    if (value === 'confirm') {
+      /*
+      await fetch(`${apiUrl}/v3/users`, {
+        method: 'post',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          session: cookies.session,
+          name,
+          role,
+          intolerances,
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setCookie('userID', data.userID, {
+            path: '/horizontal-prototype/',
+            // httpOnly: true,
+            // expires: new Date(data.expires_ts),
+          });
+        })
+        .catch((error) => setToast(error.toString()));
+      setToast(strings.toast_created);
+      */
+      load();
+    }
+  };
+
   return (
-    <View className="drawer-container">
-      <MaterialTopAppBar
-        title={strings.meal_plans}
-        onClick1={toggleDrawer}
-      />
-      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
-        <MaterialDrawer
-          open={drawerOpen}
-          selectedIndex={4}
-          onClose={toggleDrawer}
+    <>
+      <View className="drawer-container">
+        <MaterialTopAppBar
+          title={strings.meal_plans}
+          onClick1={toggleDrawer}
         />
-        <DrawerAppContent className="drawer-app-content">
-          <Grid style={{ height: useWindowDimensions().height - 64 }}>
-            {mealPlans.length > 0 && (
-            <Row>
-              {mealPlans.map((item) => (
-                <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
-                  <MealPlansCard
-                    mainText1={item.date}
-                    mainText2={item.cal_per_day + strings.calories}
-                    bodyText={item.description}
-                    actionText1={strings.view}
-                    onClickMain={() => { window.location.href = 'view/?plannedTS='; }}
-                    onClickAction1={() => { window.location.href = 'view/?plannedTS='; }}
-                  />
-                </Cell>
-              ))}
-            </Row>
-            )}
-          </Grid>
-        </DrawerAppContent>
-        {toast && (
-        <MaterialSnackbar message={toast} onClose={() => setToast('')} />
-        )}
-      </TopAppBarFixedAdjust>
-    </View>
+        <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+          <MaterialDrawer
+            open={drawerOpen}
+            selectedIndex={4}
+            onClose={toggleDrawer}
+          />
+          <DrawerAppContent className="drawer-app-content">
+            <Grid style={{ height: useWindowDimensions().height - 64 }}>
+              {mealPlans.length > 0 && (
+              <Row>
+                {mealPlans.map((item) => (
+                  <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
+                    <MealPlansCard
+                      mainText1={item.date}
+                      mainText2={item.cal_per_day + strings.calories}
+                      bodyText={item.description}
+                      actionText1={strings.view}
+                      onClickMain={() => { window.location.href = 'view/?plannedTS='; }}
+                      onClickAction1={() => { window.location.href = 'view/?plannedTS='; }}
+                    />
+                  </Cell>
+                ))}
+              </Row>
+              )}
+            </Grid>
+          </DrawerAppContent>
+          {toast && (
+          <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+          )}
+          <MaterialFab
+            icon={<MaterialIcon icon="library_add" />}
+            style={{ position: 'absolute', right: 16, bottom: 16 }}
+            onClick={toggleDialog}
+          />
+        </TopAppBarFixedAdjust>
+      </View>
+      <MealPlanDialog
+        open={dialogOpen}
+        mealPlanName={mealPlanName}
+        information={information}
+        calories={calories}
+        date={date}
+        onChange1={(e) => setMealPlanName(e.target.value)}
+        onChange2={(e) => setInformation(e.target.value)}
+        onChange3={(e) => setCalories(e.target.value)}
+        onChange4={(e) => setDate(e.target.value)}
+        onTrailingIconSelect1={() => setMealPlanName('')}
+        onTrailingIconSelect2={() => setInformation('')}
+        onTrailingIconSelect3={() => setCalories('')}
+        onTrailingIconSelect4={() => setDate('')}
+        onClose={handleSubmission}
+      />
+    </>
   );
 };

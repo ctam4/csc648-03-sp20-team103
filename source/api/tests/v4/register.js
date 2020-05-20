@@ -14,7 +14,7 @@ test.before(async (t) => {
     app.use(express.json());
     app.use(compression());
     app.use(cors());
-    app.use('/v3', require('../../routes/v3/index.js'));
+    app.use('/v4', require('../../routes/v4/index.js'));
     http.createServer(app).listen(httpPort);
   } catch (error) {
     t.log(error);
@@ -25,13 +25,13 @@ test.before(async (t) => {
     output: 'silent',
     timeout: 5,
   })
-    .then(async () => {
+    .then(() => {
       t.context.baseUrl = 'http://localhost:10002';
     });
 });
 
 test('/register | POST | 200', async (t) => {
-  await fetch(`${t.context.baseUrl}/v3/register`, {
+  await fetch(`${t.context.baseUrl}/v4/register`, {
     method: 'post',
     headers: {
       Accept: 'application/json',

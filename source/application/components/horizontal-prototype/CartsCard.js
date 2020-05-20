@@ -2,17 +2,20 @@ import React, { } from 'react';
 import PropTypes from 'prop-types';
 
 import { Headline6, Subtitle2, Body2 } from './MaterialTypography';
-import MaterialCard, { CardPrimaryContent, CardActions, CardActionButtons } from './MaterialCard';
+import MaterialCard, {
+  CardPrimaryContent, CardMedia, CardActions, CardActionButtons,
+} from './MaterialCard';
 import MaterialButton from './MaterialButton';
 
 function CartsCard(props) {
   const {
-    onClickMain, mainText1, mainText2, bodyText, onClickAction1, actionText1, onClickAction2, actionText2,
+    mainImage, mainText1, mainText2, bodyText, onClickAction1, actionText1, onClickAction2, actionText2,
   } = props;
 
   return (
     <MaterialCard className="mdc-card">
-      <CardPrimaryContent onClick={onClickMain} style={{ padding: 16 }}>
+      <CardPrimaryContent style={{ padding: 16 }}>
+        <CardMedia wide imageUrl={mainImage} />
         <Headline6 style={{ margin: 0 }}>{mainText1}</Headline6>
         <Subtitle2 style={{ margin: 0 }}>{mainText2}</Subtitle2>
         <Body2>{bodyText}</Body2>
@@ -28,7 +31,7 @@ function CartsCard(props) {
 }
 
 CartsCard.propTypes = {
-  onClickMain: PropTypes.func.isRequired,
+  mainImage: PropTypes.string.isRequired,
   mainText1: PropTypes.string.isRequired,
   mainText2: PropTypes.string.isRequired,
   bodyText: PropTypes.string.isRequired,
