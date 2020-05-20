@@ -211,7 +211,7 @@ export default () => {
               {carts.map((item) => (
                 <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
                   <CartsCard
-                    mainText1={item.key}
+                    mainText1={item.title}
                     mainText2={item.subtitle}
                     bodyText={item.content}
                     actionText1={strings.update}
