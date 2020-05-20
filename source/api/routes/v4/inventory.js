@@ -1,7 +1,7 @@
 const express = require('express');
-const inventory = express.Router();
-
 const pool = require('../../database.js');
+
+const inventory = express.Router();
 let connection;
 
 const {
@@ -20,7 +20,7 @@ const {
  */
 inventory.get('/', async (req, res) => {
   // check param types
-  const session = req.query.session;
+  const { session } = req.query;
   const inventoryID = Number.parseInt(req.query.inventoryID, 10);
   if (typeof session !== 'string' || Number.isNaN(inventoryID) || session.length !== 36
     || inventoryID < 0) {
@@ -71,30 +71,34 @@ inventory.get('/', async (req, res) => {
  */
 inventory.get('/list/:state', async (req, res) => {
   // check correct ':state'
-  const state = req.params.state;
+  const { state } = req.params;
   if (!['all', 'stored', 'expired'].includes(state)) {
     res.sendStatus(400).end();
     return;
   }
   // check correct params
-  if ((Object.keys(req.query).length == 1 ||
-    (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
-    (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
-    !('session' in req.query)) {
+  if ((Object.keys(req.query).length === 1
+    || (Object.keys(req.query).length === 3 && !('page' in req.query && 'limit' in req.query))
+    || (Object.keys(req.query).length === 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query)))
+    && !('session' in req.query)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
-  let session, page, limit, sort, descending;
+  let session;
+  let page;
+  let limit;
+  let sort;
+  let descending;
   try {
     if (typeof req.query.session !== 'string' || (req.query.sort && typeof req.query.sort !== 'string')) {
       throw new TypeError();
     }
     session = req.query.session;
-    page = (req.query.page && parseInt(req.query.page)) || 1;
-    limit = (req.query.limit && parseInt(req.query.limit)) || 100;
+    page = req.query.page ? parseInt(req.query.page, 10) : 1;
+    limit = req.query.limit ? parseInt(req.query.limit, 10) : 100;
     sort = req.query.sort || null;
-    descending = (req.query.descending && (req.query.descending == true || (req.query.descending == false && false))) || null;
+    descending = req.query.descending === 'true';
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
@@ -115,9 +119,9 @@ inventory.get('/list/:state', async (req, res) => {
           const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
           selectInventory(connection, fridgeID, null, state, page, limit, sort, descending)
-            .then((rows) => {
-              if (rows.length > 0) {
-                res.json(rows.filter((_, index) => index !== 'meta')).end();
+            .then((rows2) => {
+              if (rows2.length > 0) {
+                res.json(rows2.filter((_, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -150,30 +154,38 @@ inventory.get('/list/:state', async (req, res) => {
  */
 inventory.post('/add/manual', async (req, res) => {
   // check correct params
-  if (Object.keys(req.body).length == 7 && !('session' in req.body && 'userID' in req.body && 'ingredientID' in req.body && 'expirationDate' in req.body && 'totalQuantity' in req.body && 'unit' in req.body && 'price' in req.body)) {
+  if (Object.keys(req.body).length === 7
+    && !('session' in req.body && 'userID' in req.body && 'ingredientID' in req.body && 'expirationDate' in req.body && 'totalQuantity' in req.body && 'unit' in req.body && 'price' in req.body)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
-  let session, userID, ingredientID, expirationDate, totalQuantity, unit, price;
+  let session;
+  let userID;
+  let ingredientID;
+  let expirationDate;
+  let totalQuantity;
+  let unit;
+  let price;
   try {
     if (typeof req.body.session !== 'string' || typeof req.body.unit !== 'string') {
       throw new TypeError();
     }
     session = req.body.session;
-    userID = parseInt(req.body.userID);
-    ingredientID = parseInt(req.body.ingredientID);
-    expirationDate = (req.body.expirationDate && parseInt(req.body.expirationDate)) || null;
+    userID = parseInt(req.body.userID, 10);
+    ingredientID = parseInt(req.body.ingredientID, 10);
+    expirationDate = (req.body.expirationDate && parseInt(req.body.expirationDate, 10)) || null;
     totalQuantity = parseFloat(req.body.totalQuantity);
     unit = req.body.unit;
-    price = parseInt(req.body.price);
+    price = parseInt(req.body.price, 10);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
   // check params data range
   // @todo unit valid values
-  if (session.length !== 36 || userID <= 0 || ingredientID <= 0 || totalQuantity <= 0.0 || unit.length === 0 || unit.length > 8 || price < 0) {
+  if (session.length !== 36 || userID <= 0 || ingredientID <= 0 || totalQuantity <= 0.0
+    || unit.length === 0 || unit.length > 8 || price < 0) {
     res.sendStatus(400).end();
     return;
   }
@@ -187,7 +199,8 @@ inventory.post('/add/manual', async (req, res) => {
           // @todo handle possible duplicate sessions
           const fridgeID = rows[0].fridge_id;
           // insert for endpoint
-          insertInventory(connection, fridgeID, ingredientID, expirationDate, totalQuantity, unit, price)
+          insertInventory(connection, fridgeID, ingredientID, expirationDate,
+            totalQuantity, unit, price)
             .then((results) => {
               if (results.affectedRows > 0) {
                 insertInventoryLog(connection, results.insertId, userID, totalQuantity, unit, 'added')
@@ -227,19 +240,24 @@ inventory.post('/add/manual', async (req, res) => {
  */
 inventory.post('/consume', async (req, res) => {
   // check correct params
-  if (Object.keys(req.body).length == 5 && !('session' in req.body && 'userID' in req.body && 'inventoryID' in req.body && 'quantity' in req.body && 'unit' in req.body)) {
+  if (Object.keys(req.body).length === 5
+    && !('session' in req.body && 'userID' in req.body && 'inventoryID' in req.body && 'quantity' in req.body && 'unit' in req.body)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
-  let session, userID, inventoryID, quantity, unit;
+  let session;
+  let userID;
+  let inventoryID;
+  let quantity;
+  let unit;
   try {
     if (typeof req.body.session !== 'string' || typeof req.body.unit !== 'string') {
       throw new TypeError();
     }
     session = req.body.session;
-    userID = parseInt(req.body.userID);
-    inventoryID = parseInt(req.body.inventoryID);
+    userID = parseInt(req.body.userID, 10);
+    inventoryID = parseInt(req.body.inventoryID, 10);
     quantity = parseFloat(req.body.quantity);
     unit = req.body.unit;
   } catch (error) {
@@ -248,7 +266,8 @@ inventory.post('/consume', async (req, res) => {
   }
   // check params data range
   // @todo unit valid values
-  if (session.length !== 36 || userID <= 0 || inventoryID <= 0 || quantity <= 0.0 || unit.length === 0 || unit.length > 8) {
+  if (session.length !== 36 || userID <= 0 || inventoryID <= 0 || quantity <= 0.0
+    || unit.length === 0 || unit.length > 8) {
     res.sendStatus(400).end();
     return;
   }
@@ -302,19 +321,23 @@ inventory.post('/consume', async (req, res) => {
  */
 inventory.post('/discard', async (req, res) => {
   // check correct params
-  if (Object.keys(req.body).length == 5 && !('session' in req.body && 'userID' in req.body && 'inventoryID' in req.body && 'quantity' in req.body && 'unit' in req.body)) {
+  if (Object.keys(req.body).length === 5 && !('session' in req.body && 'userID' in req.body && 'inventoryID' in req.body && 'quantity' in req.body && 'unit' in req.body)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
-  let session, userID, inventoryID, quantity, unit;
+  let session;
+  let userID;
+  let inventoryID;
+  let quantity;
+  let unit;
   try {
     if (typeof req.body.session !== 'string' || typeof req.body.unit !== 'string') {
       throw new TypeError();
     }
     session = req.body.session;
-    userID = parseInt(req.body.userID);
-    inventoryID = parseInt(req.body.inventoryID);
+    userID = parseInt(req.body.userID, 10);
+    inventoryID = parseInt(req.body.inventoryID, 10);
     quantity = parseFloat(req.body.quantity);
     unit = req.body.unit;
   } catch (error) {
@@ -323,7 +346,8 @@ inventory.post('/discard', async (req, res) => {
   }
   // check params data range
   // @todo unit valid values
-  if (session.length !== 36 || userID <= 0 || inventoryID <= 0 || quantity <= 0.0 || unit.length === 0 || unit.length > 8) {
+  if (session.length !== 36 || userID <= 0 || inventoryID <= 0 || quantity <= 0.0
+    || unit.length === 0 || unit.length > 8) {
     res.sendStatus(400).end();
     return;
   }
