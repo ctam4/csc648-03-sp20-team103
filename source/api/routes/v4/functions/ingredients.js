@@ -10,9 +10,7 @@ const selectIngredients = async (connection, ingredientIDs, page, limit) => {
   return connection.query(sql, [...ingredientIDs, limit, (page - 1) * limit]);
 };
 
-const insertIngredient = async (connection, ingredientID, name, image) => {
-  return connection.query('INSERT IGNORE INTO v4_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image]);
-};
+const insertIngredient = async (connection, ingredientID, name, image) => connection.query('INSERT IGNORE INTO v4_ingredients (ingredient_id, name, image) VALUES (?, ?, ?)', [ingredientID, name, image]);
 
 const importIngredients = async (connection, ingredients) => {
   if (ingredients.length > 0) {
