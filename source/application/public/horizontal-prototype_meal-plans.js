@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppRegistry } from 'react-native';
 
 import MealPlans from '../pages/horizontal-prototype/MealPlans.jsx';

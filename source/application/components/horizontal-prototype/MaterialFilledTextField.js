@@ -1,25 +1,40 @@
-import React, { Component } from 'react';
+import React, { } from 'react';
+import PropTypes from 'prop-types';
 import TextField, { HelperText, Input } from '@material/react-text-field';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-text-field/dist/text-field.css';
 import '@material/react-material-icon/dist/material-icon.css';
 
 function MaterialFilledTextField(props) {
+  const {
+    label, helperText, onTrailingIconSelect, trailingIcon, inputType, value, onChange,
+  } = props;
+
   return (
     <TextField
-      label={props.label}
-      helperText={<HelperText>{props.helperText}</HelperText>}
-      onTrailingIconSelect={props.onTrailingIconSelect}
-      trailingIcon={<MaterialIcon role='button' icon={props.trailingIcon || 'clear'} />}
+      label={label}
+      helperText={<HelperText>{helperText}</HelperText>}
+      onTrailingIconSelect={onTrailingIconSelect}
+      trailingIcon={<MaterialIcon role="button" icon={trailingIcon || 'clear'} />}
       style={{ width: '100%' }}
     >
       <Input
-        inputType={props.inputType}
-        value={props.value}
-        onChange={props.onChange}
+        inputType={inputType}
+        value={value}
+        onChange={onChange}
       />
     </TextField>
   );
 }
+
+MaterialFilledTextField.propTypes = {
+  label: PropTypes.string.isRequired,
+  helperText: PropTypes.string.isRequired,
+  onTrailingIconSelect: PropTypes.func.isRequired,
+  trailingIcon: PropTypes.string,
+  inputType: PropTypes.string.isRequired,
+  value: PropTypes.string.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
 
 export default MaterialFilledTextField;

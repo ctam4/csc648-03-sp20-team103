@@ -1,4 +1,3 @@
-import React from 'react';
 import { AppRegistry } from 'react-native';
 
 import InventoryView from '../pages/horizontal-prototype/InventoryView.jsx';

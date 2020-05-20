@@ -1,7 +1,24 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
+import Moment from 'moment';
 
-import { inventoryAddReducer, initialState } from '../../reducers/horizontal-prototype/InventoryAdd';
+import { View, useWindowDimensions } from 'react-native';
+import { DrawerAppContent } from '@material/react-drawer';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import MaterialIcon from '@material/react-material-icon';
+import '@material/react-layout-grid/dist/layout-grid.css';
+import '@material/react-material-icon/dist/material-icon.css';
+
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
+import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
+import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
+import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
+import InventoryAddDialog from '../../components/horizontal-prototype/InventoryAddDialog';
+
 import {
   setSearchOpen,
   setDialogOpen,
@@ -13,44 +30,25 @@ import {
   setPrice,
   setExpirationDate,
 } from '../../actions/horizontal-prototype/InventoryAdd';
-
-import { View, useWindowDimensions } from 'react-native';
-import { DrawerAppContent } from '@material/react-drawer';
-import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
-import { Cell, Grid, Row } from '@material/react-layout-grid';
-import MaterialIcon from '@material/react-material-icon';
-import '@material/react-layout-grid/dist/layout-grid.css';
-import '@material/react-material-icon/dist/material-icon.css';
-import LocalizedStrings from 'react-localization';
-import Moment from 'moment';
-
-import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
-import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
-import MaterialFab from '../../components/horizontal-prototype/MaterialFab';
-import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
-import InventoryCard from '../../components/horizontal-prototype/InventoryCard';
-import InventoryAddDialog from '../../components/horizontal-prototype/InventoryAddDialog';
-
+import { inventoryAddReducer, initialState } from '../../reducers/horizontal-prototype/InventoryAdd';
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     expiring: 'Expiring',
     expired: 'Expired',
     remove: 'Remove',
+    toast_removed: 'Item removed from pending inventory.',
+    toast_saved: 'Item(s) saved from pending inventory to inventory.',
   },
 });
 
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
   const [state, dispatch] = useReducer(inventoryAddReducer, initialState);
+  const [toast, setToast] = useState('');
   const [inventory, setInventory] = useState([]);
   const [ingredients, setIngredients] = useState([]);
-
-  useEffect(() => {
-    // dummySetup();
-    load();
-  });
 
   const dummySetup = () => {
     // TODO: hard code inventory array
@@ -68,37 +66,9 @@ export default () => {
     ]);
   };
 
-  const load = async () => {
-    if (state.searchOpen) {
-      if (state.keywords.length > 0) {
-        await fetch(apiUrl + '/v3/ingredients/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
-          method: 'get',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        })
-          .then((res) => {
-            if (!res.ok) {
-              throw new Error(res.status + ' ' + res.statusText);
-            }
-            return res.json();
-          })
-          .then((data) => {
-            setIngredients(data);
-            const ingredients = data.map((item) => {
-              return {
-                key: item.ingredientID,
-                primaryText: item.name,
-                ingredient: item,
-              };
-            });
-            dispatch(setAutoComplete(ingredients));
-          })
-          .catch(console.log);
-      }
-    }
-  };
+  useEffect(() => {
+    // dummySetup();
+  });
 
   const toggleSearch = () => {
     dispatch(setSearchOpen(!state.searchOpen));
@@ -114,42 +84,54 @@ export default () => {
     }
   };
 
-  const handleAutoComplete = async (value) => {
-    // add to ingredients, prototype
-    await fetch(apiUrl + '/v3/ingredients', {
-      method: 'post',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        session: cookies.session,
-        ingredientID: state.autoComplete[value].ingredient.ingredientID,
-        name: state.autoComplete[value].ingredient.name,
-        image: state.autoComplete[value].ingredient.image,
-      }),
-    })
-      .then((res) => {
-        if (!res.ok) {
-          throw new Error(res.status + ' ' + res.statusText);
-        }
+  const handleSearch = async (keywords) => {
+    dispatch(setKeywords(keywords));
+    if (keywords.length > 0) {
+      await fetch(`${apiUrl}/v4/ingredients/search?session=${cookies.session}&userID=${cookies.userID}&query=${keywords}`, {
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
       })
-      .catch(console.log);
-    dispatch(setIngredientID(state.autoComplete[value].key))
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          setIngredients(data);
+          const ingredients2 = data.map((item) => ({
+            key: item.ingredientID,
+            primaryText: item.name,
+            ingredient: item,
+          }));
+          dispatch(setAutoComplete(ingredients2));
+        })
+        .catch((error) => setToast(error.toString()));
+    } else {
+      dispatch(setAutoComplete(initialState.autoComplete));
+    }
+  };
+
+  const handleAutoComplete = async (value) => {
+    dispatch(setIngredientID(state.autoComplete[value].key));
     toggleDialog();
   };
 
   const handleRemove = (key) => {
     setInventory(inventory.filter((item) => item.key !== key));
+    setToast(strings.toast_removed);
   };
 
   const handleSave = async () => {
     if (inventory.length > 0) {
-      await Promise.all(inventory.forEach(async (item) => {
-        await fetch(apiUrl + '/v3/inventory/add/manual', {
+      await inventory.forEach(async (item) => {
+        await fetch(`${apiUrl}/v4/inventory/add/manual`, {
           method: 'post',
           headers: {
-            'Accept': 'application/json',
+            Accept: 'application/json',
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
@@ -164,20 +146,20 @@ export default () => {
         })
           .then((res) => {
             if (!res.ok) {
-              throw new Error(res.status + ' ' + res.statusText);
+              throw new Error(`${res.status} ${res.statusText}`);
             }
-            return res.json();
           })
-          .catch(console.log);
-      }));
+          .catch((error) => setToast(error.toString()));
+      });
     }
+    setToast(strings.toast_saved);
     window.location.href = '..';
   };
 
   const handleSubmission = (value) => {
     toggleDialog();
     if (value === 'confirm') {
-      let ingredient = ingredients.find((item) => item.ingredientID === state.ingredientID);
+      const ingredient = ingredients.find((item) => item.ingredientID === state.ingredientID);
       inventory.push({
         ingredientID: state.ingredientID,
         quantity: state.quantity,
@@ -186,18 +168,21 @@ export default () => {
         expirationDate: state.expirationDate,
         title: ingredient.name,
         subtitle: (() => {
-          let value = state.quantity + ' ' + state.unit;
+          let value2 = `${state.quantity} ${state.unit}`;
           if (state.expirationDate) {
-            value += ' | ';
-            let expirationDate = Moment.utc(state.expirationDate);
+            value2 += ' | ';
+            const expirationDate = Moment.utc(state.expirationDate);
             if (expirationDate.unix() >= Moment.utc()) {
-              value += strings.expiring;
+              value2 += strings.expiring;
             } else {
-              value += strings.expired;
+              value2 += strings.expired;
             }
-            value += ' ' + expirationDate.fromNow();
+            value2 += ` ${expirationDate.fromNow()}`;
           }
-          return value;
+          if (state.price) {
+            value2 += ` | $${state.price}`;
+          }
+          return value2;
         })(),
         image: ingredient.image,
       });
@@ -207,24 +192,24 @@ export default () => {
 
   return (
     <>
-      <View className='drawer-container'>
+      <View className="drawer-container">
         {!state.searchOpen && (
           <MaterialTopAppBarDialog
-            icon1={'arrow_back'}
+            icon1="arrow_back"
             onClick1={handleGoBack}
             onClick2={toggleSearch}
-          ></MaterialTopAppBarDialog>
+          />
         )}
         {state.searchOpen && (
           <MaterialTopAppBarSearchDialog
             value={state.keywords}
             onClick1={toggleSearch}
-            onChange={(e) => dispatch(setKeywords(e.target.value))}
-            onTrailingIconSelect={() => dispatch(setKeywords(''))}
-          ></MaterialTopAppBarSearchDialog>
+            onChange={(e) => handleSearch(e.target.value)}
+            onTrailingIconSelect={() => dispatch(setKeywords(initialState.keywords))}
+          />
         )}
-        <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-          <DrawerAppContent className='drawer-app-content'>
+        <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+          <DrawerAppContent className="drawer-app-content">
             <Grid style={{ height: useWindowDimensions().height - 64 }}>
               {(state.searchOpen && (
               <Row>
@@ -232,7 +217,7 @@ export default () => {
                   <MaterialSingleSelectionList
                     items={state.autoComplete}
                     handleSelect={handleAutoComplete}
-                  ></MaterialSingleSelectionList>
+                  />
                 </Cell>
               </Row>
               ))}
@@ -246,18 +231,23 @@ export default () => {
                       actionText1={strings.remove}
                       onClickAction1={() => handleRemove(item.key)}
                       mainImage={item.image}
-                    ></InventoryCard>
+                    />
                   </Cell>
                 ))}
               </Row>
               ))}
             </Grid>
           </DrawerAppContent>
+          {toast && (
+          <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+          )}
+          {!state.searchOpen && (
           <MaterialFab
-            icon={<MaterialIcon icon='check' />}
+            icon={<MaterialIcon icon="check" />}
             style={{ position: 'absolute', right: 16, bottom: 16 }}
             onClick={handleSave}
-          ></MaterialFab>
+          />
+          )}
         </TopAppBarFixedAdjust>
       </View>
       <InventoryAddDialog
@@ -270,12 +260,12 @@ export default () => {
         onChange2={(e) => dispatch(setUnit(e.target.value))}
         onChange3={(e) => dispatch(setPrice(e.target.value))}
         onChange4={(e) => dispatch(setExpirationDate(e.target.value))}
-        onTrailingIconSelect1={() => dispatch(setQuantity(1.0))}
-        onTrailingIconSelect2={() => dispatch(setUnit(''))}
-        onTrailingIconSelect3={() => dispatch(setPrice(0))}
-        onTrailingIconSelect4={() => dispatch(setExpirationDate(''))}
+        onTrailingIconSelect1={() => dispatch(setQuantity(initialState.quantity))}
+        onTrailingIconSelect2={() => dispatch(setUnit(initialState.unit))}
+        onTrailingIconSelect3={() => dispatch(setPrice(initialState.price))}
+        onTrailingIconSelect4={() => dispatch(setExpirationDate(initialState.expirationDate))}
         onClose={handleSubmission}
-      ></InventoryAddDialog>
+      />
     </>
   );
 };
