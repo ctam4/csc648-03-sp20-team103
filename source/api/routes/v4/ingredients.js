@@ -110,7 +110,7 @@ ingredients.get('/search', async (req, res) => {
           // @todo handle possible duplicate sessions
           // @todo page
           // retrieve for endpoint
-          await fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&metaInformation=true&apiKey=bd1784451bab4f47ac234225bd2549ee', {
+          await fetch('https://api.spoonacular.com/food/ingredients/autocomplete?query=' + query + '&number=' + limit + '&metaInformation=true&apiKey=83f268f9caaf4a1eb91a9b953be8631c', {
             method: 'get',
             headers: {
               'Content-Type': 'application/json',
