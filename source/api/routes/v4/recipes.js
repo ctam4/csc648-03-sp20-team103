@@ -1,8 +1,8 @@
 const express = require('express');
-const recipes = express.Router();
-const fetch = require("node-fetch");
-
+const fetch = require('node-fetch');
 const pool = require('../../database.js');
+
+const recipes = express.Router();
 let connection;
 
 const {
@@ -26,22 +26,25 @@ const {
  */
 recipes.get('/search', async (req, res) => {
   // check correct params
-  if ((Object.keys(req.query).length == 2 ||
-    (Object.keys(req.query).length == 4 && !('page' in req.query && 'limit' in req.query))) &&
-    !('session' in req.query && 'query' in req.query)) {
+  if ((Object.keys(req.query).length === 2
+    || (Object.keys(req.query).length === 4 && !('page' in req.query && 'limit' in req.query)))
+    && !('session' in req.query && 'query' in req.query)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
-  let session, query, page, limit;
+  let session;
+  let query;
+  let page;
+  let limit;
   try {
     if (typeof req.query.session !== 'string' || (req.query.sort && typeof req.query.sort !== 'string')) {
       throw new TypeError();
     }
     session = req.query.session;
     query = req.query.query;
-    page = (req.query.page && parseInt(req.query.page)) || 1;
-    limit = (req.query.limit && parseInt(req.query.limit)) || 20;
+    page = (req.query.page && parseInt(req.query.page, 10)) || 1;
+    limit = (req.query.limit && parseInt(req.query.limit, 10)) || 20;
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
@@ -59,28 +62,26 @@ recipes.get('/search', async (req, res) => {
       .then(async (rows) => {
         if (rows.length > 0) {
           // retrieve for endpoint
-          await fetch('https://api.spoonacular.com/recipes/search?query=' + query + '&number=' + limit + '&apiKey=a71257d9f31f4ee2af88be4615153f31', {
+          await fetch(`https://api.spoonacular.com/recipes/search?query=${query}&number=${limit}&apiKey=a71257d9f31f4ee2af88be4615153f31`, {
             method: 'get',
             headers: {
               'Content-Type': 'application/json',
             },
           })
-            .then((res) => {
-              if (!res.ok) {
-                throw new Error('error ' + res.status);
+            .then((res2) => {
+              if (!res2.ok) {
+                throw new Error(`error ${res2.status}`);
               }
-              return res.json();
+              return res2.json();
             })
             .then(async (data) => {
               if (data.results.length > 0) {
-                const recipeIDs = data.results.map((item) => {
-                  return item.id;
-                });
+                const recipeIDs = data.results.map((item) => item.id);
                 await importRecipes(connection, recipeIDs);
                 selectRecipes(connection, recipeIDs, page, limit, 'recipe_id', false)
-                  .then((rows) => {
-                    if (rows.length > 0) {
-                      res.json(rows.filter((_, index) => index !== 'meta')).end();
+                  .then((rows2) => {
+                    if (rows2.length > 0) {
+                      res.json(rows2.filter((_, index) => index !== 'meta')).end();
                     } else {
                       res.sendStatus(406).end();
                     }
@@ -116,19 +117,21 @@ recipes.get('/', async (req, res) => {
     return;
   }
   // check params data type
-  let session, recipeIDs;
+  let session;
+  let recipeIDs;
   try {
     if (typeof req.query.session !== 'string' || typeof req.query.recipeIDs !== 'string') {
       throw new TypeError();
     }
     session = req.query.session;
-    recipeIDs = req.query.recipeIDs.split(',').map(value => parseInt(value));
+    recipeIDs = req.query.recipeIDs.split(',').map((value) => parseInt(value, 10));
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
   }
   // check params data range
-  if (session.length !== 36 || recipeIDs.length === 0 || !recipeIDs.every(value => !isNaN(value) && value > 0)) {
+  if (session.length !== 36 || recipeIDs.length === 0
+    || !recipeIDs.every((value) => !Number.isNaN(value) && value > 0)) {
     res.sendStatus(400).end();
     return;
   }
@@ -143,26 +146,28 @@ recipes.get('/', async (req, res) => {
           selectRecipes(connection, recipeIDs, 1, recipeIDs.length)
             .then(async (rows2) => {
               if (rows2.length > 0) {
-                const recipes = await Promise.all(rows2.map(async (recipe, index) => {
+                const recipes2 = await Promise.all(rows2.map(async (recipe, index) => {
                   if (index !== 'meta') {
+                    const copy = { ...recipe };
                     await Promise.all([
                       selectRecipeIngredients(connection, recipe.recipeID)
                         .then((rows3) => {
                           if (rows3.length > 0) {
-                            recipe.ingredients = rows3.filter((_, index2) => index2 !== 'meta');
+                            copy.ingredients = rows3.filter((_, index2) => index2 !== 'meta');
                           }
                         }),
                       selectRecipeFavorites(connection, recipe.recipeID, fridgeID)
                         .then((rows3) => {
                           if (rows3.length > 0) {
-                            recipe.favorites = rows3.filter((_, index2) => index2 !== 'meta');
+                            copy.favorites = rows3.filter((_, index2) => index2 !== 'meta');
                           }
                         }),
                     ]);
-                    return recipe;
+                    return copy;
                   }
+                  return undefined;
                 }));
-                res.json(recipes).end();
+                res.json(recipes2).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -190,14 +195,16 @@ recipes.get('/', async (req, res) => {
  */
 recipes.post('/favorite', async (req, res) => {
   // check params data type
-  let session, userID, recipeID;
+  let session;
+  let userID;
+  let recipeID;
   try {
     if (typeof req.body.session !== 'string') {
       throw new TypeError();
     }
     session = req.body.session;
-    userID = parseInt(req.body.userID);
-    recipeID = parseInt(req.body.recipeID);
+    userID = parseInt(req.body.userID, 10);
+    recipeID = parseInt(req.body.recipeID, 10);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
@@ -224,7 +231,7 @@ recipes.post('/favorite', async (req, res) => {
         } else {
           res.sendStatus(401).end();
         }
-      })
+      });
   } catch (error) {
     res.sendStatus(500).end();
     throw error;
@@ -244,7 +251,9 @@ recipes.post('/favorite', async (req, res) => {
  */
 recipes.delete('/favorite', async (req, res) => {
   // check params data type
-  let session, userID, recipeID;
+  let session;
+  let userID;
+  let recipeID;
   try {
     if (typeof req.query.session !== 'string') {
       throw new TypeError();
@@ -257,7 +266,8 @@ recipes.delete('/favorite', async (req, res) => {
     throw error;
   }
   // check params data range
-  if (session.length !== 36 || Number.isNaN(userID) || Number.isNaN(recipeID) || userID < 0 || recipeID < 0) {
+  if (session.length !== 36 || Number.isNaN(userID) || Number.isNaN(recipeID) || userID < 0
+    || recipeID < 0) {
     res.sendStatus(400).end();
     return;
   }
@@ -278,7 +288,7 @@ recipes.delete('/favorite', async (req, res) => {
         } else {
           res.sendStatus(401).end();
         }
-      })
+      });
   } catch (error) {
     res.sendStatus(500).end();
     throw error;
@@ -302,34 +312,39 @@ recipes.delete('/favorite', async (req, res) => {
  */
 recipes.get('/list/:state', async (req, res) => {
   // check correct ':state'
-  const state = req.params.state;
+  const { state } = req.params;
   if (!['all', 'favorited'].includes(state)) {
     res.sendStatus(400).end();
     return;
   }
   // check correct params
-  if ((Object.keys(req.query).length == 1 ||
-  (Object.keys(req.query).length == 2 && !('userID' in req.query)) ||
-  (Object.keys(req.query).length == 3 && !('page' in req.query && 'limit' in req.query)) ||
-  (Object.keys(req.query).length == 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query)) ||
-  (Object.keys(req.query).length == 4 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query)) ||
-  (Object.keys(req.query).length == 6 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))) &&
-  !('session' in req.query)) {
+  if ((Object.keys(req.query).length === 1
+    || (Object.keys(req.query).length === 2 && !('userID' in req.query))
+    || (Object.keys(req.query).length === 3 && !('page' in req.query && 'limit' in req.query))
+    || (Object.keys(req.query).length === 5 && !('page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query))
+    || (Object.keys(req.query).length === 4 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query))
+    || (Object.keys(req.query).length === 6 && !('userID' in req.query && 'page' in req.query && 'limit' in req.query && 'sort' in req.query && 'descending' in req.query)))
+    && !('session' in req.query)) {
     res.sendStatus(400).end();
     return;
   }
   // check params data type
-  let session, userID, page, limit, sort, descending;
+  let session;
+  let userID;
+  let page;
+  let limit;
+  let sort;
+  let descending;
   try {
     if (typeof req.query.session !== 'string' || (req.query.sort && typeof req.query.sort !== 'string')) {
       throw new TypeError();
     }
     session = req.query.session;
-    userID = (req.query.userID && parseInt(req.query.userID)) || null;
-    page = (req.query.page && parseInt(req.query.page)) || 1;
-    limit = (req.query.limit && parseInt(req.query.limit)) || 100;
+    userID = req.query.userID ? parseInt(req.query.userID, 10) : null;
+    page = req.query.page ? parseInt(req.query.page, 10) : 1;
+    limit = req.query.limit ? parseInt(req.query.limit, 10) : 100;
     sort = req.query.sort || null;
-    descending = (req.query.descending && (req.query.descending == true || (req.query.descending == false && false))) || null;
+    descending = req.query.descending === 'true';
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
@@ -346,8 +361,6 @@ recipes.get('/list/:state', async (req, res) => {
     await connection.query('SELECT fridge_id FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          // @todo handle possible duplicate sessions
-          const fridgeID = rows[0].fridge_id;
           // retrieve for endpoint
           let query;
           switch (state) {
@@ -357,11 +370,14 @@ recipes.get('/list/:state', async (req, res) => {
             case 'favorited':
               query = selectFavoritedRecipes(connection, userID, page, limit, sort, descending);
               break;
+            default:
+              res.sendStatus(400).end();
+              return;
           }
           query
-            .then((rows) => {
-              if (rows.length > 0) {
-                res.json(rows.filter((_, index) => index !== 'meta')).end();
+            .then((rows2) => {
+              if (rows2.length > 0) {
+                res.json(rows2.filter((_, index) => index !== 'meta')).end();
               } else {
                 res.sendStatus(406).end();
               }
@@ -380,4 +396,4 @@ recipes.get('/list/:state', async (req, res) => {
   }
 });
 
-module.exports = recipes
+module.exports = recipes;
