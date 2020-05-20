@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
 import LocalizedStrings from 'react-localization';
-import Moment from 'moment';
 
 import { View, useWindowDimensions } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
@@ -16,6 +15,7 @@ import CartsCard from '../../components/horizontal-prototype/CartsCard';
 
 import { apiUrl } from '../../url';
 import CartsUpdateDialog from "../../components/horizontal-prototype/CartsUpdateDialog";
+import CartsRemoveDialog from "../../components/horizontal-prototype/CartsRemoveDialog";
 
 const strings = new LocalizedStrings({
   en: {
@@ -148,17 +148,19 @@ export default () => {
     toggleDialog('patch')
   };
 
-  const handleRemove = async () => {
+  const handleRemove = (key) => {
     // TODO: fetch
+    setInventoryID(key);
+    toggleDialog('delete')
   };
 
-  const handleSubmission = async (value) => {
+  const handleUpdateSubmission = async (value) => {
     const action = dialogOpen;
     toggleDialog(null);
     if (value === 'confirm') {
       switch (action) {
-        case 'patch':
         case 'delete':
+        case 'patch':
           await fetch(`${apiUrl}/v4/carts/`, {
             method: 'PATCH',
             headers: {
@@ -170,6 +172,45 @@ export default () => {
               quantity: dialogQuantity,
               unit: dialogUnit,
               cartID: inventoryID,
+            }),
+          })
+              .then((res) => {
+                if (!res.ok) {
+                  throw new Error(`${res.status} ${res.statusText}`);
+                }
+              })
+              .catch((error) => setToast(error.toString()));
+          switch (action) {
+            case 'patch':
+              setToast(strings.toast_updated);
+              break;
+            case 'delete':
+              setToast(strings.toast_removed);
+              break;
+          }
+          load();
+          break;
+      }
+    }
+  };
+
+  const handleDeleteSubmission = async (value) => {
+    const action = dialogOpen;
+    toggleDialog(null);
+    if (value === 'confirm') {
+      console.log(inventoryID)
+      switch (action) {
+        case 'patch':
+        case 'delete':
+          await fetch(`${apiUrl}/v4/carts/?session=${cookies.session}&cartIDs=${inventoryID}`, {
+            method: 'DELETE',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              session: cookies.session,
+              cartIDs: inventoryID,
             }),
           })
               .then((res) => {
@@ -231,7 +272,7 @@ export default () => {
         )}
       </TopAppBarFixedAdjust>
       <CartsUpdateDialog open={dialogOpen === 'patch'}
-                         onClose={handleSubmission}
+                         onClose={handleUpdateSubmission}
                          quantity={dialogQuantity}
                          onChange1={(e) => setDialogQuantity(e.target.value)}
                          onTrailingIconSelect1={() => setDialogQuantity(1.0)}
@@ -239,6 +280,7 @@ export default () => {
                          onChange2={(e) => setDialogUnit(e.target.value)}
                          onTrailingIconSelect2={() => setDialogUnit('')}
       />
+      <CartsRemoveDialog open={dialogOpen === 'delete'} onClose={handleDeleteSubmission}/>
     </View>
   );
 };
