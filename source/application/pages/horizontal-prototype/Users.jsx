@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
 import { View, useWindowDimensions } from 'react-native';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
@@ -8,7 +9,6 @@ import { Cell, Grid, Row } from '@material/react-layout-grid';
 import MaterialIcon from '@material/react-material-icon';
 import '@material/react-layout-grid/dist/layout-grid.css';
 import '@material/react-material-icon/dist/material-icon.css';
-import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBar from '../../components/horizontal-prototype/MaterialTopAppBar';
 import MaterialDrawer from '../../components/horizontal-prototype/MaterialDrawer';
@@ -19,8 +19,9 @@ import UsersListCard from '../../components/horizontal-prototype/UsersListCard';
 
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
+    toast_missing: 'Oops. Information is missing.',
   },
 });
 
@@ -34,11 +35,6 @@ export default () => {
   const [toast, setToast] = useState('');
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    // dummySetup();
-    load();
-  }, []);
-
   const dummySetup = () => {
     // TODO: hard code users array
     setUsers([
@@ -51,41 +47,47 @@ export default () => {
         key: 2,
         primaryText: 'User 2 ',
         secondaryText: 'role 2',
-      }
+      },
     ]);
   };
 
   const load = async () => {
-    await fetch(apiUrl + '/v3/users?session=' + cookies.session, {
+    await fetch(`${apiUrl}/v4/users?session=${cookies.session}`, {
       method: 'get',
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        if (res.status !== 406) {
-          throw new Error(res.status + ' ' + res.statusText);
-        } else {
-          return null;
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status !== 406) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          } else {
+            return null;
+          }
         }
-      }
-      return res.json();
-    })
-    .then((data) => {
-      if (data !== null) {
-        let users = [];
-        data.forEach((item) => users.push({
-          key: item.userID,
-          primaryText: item.name,
-          secondaryText: item.role,
-        }));
-        setUsers(users);
-      }
-    })
-    .catch((error) => setToast(error.toString()));
+        return res.json();
+      })
+      .then((data) => {
+        if (data !== null) {
+          const users2 = data.map((item) => ({
+            key: item.userID,
+            primaryText: item.name,
+            secondaryText: item.role,
+          }));
+          setUsers(users2);
+        } else {
+          setToast(strings.toast_missing);
+        }
+      })
+      .catch((error) => setToast(error.toString()));
   };
+
+  useEffect(() => {
+    // dummySetup();
+    load();
+  }, []);
 
   const toggleDrawer = () => {
     setDrawerOpen(!drawerOpen);
@@ -102,22 +104,22 @@ export default () => {
   const handleSubmission = async (value) => {
     toggleDialog();
     if (value === 'confirm') {
-      await fetch(apiUrl + '/v3/users', {
+      await fetch(`${apiUrl}/v4/users`, {
         method: 'post',
         headers: {
-          'Accept': 'application/json',
+          Accept: 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           session: cookies.session,
-          name: name,
-          role: role,
-          intolerances: intolerances,
+          name,
+          role,
+          intolerances,
         }),
       })
         .then((res) => {
           if (!res.ok) {
-            throw new Error(res.status + ' ' + res.statusText);
+            throw new Error(`${res.status} ${res.statusText}`);
           }
           return res.json();
         })
@@ -128,33 +130,33 @@ export default () => {
             // expires: new Date(data.expires_ts),
           });
         })
-        .catch(console.log);
-      window.location.reload();
+        .catch((error) => setToast(error.toString()));
+      setToast(strings.toast_created);
+      load();
     }
   };
 
   return (
     <>
-      <View className='drawer-container'>
+      <View className="drawer-container">
         <MaterialTopAppBar
           title={strings.users}
           onClick1={toggleDrawer}
-        ></MaterialTopAppBar>
-        <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
+        />
+        <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
           <MaterialDrawer
             open={drawerOpen}
             selectedIndex={5}
             onClose={toggleDrawer}
-          ></MaterialDrawer>
-          <DrawerAppContent className='drawer-app-content'>
+          />
+          <DrawerAppContent className="drawer-app-content">
             <Grid style={{ height: useWindowDimensions().height - 64 }}>
               {users.length > 0 && (
               <Row>
                 <Cell columns={12}>
                   <UsersListCard
                     items={users}
-                    // handleSelect={handleDelete}
-                  ></UsersListCard>
+                  />
                 </Cell>
               </Row>
               )}
@@ -164,10 +166,10 @@ export default () => {
           <MaterialSnackbar message={toast} onClose={() => setToast('')} />
           )}
           <MaterialFab
-            icon={<MaterialIcon icon='person_add'/>}
+            icon={<MaterialIcon icon="person_add" />}
             style={{ position: 'absolute', right: 16, bottom: 16 }}
             onClick={toggleDialog}
-          ></MaterialFab>
+          />
         </TopAppBarFixedAdjust>
       </View>
       <UsersDialog
@@ -178,11 +180,11 @@ export default () => {
         onChange1={(e) => setName(e.target.value)}
         onChange2={(e) => setRole(e.target.value)}
         onChange3={(e) => setIntolerances(e.target.value)}
-        onTrailingIconSelect1={() => setName('')}
-        onTrailingIconSelect2={() => setRole('')}
-        onTrailingIconSelect3={() => setIntolerances('')}
+        onTrailingIconSelect1={() => setName(initialState.name)}
+        onTrailingIconSelect2={() => setRole(initialState.role)}
+        onTrailingIconSelect3={() => setIntolerances(initialState.intolerances)}
         onClose={handleSubmission}
-      ></UsersDialog>
+      />
     </>
   );
 };

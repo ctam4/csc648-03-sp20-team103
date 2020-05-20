@@ -1,4 +1,3 @@
-import React, { Component } from 'react';
 import Checkbox from '@material/react-checkbox';
 import '@material/react-checkbox/dist/checkbox.css';
 

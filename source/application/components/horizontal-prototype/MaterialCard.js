@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
 import Card, {
   CardPrimaryContent,
   CardMedia,
   CardActions,
   CardActionButtons,
-  CardActionIcons
+  CardActionIcons,
 } from '@material/react-card';
 import '@material/react-card/dist/card.css';
 
@@ -15,5 +14,5 @@ export {
   CardMedia,
   CardActions,
   CardActionButtons,
-  CardActionIcons
+  CardActionIcons,
 };

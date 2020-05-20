@@ -1,7 +1,20 @@
-import React, { useEffect, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
 
-import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
+import { View, useWindowDimensions } from 'react-native';
+import { Cell, Grid, Row } from '@material/react-layout-grid';
+import { DrawerAppContent } from '@material/react-drawer';
+import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
+import '@material/react-layout-grid/dist/layout-grid.css';
+
+import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
+import { Body1 } from '../../components/horizontal-prototype/MaterialTypography';
+import MaterialChoiceChips from '../../components/horizontal-prototype/MaterialChoiceChips';
+import MaterialFilterChips from '../../components/horizontal-prototype/MaterialFilterChips';
+import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
+
 import {
   setSearchOpen,
   setKeywords,
@@ -12,24 +25,10 @@ import {
   setCarbonhydratesFilter,
   setAutoComplete,
 } from '../../actions/horizontal-prototype/RecipesSearch';
-
-import { View, useWindowDimensions } from 'react-native';
-import { Cell, Grid, Row } from '@material/react-layout-grid';
-import { DrawerAppContent } from '@material/react-drawer';
-import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
-import '@material/react-layout-grid/dist/layout-grid.css';
-import LocalizedStrings from 'react-localization';
-
-import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
-import MaterialTopAppBarSearchDialog from '../../components/horizontal-prototype/MaterialTopAppBarSearchDialog';
-import { Body1 } from '../../components/horizontal-prototype/MaterialTypography';
-import MaterialChoiceChips from '../../components/horizontal-prototype/MaterialChoiceChips';
-import MaterialFilterChips from '../../components/horizontal-prototype/MaterialFilterChips';
-import MaterialSingleSelectionList from '../../components/horizontal-prototype/MaterialSingleSelectionList';
-
+import { recipesSearchReducer, initialState } from '../../reducers/horizontal-prototype/RecipesSearch';
 import { apiUrl } from '../../url';
 
-let strings = new LocalizedStrings({
+const strings = new LocalizedStrings({
   en: {
     choose_calories: 'Choose calories per serving',
     choose_servings: 'Choose servings',
@@ -70,38 +69,6 @@ export default () => {
     { id: '10_20', label: strings.grams_10_20 },
   ];
 
-  useEffect(() => {
-    load();
-  });
-
-  const load = async () => {
-    // TODO: fetch
-    /*
-    await fetch(apiUrl + '/v3/recipes/search?session=' + cookies.session + '&userID=' + cookies.userID + '&query=' + state.keywords, {
-      method: 'get',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error(res.status + ' ' + res.statusText);
-      }
-      return res.json();
-    })
-    .then(async (data) => {
-      let recipes = [];
-      data.foreach((item) => recipes.push({
-        key: item.recipeID,
-        primaryText: item.name,
-        // @todo
-      }));
-      dispatch(setAutoComplete(recipes));
-    });
-    */
-  };
-
   const toggleSearch = () => {
     dispatch(setSearchOpen(!state.searchOpen));
   };
@@ -112,30 +79,60 @@ export default () => {
     }
   };
 
+  const handleSearch = async (keywords) => {
+    dispatch(setKeywords(keywords));
+    if (keywords.length > 0) {
+      await fetch(`${apiUrl}/v4/recipes/search?session=${cookies.session}&query=${keywords}`, {
+        method: 'get',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          }
+          return res.json();
+        })
+        .then((data) => {
+          const recipes = data.map((item) => ({
+            key: item.recipeID,
+            primaryText: item.title,
+            recipe: item,
+          }));
+          dispatch(setAutoComplete(recipes));
+        });
+    } else {
+      dispatch(setAutoComplete(initialState.autoComplete));
+    }
+  };
+
   const handleAutoComplete = (value) => {
-    window.location.href = '../view/?id=' + state.autoComplete[value].key;
+    window.location.href = `../view/?id=${state.autoComplete[value].key}`;
   };
 
   return (
-    <View className='drawer-container'>
+    <View className="drawer-container">
       {!state.searchOpen && (
       <MaterialTopAppBarDialog
-        icon1={'arrow_back'}
+        icon1="arrow_back"
         onClick1={handleGoBack}
         onClick2={toggleSearch}
-      ></MaterialTopAppBarDialog>
+      />
       )}
       {state.searchOpen && (
       <MaterialTopAppBarSearchDialog
         value={state.keywords}
         onClick1={toggleSearch}
-        onChange={(e) => dispatch(setKeywords(e.target.value))}
-        onTrailingIconSelect={() => dispatch(setKeywords(''))}
-      ></MaterialTopAppBarSearchDialog>
+        onChange={(e) => handleSearch(e.target.value)}
+        onTrailingIconSelect={() => dispatch(setKeywords(initialState.keywords))}
+      />
       )}
-      <TopAppBarFixedAdjust className='top-app-bar-fix-adjust'>
-        <DrawerAppContent className='drawer-app-content'>
+      <TopAppBarFixedAdjust className="top-app-bar-fix-adjust">
+        <DrawerAppContent className="drawer-app-content">
           <Grid style={{ height: useWindowDimensions().height - 64 }}>
+            {/*
             <Row>
               <Cell columns={12}>
                 <Body1>{strings.choose_calories}</Body1>
@@ -143,7 +140,7 @@ export default () => {
                   selectedChipIds={state.caloriesFilter}
                   handleSelect={(value) => dispatch(setCaloriesFilter(value))}
                   choices={caloriesFilterChoices}
-                ></MaterialFilterChips>
+                />
               </Cell>
               <Cell columns={12}>
                 <Body1>{strings.choose_servings}</Body1>
@@ -151,7 +148,7 @@ export default () => {
                   selectedChipIds={state.servingsFilter}
                   handleSelect={(value) => dispatch(setServingsFilter(value))}
                   choices={servingsFilterChoices}
-                ></MaterialFilterChips>
+                />
               </Cell>
               <Cell columns={12}>
                 <Body1>{strings.choose_fat}</Body1>
@@ -159,7 +156,7 @@ export default () => {
                   selectedChipIds={state.fatFilter}
                   handleSelect={(value) => dispatch(setFatFilter(value))}
                   choices={fatFilterChoices}
-                ></MaterialFilterChips>
+                />
               </Cell>
               <Cell columns={12}>
                 <Body1>{strings.choose_protein}</Body1>
@@ -167,7 +164,7 @@ export default () => {
                   selectedChipIds={state.proteinFilter}
                   handleSelect={(value) => dispatch(setProteinFilter(value))}
                   choices={proteinFilterChoices}
-                ></MaterialFilterChips>
+                />
               </Cell>
               <Cell columns={12}>
                 <Body1>{strings.choose_carbonhydrates}</Body1>
@@ -175,15 +172,16 @@ export default () => {
                   selectedChipIds={state.carbonhydratesFilter}
                   handleSelect={(value) => dispatch(setCarbonhydratesFilter(value))}
                   choices={carbonhydratesFilterChoices}
-                ></MaterialFilterChips>
+                />
               </Cell>
             </Row>
+            */}
             <Row>
               <Cell columns={12}>
                 <MaterialSingleSelectionList
                   items={state.autoComplete}
                   handleSelect={handleAutoComplete}
-                ></MaterialSingleSelectionList>
+                />
               </Cell>
             </Row>
           </Grid>

@@ -1,39 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { useCookies } from 'react-cookie';
+import LocalizedStrings from 'react-localization';
+import Moment from 'moment';
 
 import { View, useWindowDimensions } from 'react-native';
 import { DrawerAppContent } from '@material/react-drawer';
 import { TopAppBarFixedAdjust } from '@material/react-top-app-bar';
 import { Cell, Grid, Row } from '@material/react-layout-grid';
 import '@material/react-layout-grid/dist/layout-grid.css';
-import LocalizedStrings from 'react-localization';
 
 import MaterialTopAppBarDialog from '../../components/horizontal-prototype/MaterialTopAppBarDialog';
+import MaterialSnackbar from '../../components/horizontal-prototype/MaterialSnackbar';
 import MealPlansCardFull from '../../components/horizontal-prototype/MealPlansCardFull';
 import RecipesCard from '../../components/horizontal-prototype/RecipesCard';
 
+import {
+  setPlannedTS,
+  setMealPlans,
+} from '../../actions/horizontal-prototype/MealPlansView';
+import { mealPlansViewReducer, initialState } from '../../reducers/horizontal-prototype/MealPlansView';
 import { apiUrl } from '../../url';
 
 let strings = new LocalizedStrings({
   en: {
-    calories: ' calories',
-    change: 'Change',
+    meals: 'meals',
+    servings: 'servings',
+    minutes: 'minutes',
+    replace: 'Replace',
+    toast_missing: 'Oops. Information is missing.',
   },
 });
 
 export default () => {
   const [cookies, setCookie] = useCookies(['session', 'userID']);
-  const [expirationDate, setExpirationDate] = useState('');
-  const [quantity, setQuantity] = useState('');
-  const [unit, setUnit] = useState('');
-  const [price, setPrice] = useState('');
-  const [state, setState] = useState('');
-  const [recipes, setRecipes] = useState([]);
-
-  useEffect(() => {
-    dummySetup();
-    load();
-  }, []);
+  const [state, dispatch] = useReducer(mealPlansViewReducer, initialState);
+  const [toast, setToast] = useState('');
 
   const dummySetup = () => {
     // TODO: hard code recipes array
@@ -53,33 +54,86 @@ export default () => {
 
   const load = async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    await fetch(apiUrl + '/v2/meal-plans?meal_plans_id=' + urlParams.get('id'), {
+    const plannedTS = urlParams.get('plannedTS');
+    dispatch(setPlannedTS(plannedTS));
+    await fetch(`${apiUrl}/v4/meal-plans?session=${cookies.session}&userID=${cookies.userID}&plannedTS=${plannedTS}`, {
       method: 'get',
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
       },
     })
-    .then((res) => {
-      if (!res.ok) {
-        throw new Error('error ' + res.status);
-      }
-      return res.json();
-    })
-    .then((data) => {
-      // TODO: fetch meal plans info
-      setQuantity(data.quantity);
-      setUnit(data.unit);
-      setPrice(data.price);
-      setState(data.state);
-    })
-    .catch(console.log);
+      .then((res) => {
+        if (!res.ok) {
+          if (res.status !== 406) {
+            throw new Error(`${res.status} ${res.statusText}`);
+          } else {
+            return null;
+          }
+        }
+        return res.json();
+      })
+      .then(async (data) => {
+        if (data !== null) {
+          let recipeIDs = data.map((item) => item.recipeID);
+          if (recipeIDs.length > 0) {
+            recipeIDs = [...new Set(recipeIDs)];
+            await fetch(`${apiUrl}/v4/recipes?session=${cookies.session}&recipeIDs=${recipeIDs}`, {
+              method: 'get',
+              headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
+            })
+              .then((res2) => {
+                if (!res2.ok) {
+                  if (res2.status !== 406) {
+                    throw new Error(`${res2.status} ${res2.statusText}`);
+                  } else {
+                    return null;
+                  }
+                }
+                return res2.json();
+              })
+              .then((data2) => {
+                if (data2 !== null) {
+                  const mealPlans = data.map((item, index) => {
+                    const recipe = data2.find((item2) => item.recipeID === item2.recipeID);
+                    return {
+                      key: item.mealPlanID,
+                      title: `#${index}: ${recipe.title}`,
+                      subtitle: `${recipe.servings} ${strings.servings} | ${recipe.cookingTime} ${strings.minutes}`,
+                      image: recipe.image,
+                    };
+                  });
+                  dispatch(setMealPlans(mealPlans));
+                } else {
+                  setToast(strings.toast_missing);
+                }
+              });
+          } else {
+            setToast(strings.toast_missing);
+          }
+        } else {
+          setToast(strings.toast_missing);
+        }
+      })
+      .catch((error) => setToast(error.toString()));
   };
+
+  useEffect(() => {
+    // dummySetup();
+    load();
+  }, []);
 
   const handleGoBack = () => {
     if (history.length > 0) {
       history.back();
     }
+  };
+
+  const handleReplace = (key) => {
+    windown.location.href = `../replace/?id=${key}`;
   };
 
   return (
@@ -93,28 +147,32 @@ export default () => {
             <Row>
               <Cell desktopColumns={12} phoneColumns={4} tabletColumns={8}>
                 <MealPlansCardFull
-                  mainText1='3 Meal a Day'
-                  mainText2='2000 Calories'
-                  bodyText={'Per day weight loss meal plan structured towards a healthy balanced diet. All Meals are designed to serve 1. Recipes create delicious meals with half the amount of calories you would expect. Shopping List included. 3 Meals per day.'}>
+                  mainText1={Moment.utc(state.plannedTS).format('dddd, MMMM Do YYYY')}
+                  mainText2={`${state.mealPlans.length} ${strings.meals}`}
+                  bodyText='Per day weight loss meal plan structured towards a healthy balanced diet. All meals are designed to serve 1. Recipes create delicious meals with half the amount of calories you would expect.'>
                 </MealPlansCardFull>
               </Cell>
-              {recipes.map((item) => (
-              <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
-                <RecipesCard
-                  mainText1={item.title}
-                  mainText2={item.subtitle + strings.calories}
-                  actionText1={strings.change}
-                  // onClickMain={() => { window.location.href = 'view/?id=' }}
-                  // onClickAction1={handleFavorite}
-                  // onClickAction2={handleHistory}
-                  // onClickAction3={handleAddToCart}
-                  mainImage={item.image}
-                ></RecipesCard>
-              </Cell>
-              ))}
             </Row>
+            {state.mealPlans.length > 0 && (
+              <Row>
+                {state.mealPlans.map((item) => (
+                  <Cell desktopColumns={6} phoneColumns={4} tabletColumns={8}>
+                    <RecipesCard
+                      mainText1={item.title}
+                      mainText2={item.subtitle}
+                      actionText1={strings.replace}
+                      onClickAction1={() => handleReplace(item.key)}
+                      mainImage={item.image}
+                    />
+                  </Cell>
+                ))}
+              </Row>
+            )}
           </Grid>
         </DrawerAppContent>
+        {toast && (
+          <MaterialSnackbar message={toast} onClose={() => setToast('')} />
+        )}
       </TopAppBarFixedAdjust>
     </View>
   );

@@ -42,6 +42,7 @@
     "handlebars": "^4.7.6",
     "moment": "^2.25.3",
     "parcel-bundler": "^1.12.4",
+    "prop-types": "^15.7.2",
     "react": "^16.13.1",
     "react-addons-test-utils": "^15.6.2",
     "react-cookie": "^4.0.3",
