@@ -578,7 +578,7 @@ exports.down = (db, callback) => {
       db.dropTable(`${prefix}_inventory_log`, callback),
       db.dropTable(`${prefix}_recipe_favorites`, callback),
       db.dropTable(`${prefix}_carts`, callback),
-
+      db.dropTable(`${prefix}_meal_plans`, callback),
     ],
     callback,
   );
