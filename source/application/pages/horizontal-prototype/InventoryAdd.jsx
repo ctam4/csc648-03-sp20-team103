@@ -127,7 +127,7 @@ export default () => {
 
   const handleSave = async () => {
     if (inventory.length > 0) {
-      await Promise.all(inventory.forEach(async (item) => {
+      await inventory.forEach(async (item) => {
         await fetch(`${apiUrl}/v4/inventory/add/manual`, {
           method: 'post',
           headers: {
@@ -150,7 +150,7 @@ export default () => {
             }
           })
           .catch((error) => setToast(error.toString()));
-      }));
+      });
     }
     setToast(strings.toast_saved);
     window.location.href = '..';
