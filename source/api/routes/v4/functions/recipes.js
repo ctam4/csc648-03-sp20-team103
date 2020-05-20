@@ -103,7 +103,7 @@ const importRecipes = async (connection, recipeIDs) => {
         }
       });
     if (recipeIDs.length > 0) {
-      await fetch(`https://api.spoonacular.com/recipes/informationBulk?ids=${recipeIDs.join(',')}&includeNutrition=true&apiKey=83f268f9caaf4a1eb91a9b953be8631c`, {
+      await fetch(`https://api.spoonacular.com/recipes/informationBulk?ids=${recipeIDs.join(',')}&includeNutrition=true&apiKey=ced288fd098243a1a500b440eb6fd263`, {
         method: 'get',
         headers: {
           'Content-Type': 'application/json',
