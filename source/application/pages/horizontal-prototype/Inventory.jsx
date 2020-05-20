@@ -251,7 +251,7 @@ export default () => {
           <MaterialFab
             icon={<MaterialIcon icon="library_add" />}
             style={{ position: 'absolute', right: 16, bottom: 16 }}
-            onClick={() => window.location.href = 'add/receipt/'}
+            onClick={() => window.location.href = 'add/'}
           />
         </TopAppBarFixedAdjust>
       </View>
