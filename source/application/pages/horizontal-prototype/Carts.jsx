@@ -23,7 +23,7 @@ const strings = new LocalizedStrings({
     added_by: 'Added by',
     update: 'Update',
     remove: 'Remove',
-    toast_updated: 'Item updated from cart.',
+    toast_updated: 'Item updated.',
     toast_missing: 'Oops. Information is missing.',
     toast_removed: 'Item removed from cart.',
   },
@@ -38,18 +38,6 @@ export default () => {
   const [inventoryID, setInventoryID] = useState(null);
   const [toast, setToast] = useState('');
   const [carts, setCarts] = useState([]);
-
-  const dummySetup = () => {
-    // TODO: hard code carts array
-    setCarts([
-      {
-        title: 'ingredient name',
-        subtitle: '10 count',
-        content: `${strings.added_by} user name 10 days ago`,
-        image: 'test.jpg',
-      },
-    ]);
-  };
 
   const load = async () => {
     await fetch(`${apiUrl}/v4/carts?session=${cookies.session}` + '&userID=' + cookies.userID, {
@@ -143,7 +131,6 @@ export default () => {
   };
 
   useEffect(() => {
-    //dummySetup();
     load();
   }, []);
 
@@ -158,7 +145,7 @@ export default () => {
   const handleUpdate = (key) => {
     // TODO: fetch
     setInventoryID(key);
-    toggleDialog('update')
+    toggleDialog('patch')
   };
 
   const handleRemove = async () => {
@@ -169,22 +156,20 @@ export default () => {
     const action = dialogOpen;
     toggleDialog(null);
     if (value === 'confirm') {
-      console.log(action);
       switch (action) {
-        case 'consume':
-        case 'remove':
-          await fetch(`${apiUrl}/v4/carts/${action}`, {
-            method: 'post',
+        case 'patch':
+        case 'delete':
+          await fetch(`${apiUrl}/v4/carts/`, {
+            method: 'PATCH',
             headers: {
               Accept: 'application/json',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
               session: cookies.session,
-              userID: cookies.userID,
-              inventoryID,
               quantity: dialogQuantity,
               unit: dialogUnit,
+              cartID: inventoryID,
             }),
           })
               .then((res) => {
@@ -194,10 +179,10 @@ export default () => {
               })
               .catch((error) => setToast(error.toString()));
           switch (action) {
-            case 'consume':
+            case 'patch':
               setToast(strings.toast_updated);
               break;
-            case 'remove':
+            case 'delete':
               setToast(strings.toast_removed);
               break;
           }
@@ -226,7 +211,7 @@ export default () => {
               {carts.map((item) => (
                 <Cell desktopColumns={6} phoneColumns={4} tabletColumns={4}>
                   <CartsCard
-                    mainText1={item.title}
+                    mainText1={item.key}
                     mainText2={item.subtitle}
                     bodyText={item.content}
                     actionText1={strings.update}
@@ -245,7 +230,7 @@ export default () => {
         <MaterialSnackbar message={toast} onClose={() => setToast('')} />
         )}
       </TopAppBarFixedAdjust>
-      <CartsUpdateDialog open={dialogOpen === 'update'}
+      <CartsUpdateDialog open={dialogOpen === 'patch'}
                          onClose={handleSubmission}
                          quantity={dialogQuantity}
                          onChange1={(e) => setDialogQuantity(e.target.value)}
