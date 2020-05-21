@@ -36,7 +36,7 @@ convert.get('/', async (req, res) => {
     await connection.query('SELECT 1 FROM v4_sessions WHERE session=?', [session])
       .then(async (rows) => {
         if (rows.length > 0) {
-          await fetch(`https://api.spoonacular.com/recipes/convert?ingredientName=${ingredientName}&sourceAmount=${quantity}&sourceUnit=${sourceUnit}&targetUnit=${targetUnit}&apiKey=83f268f9caaf4a1eb91a9b953be8631c`, {
+          await fetch(`https://api.spoonacular.com/recipes/convert?ingredientName=${ingredientName}&sourceAmount=${quantity}&sourceUnit=${sourceUnit}&targetUnit=${targetUnit}&apiKey=ced288fd098243a1a500b440eb6fd263`, {
             method: 'get',
             headers: {
               Accept: 'application/json',

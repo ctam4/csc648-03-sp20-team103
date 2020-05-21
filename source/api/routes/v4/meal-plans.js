@@ -86,7 +86,7 @@ mealPlans.get('/', async (req, res) => {
                     }
                     return undefined;
                   });
-                  fetch(`https://api.spoonacular.com/recipes/findByIngredients/?ingredients=${ingredientNames.join(',')}&number=3&ranking=2&ignorePantry=true&apiKey=83f268f9caaf4a1eb91a9b953be8631c`, {
+                  fetch(`https://api.spoonacular.com/recipes/findByIngredients/?ingredients=${ingredientNames.join(',')}&number=3&ranking=2&ignorePantry=true&apiKey=ced288fd098243a1a500b440eb6fd263`, {
                     method: 'get',
                     headers: {
                       Accept: 'application/json',
