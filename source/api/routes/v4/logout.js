@@ -1,7 +1,7 @@
 const express = require('express');
-const logout = express.Router();
-
 const pool = require('../../database.js');
+
+const logout = express.Router();
 let connection;
 
 /**
@@ -16,14 +16,8 @@ logout.post('/', async (req, res) => {
     return;
   }
   // check params data type
-  let session;
-  if (typeof req.body.session !== 'string') {
-    res.sendStatus(400).end();
-    throw new TypeError();
-  }
-  session = req.body.session;
-  // check params data range
-  if (session.length !== 36) {
+  const { session } = req.body;
+  if (typeof session !== 'string' || session.length !== 36) {
     res.sendStatus(400).end();
     return;
   }

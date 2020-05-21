@@ -1,8 +1,8 @@
 const express = require('express');
 const { v4: uuidv4 } = require('uuid');
-const login = express.Router();
-
 const pool = require('../../database.js');
+
+const login = express.Router();
 let connection;
 
 /**
@@ -19,15 +19,16 @@ login.post('/', async (req, res) => {
     return;
   }
   // check params data type
-  let serialNumber, pin;
-  if (typeof req.body.serialNumber !== 'string' || typeof req.body.pin !== 'string') {
+  const {
+    serialNumber,
+    pin,
+  } = req.body;
+  if (typeof serialNumber !== 'string' || typeof pin !== 'string') {
     res.sendStatus(400).end();
     throw new TypeError();
   }
-  serialNumber = req.body.serialNumber;
-  pin = req.body.pin;
-  // check params data range
-  if (serialNumber.length === 0 || serialNumber.length > 16 || pin.length === 0 || pin.length > 16) {
+  if (serialNumber.length === 0 || serialNumber.length > 16 || pin.length === 0
+    || pin.length > 16) {
     res.sendStatus(400).end();
     return;
   }
@@ -59,45 +60,6 @@ login.post('/', async (req, res) => {
   } finally {
     if (connection) {
       connection.release();
-    }
-  }
-});
-
-//for testing
-login.get('/', async (req, res) => {
-  try {
-    connection = await pool.getConnection();
-    let sql = 'SELECT * FROM v4_sessions';
-    await connection.query(sql)
-      .then((results) => {
-        res.send(JSON.stringify(results)).end();
-        // res.json(results).end();
-      });
-  } catch (error) {
-    res.sendStatus(500).end();
-    throw error;
-  } finally {
-    if (connection) {
-      connection.release(); // release to pool
-    }
-  }
-});
-
-//for testing
-login.delete('/', async (req, res) => {
-  try {
-    connection = await pool.getConnection();
-    let sql = 'DELETE FROM v4_sessions';
-    await connection.query(sql)
-      .then((results) => {
-        res.send(JSON.stringify(results)).end();
-      });
-  } catch (error) {
-    res.sendStatus(500).end();
-    throw error;
-  } finally {
-    if (connection) {
-      connection.release(); // release to pool
     }
   }
 });

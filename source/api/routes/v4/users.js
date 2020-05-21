@@ -1,7 +1,7 @@
 const express = require('express');
-const users = express.Router();
-
 const pool = require('../../database.js');
+
+const users = express.Router();
 let connection;
 
 const { selectUsers, insertUser, deleteUser } = require('./functions/users.js');
@@ -19,12 +19,11 @@ users.get('/', async (req, res) => {
     return;
   }
   // check params data type
-  let session;
-  if (typeof req.query.session !== 'string') {
+  const { session } = req.query;
+  if (typeof session !== 'string') {
     res.sendStatus(400).end();
     throw new TypeError();
   }
-  session = req.query.session;
   // check params data range
   if (session.length !== 36) {
     res.sendStatus(400).end();
@@ -78,18 +77,21 @@ users.post('/', async (req, res) => {
     return;
   }
   // check params data type
-  let session, name, role, intolerances;
-  if (typeof req.body.session !== 'string' || typeof req.body.name !== 'string' || typeof req.body.role !== 'string' || !Array.isArray(req.body.intolerances)) {
+  const {
+    session,
+    name,
+    role,
+    intolerances,
+  } = req.body;
+  if (typeof session !== 'string' || typeof name !== 'string' || typeof role !== 'string' || !Array.isArray(intolerances)) {
     res.sendStatus(400).end();
     throw new TypeError();
   }
-  session = req.body.session;
-  name = req.body.name;
-  role = req.body.role;
-  intolerances = req.body.intolerances;
   // check params data range
   const knownIntolerances = ['dairy', 'egg', 'gluten', 'grain', 'peanut', 'seafood', 'sesame', 'shellfish', 'soy', 'sulfite', 'tree nut', 'wheat'];
-  if (session.length !== 36 || name.length < 3 || name.length > 64 || role.length === 0 || role.length > 64 || !intolerances.every((intolerance) => knownIntolerances.includes(intolerance))) {
+  if (session.length !== 36 || name.length < 3 || name.length > 64 || role.length === 0
+    || role.length > 64
+    || !intolerances.every((intolerance) => knownIntolerances.includes(intolerance))) {
     res.sendStatus(400).end();
     return;
   }
@@ -138,13 +140,14 @@ users.delete('/:userID', async (req, res) => {
     return;
   }
   // check params data type
-  let userID, session;
+  let userID;
+  let session;
   try {
     if (typeof req.query.session !== 'string') {
       throw new TypeError();
     }
     session = req.query.session;
-    userID = parseInt(req.params.userID);
+    userID = parseInt(req.params.userID, 10);
   } catch (error) {
     res.sendStatus(400).end();
     throw error;
